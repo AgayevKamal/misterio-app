@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Misterio — Çarxı fırlat, hədiyyə qazan</title>
+<title>Misterio — Sürpriz endirim kuponları</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
 </head>
@@ -12,8 +12,7 @@
   <a class="logo" href="index.html">
     <svg width="38" height="38" viewBox="0 0 48 48" aria-hidden="true">
       <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#ff5f6d"/><stop offset="1" stop-color="#7b2ff7"/>
-      </linearGradient></defs>
+        <stop offset="0" stop-color="#ff5f6d"/><stop offset="1" stop-color="#7b2ff7"/></linearGradient></defs>
       <circle cx="24" cy="24" r="21" fill="url(#lg)"/>
       <circle cx="24" cy="24" r="21" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 5"/>
       <path d="M24 9 L28 20 L39 20 L30 27 L33 38 L24 31 L15 38 L18 27 L9 20 L20 20 Z" fill="#fff" fill-opacity=".95"/>
@@ -23,64 +22,71 @@
   </a>
   <a class="avatar" href="profile.html" title="Profil">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
-      <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
-    </svg>
+      <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
   </a>
 </header>
 
 <main>
   <section class="hero">
-    <h1>Çarxı fırlat, <span class="grad">sürpriz endirim</span> qazan!</h1>
-    <p>Kateqoriya seç, çarxı fırlat və sevimli məkanlarından kupon qazan.</p>
+    <div class="badge">🎁 Sürpriz endirim platforması</div>
+    <h1>Misterio — <span class="grad">sürprizin ünvanı</span></h1>
+    <p class="lead">Restoranlardan kitab mağazalarına qədər onlarla məkanın endirim kuponu bir çarxda.
+       Hesab yarat, çarxı fırlat və qazandığın kuponu kassada göstər.</p>
+    <div class="row">
+      <a class="btn big" href="spin.html">Çarxı fırlat 🎡</a>
+      <a class="btn ghost big" href="auth.html">Hesab yarat</a>
+    </div>
+    <p class="hint">Çarxı fırlatmaq üçün hesab tələb olunur.</p>
+  </section>
+
+  <section class="wrap">
+    <h2 class="sec-title">Necə işləyir?</h2>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><div class="ic">👤</div><h3>Hesab yarat</h3>
+        <p>Email ilə qeydiyyatdan keç və poçtuna gələn 6 rəqəmli kodla hesabını təsdiqlə.</p></div>
+      <div class="step"><div class="num">2</div><div class="ic">🗂️</div><h3>Kateqoriya seç</h3>
+        <p>Restoran, anticafe, co-working, kurslar, coffeeshop və ya kitab mağazaları.</p></div>
+      <div class="step"><div class="num">3</div><div class="ic">🎡</div><h3>Çarxı fırlat</h3>
+        <p>Çarx təsadüfi dayanır — nəticə əvvəlcədən məlum deyil. Hər hesaba 1 pulsuz fırlatma.</p></div>
+      <div class="step"><div class="num">4</div><div class="ic">🎟️</div><h3>Kuponu istifadə et</h3>
+        <p>Kupon "Kuponlarım"a düşür. Kassada kodu göstər — hər kupon 1 dəfəlikdir.</p></div>
+    </div>
   </section>
 
   <section class="wrap">
     <h2 class="sec-title">Kateqoriyalar</h2>
-    <div id="cats" class="cats"></div>
+    <div class="cats" id="catsPreview"></div>
+    <p class="hint center">Kateqoriya seçimi və çarx hesaba daxil olduqdan sonra açılır.</p>
   </section>
 
-  <section class="wrap wheel-sec" id="wheelSec">
-    <h2 class="sec-title" id="wheelTitle">Çarx</h2>
-    <div class="wheel-box">
-      <div class="pointer"></div>
-      <div class="wheel-outer"><canvas id="wheel" width="420" height="420"></canvas></div>
-      <div id="lockMsg" class="lock-msg hidden">🔒 Növbəti fırlatma üçün ödəniş tələb olunur</div>
-      <button id="spinBtn" class="btn big">🎁 Hədiyyə əldə et</button>
-      <p class="hint" id="hint">Sizdə 1 pulsuz fırlatma haqqı var.</p>
+  <section class="wrap">
+    <div class="info-grid">
+      <div class="card info"><h3>🎁 1 pulsuz fırlatma</h3><p>Hər təsdiqlənmiş hesaba bir pulsuz şans verilir. Hesab başına ayrıca sayılır.</p></div>
+      <div class="card info"><h3>💳 Əlavə fırlatma</h3><p>Növbəti fırlatmalar 9.90 ₼-dir. Ödəniş axını nümunə (demo) olaraq göstərilir.</p></div>
+      <div class="card info"><h3>🔒 Təhlükəsiz</h3><p>Məlumatlar yalnız sizin brauzerinizdə (localStorage) saxlanılır, serverə göndərilmir.</p></div>
     </div>
+  </section>
+
+  <section class="wrap cta">
+    <h2>Şansını sınamağa hazırsan?</h2>
+    <a class="btn big" href="spin.html">Başla 🎉</a>
   </section>
 </main>
-
-<div class="modal hidden" id="modal">
-  <div class="modal-card">
-    <div class="confetti">🎉</div>
-    <h3>Təbriklər!</h3>
-    <p class="win" id="winTxt"></p>
-    <p class="sub">Kupon "Kuponlarım" bölməsinə əlavə olundu.</p>
-    <div class="row">
-      <a class="btn ghost" href="profile.html">Kuponlarım</a>
-      <button class="btn" id="closeModal">Bağla</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal hidden" id="payModal">
-  <div class="modal-card">
-    <div class="confetti">💳</div>
-    <h3>Ödəniş tələb olunur</h3>
-    <p class="sub">Pulsuz fırlatma haqqınız bitib. Əlavə fırlatma — 1.99 ₼ (nümunə axın).</p>
-    <div class="row">
-      <button class="btn ghost" id="payCancel">İmtina</button>
-      <button class="btn" id="payGo">Ödə və fırlat</button>
-    </div>
-  </div>
-</div>
 
 <footer class="ftr">
   <div class="ftr-logo">Misterio</div>
   <div>info@misterio.az · +994 50 418 27 63</div>
   <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
 </footer>
-<script src="app.js"></script>
+<script src="auth.js"></script>
+<script src="data.js"></script>
+<script>
+const box=document.getElementById("catsPreview");
+Object.values(DATA).forEach(v=>{
+  const d=document.createElement("a"); d.className="cat"; d.href="spin.html";
+  d.innerHTML=`<div class="ic">${v.icon}</div><div class="nm">${v.name}</div><div class="cnt">${v.shops.length} məkan</div>`;
+  box.appendChild(d);
+});
+</script>
 </body>
 </html>

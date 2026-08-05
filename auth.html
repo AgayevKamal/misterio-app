@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Giriş / Qeydiyyat — Misterio</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
+</head>
+<body>
+<header class="hdr">
+  <a class="logo" href="index.html">
+    <svg width="38" height="38" viewBox="0 0 48 48" aria-hidden="true">
+      <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ff5f6d"/><stop offset="1" stop-color="#7b2ff7"/></linearGradient></defs>
+      <circle cx="24" cy="24" r="21" fill="url(#lg)"/>
+      <circle cx="24" cy="24" r="21" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 5"/>
+      <path d="M24 9 L28 20 L39 20 L30 27 L33 38 L24 31 L15 38 L18 27 L9 20 L20 20 Z" fill="#fff" fill-opacity=".95"/>
+      <circle cx="24" cy="24" r="4" fill="#7b2ff7"/></svg>
+    <span class="logo-txt">Misterio</span>
+  </a>
+  <a class="avatar" href="profile.html" title="Profil">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+  </a>
+</header>
+
+<main>
+  <section class="wrap auth-wrap">
+    <div class="card auth-card">
+      <div class="tabs">
+        <button class="tab active" data-t="login">Daxil ol</button>
+        <button class="tab" data-t="signup">Qeydiyyat</button>
+      </div>
+
+      <!-- LOGIN -->
+      <form id="loginForm" class="form pane">
+        <label>Email<input id="lEmail" type="email" required placeholder="siz@mail.com"></label>
+        <label>Şifrə<input id="lPass" type="password" required placeholder="••••••••"></label>
+        <div class="err hidden" id="lErr"></div>
+        <button class="btn" type="submit">Daxil ol</button>
+      </form>
+
+      <!-- SIGNUP -->
+      <form id="signupForm" class="form pane hidden">
+        <label>Ad Soyad<input id="sName" required placeholder="Kamal Ağayev"></label>
+        <label>Email<input id="sEmail" type="email" required placeholder="siz@mail.com"></label>
+        <label>Telefon<input id="sPhone" placeholder="+994 __ ___ __ __"></label>
+        <label>Şifrə<input id="sPass" type="password" required minlength="6" placeholder="ən azı 6 simvol"></label>
+        <label>Şifrə təkrar<input id="sPass2" type="password" required placeholder="••••••••"></label>
+        <div class="err hidden" id="sErr"></div>
+        <button class="btn" type="submit">Qeydiyyatdan keç</button>
+      </form>
+
+      <!-- VERIFY -->
+      <div id="verifyPane" class="pane hidden">
+        <div class="confetti">📧</div>
+        <h3 class="center">Email doğrulaması</h3>
+        <p class="sub center"><span id="vEmail"></span> ünvanına 6 rəqəmli təsdiq kodu göndərildi.</p>
+        <div class="demo-mail">
+          <b>Demo rejimi:</b> real email göndərilmir. Kodunuz: <span class="code-inline" id="vCode"></span>
+        </div>
+        <form class="form" id="verifyForm">
+          <label>Təsdiq kodu<input id="vInput" inputmode="numeric" maxlength="6" placeholder="______" class="otp"></label>
+          <div class="err hidden" id="vErr"></div>
+          <button class="btn" type="submit">Təsdiqlə</button>
+          <button class="btn ghost" type="button" id="resend">Kodu yenidən göndər</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="ftr">
+  <div class="ftr-logo">Misterio</div>
+  <div>info@misterio.az · +994 50 418 27 63</div>
+  <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
+</footer>
+<script src="auth.js"></script>
+<script>
+const q=id=>document.getElementById(id);
+const params=new URLSearchParams(location.search);
+const next=params.get("next")||"spin.html";
+const show=n=>{
+  ["loginForm","signupForm","verifyPane"].forEach(p=>q(p).classList.add("hidden"));
+  q(n).classList.remove("hidden");
+};
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  t.classList.add("active");
+  show(t.dataset.t==="login"?"loginForm":"signupForm");
+});
+const err=(el,m)=>{el.textContent=m;el.classList.remove("hidden")};
+const hide=el=>el.classList.add("hidden");
+const gen=()=>String(Math.floor(100000+Math.random()*900000));
+
+/* onsuz da daxil olubsa */
+if(Session.user() && Session.user().verified) location.href=next;
+
+let pending=null;
+
+q("signupForm").onsubmit=e=>{
+  e.preventDefault(); hide(q("sErr"));
+  const email=q("sEmail").value.trim().toLowerCase();
+  if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(email)) return err(q("sErr"),"Email formatı düzgün deyil.");
+  if(q("sPass").value!==q("sPass2").value) return err(q("sErr"),"Şifrələr uyğun gəlmir.");
+  const ex=Users.get(email);
+  if(ex && ex.verified) return err(q("sErr"),"Bu email artıq qeydiyyatdadır. Daxil olun.");
+  const user={name:q("sName").value.trim(),email,phone:q("sPhone").value.trim(),
+    pass:q("sPass").value,verified:false,code:gen(),
+    freeUsed:false,coupons:[],created:new Date().toLocaleDateString("az-AZ")};
+  Users.put(user); pending=email;
+  q("vEmail").textContent=email; q("vCode").textContent=user.code;
+  show("verifyPane");
+};
+
+q("loginForm").onsubmit=e=>{
+  e.preventDefault(); hide(q("lErr"));
+  const email=q("lEmail").value.trim().toLowerCase();
+  const u=Users.get(email);
+  if(!u) return err(q("lErr"),"Belə istifadəçi tapılmadı. Qeydiyyatdan keçin.");
+  if(u.pass!==q("lPass").value) return err(q("lErr"),"Şifrə yanlışdır.");
+  if(!u.verified){
+    pending=email; u.code=gen(); Users.put(u);
+    q("vEmail").textContent=email; q("vCode").textContent=u.code;
+    return show("verifyPane");
+  }
+  Session.login(email); location.href=next;
+};
+
+q("verifyForm").onsubmit=e=>{
+  e.preventDefault(); hide(q("vErr"));
+  const u=Users.get(pending);
+  if(!u) return err(q("vErr"),"Xəta baş verdi, yenidən cəhd edin.");
+  if(q("vInput").value.trim()!==u.code) return err(q("vErr"),"Kod yanlışdır.");
+  u.verified=true; u.code=null; Users.put(u);
+  Session.login(u.email); location.href=next;
+};
+q("resend").onclick=()=>{
+  const u=Users.get(pending); if(!u) return;
+  u.code=gen(); Users.put(u); q("vCode").textContent=u.code;
+};
+</script>
+</body>
+</html>

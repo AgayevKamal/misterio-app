@@ -90,3 +90,64 @@ main{flex:1;width:100%}
 .ftr-logo{font-size:22px;font-weight:800}
 .ftr .small{font-size:13px;opacity:.8}
 @media(max-width:520px){.logo-txt{font-size:20px}.wrap{padding:18px 14px}}
+
+/* ---- v2 additions ---- */
+.badge{display:inline-block;background:#fff;color:var(--p1);font-weight:700;font-size:13px;
+  padding:7px 16px;border-radius:30px;box-shadow:0 6px 18px rgba(123,47,247,.18);margin-bottom:14px}
+.lead{max-width:640px;margin:14px auto 0;color:var(--soft);font-size:17px;line-height:1.6}
+.hero .row{margin-top:22px}
+.hint.center,.center{text-align:center}
+.hint.center{margin-top:14px}
+
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.step{background:#fff;border-radius:18px;padding:22px 18px;position:relative;
+  box-shadow:0 8px 24px rgba(80,40,160,.10);transition:.28s}
+.step:hover{transform:translateY(-6px);box-shadow:0 16px 34px rgba(123,47,247,.2)}
+.step .num{position:absolute;top:-12px;left:18px;width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(100deg,#7b2ff7,#ff5f6d);color:#fff;display:grid;place-items:center;font-weight:800;
+  box-shadow:0 6px 14px rgba(123,47,247,.35)}
+.step .ic{font-size:32px;margin-top:6px}
+.step h3{margin:8px 0 6px;font-size:17px}
+.step p{color:var(--soft);font-size:14px;line-height:1.55}
+
+.cat .cnt{font-size:12px;color:var(--soft);margin-top:4px}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card.info h3{font-size:17px;margin-bottom:8px}
+.card.info p{color:var(--soft);font-size:14px;line-height:1.55}
+.cta{text-align:center;padding:40px 18px}
+.cta h2{font-size:26px;margin-bottom:18px}
+
+.auth-wrap{max-width:480px}
+.auth-card{padding:26px}
+.tabs{display:flex;background:#f2ecff;border-radius:14px;padding:5px;margin-bottom:20px}
+.tab{flex:1;border:0;background:transparent;padding:10px;border-radius:10px;font-weight:700;
+  font-size:15px;cursor:pointer;color:var(--soft);transition:.2s}
+.tab.active{background:#fff;color:var(--p1);box-shadow:0 4px 12px rgba(123,47,247,.15)}
+.err{background:#ffe6e8;color:#c02135;padding:10px 14px;border-radius:10px;font-size:14px;font-weight:600}
+.demo-mail{background:#f2e9ff;border:1px dashed var(--p1);border-radius:12px;padding:12px;
+  font-size:14px;text-align:center;margin:14px 0;color:var(--ink)}
+.code-inline{font-family:monospace;font-size:20px;font-weight:800;letter-spacing:3px;color:var(--p2)}
+.otp{text-align:center;letter-spacing:8px;font-size:22px!important;font-family:monospace}
+.form .btn{justify-self:start}
+.form.pane .btn{width:100%}
+
+.welcome{background:#fff;border-radius:14px;padding:12px 18px;margin-bottom:18px;
+  box-shadow:0 6px 18px rgba(80,40,160,.08);font-size:15px}
+.link{color:var(--p1);font-weight:700}
+.link:hover{text-decoration:underline}
+
+.prof-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.pf-av{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;font-size:26px;font-weight:800;
+  color:#fff;background:linear-gradient(135deg,#7b2ff7,#ff5f6d);box-shadow:0 8px 20px rgba(123,47,247,.3)}
+.pf-name{font-size:20px;font-weight:800}
+.pf-mail{color:var(--soft);font-size:14px}
+.pf-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.pill{background:#f2e9ff;color:var(--p1);font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px}
+.pill.ok{background:#e3f9ec;color:#1a9b4b}
+.prof-head .btn{margin-left:auto}
+
+.coupon .owner{font-size:13px;color:var(--soft);margin-top:2px}
+.pay-fake{background:#f7f3ff;border-radius:12px;padding:12px;margin:14px 0;font-size:14px}
+.pay-row{display:flex;justify-content:space-between;padding:4px 0;color:var(--soft)}
+.pay-row b{color:var(--ink)}
+.avatar.on{box-shadow:0 0 0 3px rgba(255,255,255,.35)}
