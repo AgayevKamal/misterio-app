@@ -104,7 +104,7 @@
       d.className="coupon";
       d.innerHTML=`
         <div class="c-initial">${initial(c.shop)}</div>
-        <div class="c-shop" title="${c.shop}">${shortName(c.shop,16)}</div>
+        <div class="c-shop" title="${c.shop}">${shortName(c.shop,30)}</div>
         <div class="c-cat">${c.cat}</div>
         <div class="c-status">✦ Aktiv</div>
         <button class="btn">Bax</button>`;
