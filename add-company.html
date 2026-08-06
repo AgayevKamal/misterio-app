@@ -14,7 +14,7 @@
     <svg width="38" height="38" viewBox="0 0 48 48" aria-hidden="true">
       <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0" stop-color="#ff5f6d"/><stop offset="1" stop-color="#7b2ff7"/></linearGradient></defs>
-      <circle cx="24" cy="24" r="21" fill="url(#lg)"/>
+      <circle cx="24" cy="24" r="21" fill="#7b2ff7"/>
       <circle cx="24" cy="24" r="21" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 5"/>
       <path d="M24 9 L28 20 L39 20 L30 27 L33 38 L24 31 L15 38 L18 27 L9 20 L20 20 Z" fill="#fff" fill-opacity=".95"/>
       <circle cx="24" cy="24" r="4" fill="#7b2ff7"/></svg>
@@ -32,7 +32,7 @@
   <section class="hero">
     <div class="badge">🤝 Tərəfdaş ol</div>
     <h1>Şirkətini <span class="grad">çarxa əlavə et</span></h1>
-    <p class="lead">Məkanını Misterio çarxına əlavə et — istifadəçilər sənin endirimini qazanıb birbaşa qapından girsin.</p>
+    <p class="lead">Məkanını Misterio çarxına əlavə et — istifadəçilər sənin endirimini qazanıb birbaşa qapından girsin. Qeydiyyat zamanı onlayn müqavilə avtomatik imzalanır.</p>
   </section>
 
   <section class="wrap">
@@ -48,13 +48,12 @@
         <label>Əlaqə nömrəsi *
           <input id="cPhone" required placeholder="+994 __ ___ __ __"></label>
         <div class="err hidden" id="cErr"></div>
-        <button class="btn" type="submit">Çarxa əlavə et</button>
+        <button class="btn" type="submit">Davam et → Müqavilə</button>
       </form>
 
       <div class="side-col">
         <div class="card info"><h3>ℹ️ Necə işləyir?</h3>
-          <p>Formanı doldurduqdan sonra şirkətin dərhal seçdiyin kateqoriyaya və çarxa yeni seqment
-             kimi əlavə olunur. "Hamısı" çarxında da görünəcək.</p></div>
+          <p>1) Məlumatları doldur → 2) Onlayn müqaviləni oxu və "razıyam" de → 3) Sistem müqaviləni imzalayır, PDF yaradır və şirkəti çarxa əlavə edir. Sənə əlavə olaraq heç nə etmək lazım deyil.</p></div>
         <div class="card info"><h3>📋 Əlavə edilmiş şirkətlər</h3>
           <div id="compList" class="comp-list"></div></div>
       </div>
@@ -62,24 +61,50 @@
   </section>
 </main>
 
+<!-- MÜQAVİLƏ MODALI -->
+<div class="modal hidden" id="contractModal">
+  <div class="modal-card" style="max-width:560px">
+    <div class="sec-ic" style="text-align:center">📝</div>
+    <h3>Misterio Tərəfdaşlıq Müqaviləsi</h3>
+    <p class="sub" style="text-align:center">Hüquqi şəxs və ya Fiziki şəxs üçün tərəfdaşlıq şərtləri</p>
+    <div id="contractText" class="contract-text"></div>
+    <label class="contract-check">
+      <input type="checkbox" id="agreeChk">
+      <span>Mən yuxarıdakı müqaviləni oxudum, başa düşdüm və şərtlərlə <b>razıyam</b>.</span>
+    </label>
+    <div class="err hidden" id="contractErr"></div>
+    <div class="row" style="margin-top:18px">
+      <button class="btn ghost" id="contractCancel" type="button">İmtina</button>
+      <button class="btn" id="signBtn" type="button" disabled>✍️ Oxudum, razıyam — İmzala</button>
+    </div>
+  </div>
+</div>
+
+<!-- UĞUR MODALI (PDF + simulyasiya) -->
 <div class="modal hidden" id="okModal">
   <div class="modal-card">
-    <div class="confetti">🔮</div>
-    <h3>Şirkət əlavə olundu!</h3>
+    <div class="confetti">✅</div>
+    <h3>Şirkət əlavə olundu və müqavilə imzalandı!</h3>
     <p class="win" id="okTxt"></p>
     <p class="sub" id="okSub"></p>
+    <div class="contract-meta" id="okMeta"></div>
     <div class="row">
       <button class="btn ghost" id="okMore">Daha bir şirkət</button>
+      <button class="btn ghost" id="dlPdf">📄 Müqavilə PDF</button>
       <a class="btn" href="spin.html">Çarxda gör 🎡</a>
     </div>
   </div>
 </div>
+
+<!-- print üçün gizli sahə (PDF məzmunu) -->
+<div id="printArea" class="hidden"></div>
 
 <footer class="ftr">
   <div class="ftr-logo">Misterio</div>
   <div>info@misterio.az · +994 70 562 12 69</div>
   <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
 </footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="auth.js"></script>
 <script src="data.js"></script>
 <script>
@@ -88,6 +113,137 @@ const sel=q("cCat");
 CATEGORY_LIST.forEach(c=>{
   const o=document.createElement("option"); o.value=c.key; o.textContent=c.icon+" "+c.name; sel.appendChild(o);
 });
+
+/* ---------- Müqavilə mətni ---------- */
+function contractHTML(c){
+  return `
+  <p><b>Tərəfdaş:</b> ${c.name}</p>
+  <p><b>Kateqoriya:</b> ${(CATEGORY_LIST.find(x=>x.key===c.cat)||{}).name||c.cat}</p>
+  <p><b>Endirim faizi:</b> ${c.disc}%</p>
+  <p><b>Əlaqə nömrəsi:</b> ${c.phone}</p>
+  <hr>
+  <p><b>1. Tərəfdaşlıq predmeti.</b> Tərəfdaş, Misterio platformasında çarx vasitəsilə istifadəçilərə təqdim etdiyi endirim kuponlarının yayımı üçün razılıq verir.</p>
+  <p><b>2. Ödəniş və komissiya.</b> Hər qazanılmış kupon üzrə hesablaşma şərtləri ayrıca razılaşdırılır. Tərəfdaş sorğusu əsasında faktura təqdim edilir.</p>
+  <p><b>3. Məlumatların qorunması.</b> Tərəfdaşın verdiyi məlumatlar yalnız xidmətin göstərilməsi üçün istifadə olunur və üçüncü şəxslərə ötürülmür.</p>
+  <p><b>4. Müqavilənin qüvvəyə minməsi.</b> Bu müqavilə tərəfdaş tərəfindən onlayn imzalandığı andan qüvvəyə minir. Sistem avtomatik timestamp, IP və versiya qeyd edir.</p>
+  <p><b>5. Xitam.</b> Tərəfdaş istənilən vaxt tərəfdaşlığa son verə bilər; mövcud kuponlar müddəti bitənədək qüvvədə qalır.</p>`;
+}
+
+/* ---------- Form submit → müqavilə modalı ---------- */
+let pending = null;
+q("compForm").onsubmit=e=>{
+  e.preventDefault();
+  const err=q("cErr"); err.classList.add("hidden");
+  const name=q("cName").value.trim();
+  const cat=sel.value;
+  const disc=parseInt(q("cDisc").value,10);
+  const phone=q("cPhone").value.trim();
+  if(name.length<2){ err.textContent="Şirkət adı çox qısadır."; err.classList.remove("hidden"); return; }
+  if(!(disc>=5&&disc<=90)){ err.textContent="Endirim faizi 5-90 aralığında olmalıdır."; err.classList.remove("hidden"); return; }
+  if(phone.replace(/\D/g,"").length<7){ err.textContent="Əlaqə nömrəsi düzgün deyil."; err.classList.remove("hidden"); return; }
+  pending={name,cat,disc,phone};
+  q("contractText").innerHTML=contractHTML(pending);
+  q("agreeChk").checked=false;
+  q("signBtn").disabled=true;
+  q("contractErr").classList.add("hidden");
+  q("contractModal").classList.remove("hidden");
+};
+
+q("agreeChk").onchange=e=>{ q("signBtn").disabled=!e.target.checked; };
+q("contractCancel").onclick=()=>q("contractModal").classList.add("hidden");
+
+/* ---------- İmzala → sistem prosesi (simulyasiya) ---------- */
+let lastContract=null;
+q("signBtn").onclick=()=>{
+  if(!q("agreeChk").checked || !pending) return;
+  const ts=new Date();
+  const rec={
+    id:"C-"+ts.getTime(),
+    companyId:"custom-"+ts.getTime(),
+    companyName:pending.name,
+    cat:pending.cat, disc:pending.disc, phone:pending.phone,
+    signedAt:ts.toISOString(),
+    ip:clientIp(),
+    version:CONTRACT_VERSION,
+    status:"aktiv",
+    emailSent:false, smsSent:false
+  };
+  /* 1) şirkəti DB-yə yaz (localStorage) + çarxa əlavə */
+  addCompany({id:rec.companyId.replace("custom-",""), name:pending.name, cat:pending.cat, disc:pending.disc, phone:pending.phone});
+  refreshData();
+  /* 2) müqaviləni qeyd et */
+  addContract(rec);
+  /* 3) PDF generasiya (jsPDF) */
+  rec.pdf = makePdf(rec);
+  /* 4) email/SMS simulyasiyası */
+  rec.emailSent=true; rec.smsSent=true;
+  addContract(rec); // yenilənmiş halı saxla
+  lastContract=rec;
+
+  q("contractModal").classList.add("hidden");
+  q("okTxt").textContent=`${pending.name} — ${pending.disc}%`;
+  q("okSub").textContent=`"${(CATEGORY_LIST.find(x=>x.key===pending.cat)||{}).name}" kateqoriyasına və çarxa əlavə olundu. Ümumi seqment: ${DATA[pending.cat].shops.length}`;
+  q("okMeta").innerHTML=
+    `<div>📄 Müqavilə: <b>${rec.id}</b> · ${CONTRACT_VERSION}</div>
+     <div>🕒 İmzalanma: ${ts.toLocaleString("az-AZ")}</div>
+     <div>🌐 IP: ${rec.ip}</div>
+     <div>✅ DB statusu: <b>aktiv</b> · 📧 email + 📱 SMS göndərildi</div>`;
+  q("okModal").classList.remove("hidden");
+  q("compForm").reset();
+  renderList();
+};
+
+/* ---------- PDF (jsPDF) ---------- */
+function makePdf(rec){
+  if(!window.jspdf || !window.jspdf.jsPDF){ return null; }
+  const { jsPDF } = window.jspdf;
+  const doc=new jsPDF({unit:"pt",format:"a4"});
+  let y=60;
+  doc.setFontSize(18); doc.text("Misterio — Tərəfdaşlıq Müqaviləsi",40,y); y+=30;
+  doc.setFontSize(11);
+  const lines=[
+    `Müqavilə nömrəsi: ${rec.id}`,
+    `Versiya: ${rec.version}`,
+    `Tərəfdaş: ${rec.companyName}`,
+    `Kateqoriya: ${(CATEGORY_LIST.find(x=>x.key===rec.cat)||{}).name||rec.cat}`,
+    `Endirim faizi: ${rec.disc}%`,
+    `Əlaqə: ${rec.phone}`,
+    `İmzalanma tarixi: ${new Date(rec.signedAt).toLocaleString("az-AZ")}`,
+    `IP ünvanı: ${rec.ip}`,
+    `Status: ${rec.status}`,
+    "",
+    "1. Tərəfdaşlıq predmeti: Misterio çarxı vasitəsilə endirim kuponlarının yayımı.",
+    "2. Məlumatların qorunması: məlumatlar yalnız xidmət üçün istifadə olunur.",
+    "3. Müqavilə onlayn imzalandığı anda qüvvəyə minir.",
+    "",
+    "İmza: ______________________ (Tərəfdaş)",
+    "Misterio tərəfindən təsdiq: avtomatik (sistem)"
+  ];
+  lines.forEach(l=>{ doc.text(l,40,y); y+=18; });
+  return doc.output("datauristring");
+}
+q("dlPdf").onclick=()=>{
+  if(lastContract && lastContract.pdf && window.jspdf){
+    const { jsPDF } = window.jspdf;
+    const doc=new jsPDF();
+    // yenidən yarat (datauristring-dən açmaq əvəzinə birbaşa yüklə)
+    const { jsPDF:J }=window.jspdf;
+    const d=new J({unit:"pt",format:"a4"}); let y=60;
+    d.setFontSize(18); d.text("Misterio — Tərəfdaşlıq Müqaviləsi",40,y); y+=30;
+    d.setFontSize(11);
+    [`Müqavilə: ${lastContract.id} · ${lastContract.version}`,
+     `Tərəfdaş: ${lastContract.companyName}`,
+     `Kateqoriya: ${(CATEGORY_LIST.find(x=>x.key===lastContract.cat)||{}).name}`,
+     `Endirim: ${lastContract.disc}% · ${lastContract.phone}`,
+     `Tarix: ${new Date(lastContract.signedAt).toLocaleString("az-AZ")}`,
+     `IP: ${lastContract.ip} · Status: ${lastContract.status}`].forEach(l=>{d.text(l,40,y);y+=18;});
+    d.save(`misterio-muqavile-${lastContract.id}.pdf`);
+  } else {
+    alert("PDF modulu yüklənməyib (offline?). Səhifəni yeniləyin.");
+  }
+};
+
+q("okMore").onclick=()=>q("okModal").classList.add("hidden");
 
 function renderList(){
   const list=customCompanies();
@@ -104,30 +260,7 @@ function renderList(){
   });
 }
 renderList();
-
-q("compForm").onsubmit=e=>{
-  e.preventDefault();
-  const err=q("cErr"); err.classList.add("hidden");
-  const name=q("cName").value.trim();
-  const cat=sel.value;
-  const disc=parseInt(q("cDisc").value,10);
-  const phone=q("cPhone").value.trim();
-  if(name.length<2){ err.textContent="Şirkət adı çox qısadır."; err.classList.remove("hidden"); return; }
-  if(!(disc>=5&&disc<=90)){ err.textContent="Endirim faizi 5-90 aralığında olmalıdır."; err.classList.remove("hidden"); return; }
-  if(phone.replace(/\D/g,"").length<7){ err.textContent="Əlaqə nömrəsi düzgün deyil."; err.classList.remove("hidden"); return; }
-  const exists = DATA[cat].shops.some(s=>s.n.toLowerCase()===name.toLowerCase());
-  if(exists){ err.textContent="Bu ad artıq həmin kateqoriyada mövcuddur."; err.classList.remove("hidden"); return; }
-
-  addCompany({id:Date.now(), name, cat, disc, phone});
-  refreshData();
-  const c=CATEGORY_LIST.find(x=>x.key===cat);
-  q("okTxt").textContent=`${name} — ${disc}%`;
-  q("okSub").textContent=`"${c.name}" kateqoriyasına və çarxa əlavə olundu. Ümumi seqment: ${DATA[cat].shops.length}`;
-  q("okModal").classList.remove("hidden");
-  q("compForm").reset();
-  renderList();
-};
-q("okMore").onclick=()=>q("okModal").classList.add("hidden");
 </script>
 </body>
 </html>
+

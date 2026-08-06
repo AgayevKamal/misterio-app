@@ -34,6 +34,26 @@ function addCompany(c){
   localStorage.setItem("mist_companies", JSON.stringify(list));
 }
 
+/* ---------- Müqavilə / Contract (frontend simulyasiyası) ----------
+   Real backend qoşulanadək burada localStorage-da saxlanılır və
+   "DB-yə yazıldı / email göndərildi" simulyasiyası göstərilir.
+   Hər müqavilə: id, companyId, signedAt(timestamp), ip, version,
+   pdf(base64 və ya blob url), status:"aktiv". */
+const CONTRACT_VERSION = "v1.0";
+function contracts(){
+  try{ return JSON.parse(localStorage.getItem("mist_contracts")) || [] }catch(e){ return [] }
+}
+function addContract(c){
+  const list = contracts();
+  list.push(c);
+  localStorage.setItem("mist_contracts", JSON.stringify(list));
+}
+function clientIp(){
+  /* real IP yalnız backend-dən gəlir; frontend simulyasiyasında
+     local şəbəkə/ixa məlumatı kimi göstərilir */
+  return "127.0.0.1 (local-sim)";
+}
+
 /* DATA = baza + əlavə edilmiş şirkətlər, hər sektora unikal ID verilir */
 function buildData(){
   const d = JSON.parse(JSON.stringify(BASE_DATA));
