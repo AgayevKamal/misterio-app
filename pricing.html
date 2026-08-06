@@ -142,8 +142,7 @@ function render(){
   const s=subInfo();
   q("payAcc").textContent=u.email;
   if(s.active){
-    q("subBtn").textContent="Abunəliyin aktivdir ✅";
-    q("subBtn").disabled=true;
+    q("subBtn").outerHTML='<div class="active-badge">✅ Abunəliyin aktivdir</div>';
     q("subNote").innerHTML=`Qalan fırlatma: <b>${s.spinsLeft}</b> · Yenilənmə: <b>${s.renewText}</b>`;
   }
 }
