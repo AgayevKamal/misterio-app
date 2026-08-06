@@ -14,16 +14,15 @@
     }
     return s.slice(0,Math.max(2,Math.ceil(s.length/2)))+"***";
   }
+  const initial = s => (s||"?").trim().charAt(0).toUpperCase();
 
   function head(){
     user=Session.user();
     const s=subInfo();
-    q("pfAv").textContent=(user.name||user.email)[0].toUpperCase();
+    q("pfAv").textContent=initial(user.name||user.email);
     q("pfName").textContent=user.name||"—";
     q("pfMail").textContent=user.email;
-    q("pfSpin").textContent = s.active
-      ? `🎡 ${s.spinsLeft} fırlatma qalıb`
-      : "🔒 Abunəlik deaktiv";
+    q("pfSpin").textContent = s.active ? `🎡 ${s.spinsLeft} sirr qalıb` : "🔒 Abunəlik deaktiv";
   }
 
   function renderSub(){
@@ -33,7 +32,7 @@
       box.innerHTML=`
         <div class="sub-row">
           <div><div class="sub-state off">Deaktiv</div>
-          <p class="sub">Fırlatmaq üçün aylıq abunəliyi aktivləşdirin — 9.90 AZN, ayda 3 fırlatma.</p></div>
+          <p class="sub">Sirri açmaq üçün aylıq abunəliyi aktivləşdirin — 9.90 AZN, ayda 3 sirr.</p></div>
           <a class="btn" href="pricing.html">Abunə ol</a>
         </div>`;
       return;
@@ -44,14 +43,14 @@
           <div class="sub-state on">Aktiv</div>
           <div class="sub-grid">
             <div><span>Plan</span><b>Misterio Aylıq · 9.90 AZN</b></div>
-            <div><span>Qalan fırlatma</span><b>${s.spinsLeft} / 3</b></div>
+            <div><span>Qalan sirr</span><b>${s.spinsLeft} / 3</b></div>
             <div><span>Növbəti yenilənmə</span><b>${s.renewText}</b></div>
           </div>
-          ${s.canSpin?"":'<p class="warn">⚠️ Bu ayki fırlatma haqqınız bitib.</p>'}
+          ${s.canSpin?"":'<p class="warn">⚠️ Bu ayki sirlərin bitib.</p>'}
         </div>
         <div class="sub-actions">
-          ${s.canSpin?'<a class="btn" href="spin.html">Çarxı fırlat</a>'
-                     :'<a class="btn" href="pricing.html">Əlavə fırlatma al</a>'}
+          ${s.canSpin?'<a class="btn" href="spin.html">Sirri aç 🔮</a>'
+                     :'<a class="btn" href="pricing.html">Əlavə sirr al</a>'}
           <button class="btn ghost" id="cancelSub">Abunəliyi ləğv et</button>
         </div>
       </div>`;
@@ -80,21 +79,22 @@
   const box=q("coupons"), cm=q("cModal");
   let openId=null;
 
+  /* KART: yalnız baş hərf + status + Bax — mətn kəsilmə problemi yoxdur */
   function render(){
     user=Session.user();
     const list=user.coupons||[];
     if(!list.length){
-      box.innerHTML='<div class="empty">Hələ kuponunuz yoxdur. <a class="link" href="spin.html">Çarxı fırladın 🎁</a></div>';
+      box.innerHTML='<div class="empty">🔮 Hələ sirrin açılmayıb. <a class="link" href="spin.html">Çarxı fırlat</a> və ilk kuponunu qazan.</div>';
       return;
     }
     box.innerHTML="";
     list.slice().reverse().forEach(c=>{
       const d=document.createElement("div");
       d.className="coupon";
-      d.innerHTML=`<div class="cat-l">${c.cat}</div><div class="shop">${c.shop}</div>
-        <div class="disc">-${c.disc}%</div>
-        <div class="owner">👤 ${maskName(user.name)}</div>
-        <button class="btn">Bax</button>`;
+      d.innerHTML=`
+        <div class="c-initial">${initial(c.shop)}</div>
+        <div class="c-status">✦ Aktiv</div>
+        <button class="btn">Sirri aç</button>`;
       d.querySelector("button").onclick=()=>openC(c);
       box.appendChild(d);
     });
@@ -102,6 +102,7 @@
 
   function openC(c){
     openId=c.id;
+    q("cInitial").textContent=initial(c.shop);
     q("cTitle").textContent=c.shop;
     q("cDisc").textContent=c.disc+"% endirim";
     q("cCode").textContent=c.code;

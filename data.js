@@ -20,8 +20,9 @@ const BASE_DATA = {
     {n:"Akademkitab",d:25},{n:"Qanun Nəşr",d:30},{n:"Book Point",d:18}]}
 };
 
-const COLORS = ["#7b2ff7","#ff5f6d","#ffc371","#22c1c3","#fd6585","#845ec2","#00c9a7","#ff9671",
-                "#ff6f91","#4d8076","#f9a826","#5d5fef"];
+/* mystery palitrası — tünd fon üzərində parlaq, lakin premium tonlar */
+const COLORS = ["#6d3bff","#a855ff","#c026d3","#ff4d8d","#ff7a45","#ffcf5c",
+                "#3ddcff","#2d9bf0","#7c4dff","#e0479e","#f59e0b","#4dd4ac"];
 
 /* istifadəçilərin əlavə etdiyi şirkətlər — localStorage */
 function customCompanies(){

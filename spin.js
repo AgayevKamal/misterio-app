@@ -2,6 +2,12 @@
    BUG FIX: qalib əvvəlcə seçilir (single source of truth), animasiya bucağı
    həmin qalibə görə hesablanır. Mütləq bucaqla işləyirik, ona görə
    təkrar fırlatmalarda da ox həmişə düz qazanan sektorun üstündə dayanır. */
+function shade(hex,amt){
+  const n=parseInt(hex.slice(1),16);
+  let r=(n>>16)+amt, g=((n>>8)&255)+amt, b=(n&255)+amt;
+  r=Math.max(0,Math.min(255,r)); g=Math.max(0,Math.min(255,g)); b=Math.max(0,Math.min(255,b));
+  return "#"+((r<<16)|(g<<8)|b).toString(16).padStart(6,"0");
+}
 (function(){
   let user = requireAuth();
   if(!user) return;
@@ -23,21 +29,21 @@
     if(!s.active){
       bb.classList.remove("hidden"); area.classList.add("hidden"); sec.classList.remove("show");
       q("bbIc").textContent="🔒";
-      q("bbTitle").textContent="Abunəlik tələb olunur";
-      q("bbText").textContent="Çarxı fırlatmaq üçün aylıq abunəliyi aktivləşdirin — 9.90 AZN, ayda 3 fırlatma.";
+      q("bbTitle").textContent="Sirr kilidlidir";
+      q("bbText").textContent="Çarxın arxasında nə gizləndiyini görmək üçün abunəliyi aktivləşdirin — 9.90 AZN, ayda 3 sirr.";
       q("bbBtn").textContent="Abunə ol — 9.90 AZN/ay";
       return false;
     }
     if(!s.canSpin){
       bb.classList.remove("hidden"); area.classList.add("hidden"); sec.classList.remove("show");
       q("bbIc").textContent="⏳";
-      q("bbTitle").textContent="Bu ayki fırlatma haqqınız bitib";
-      q("bbText").innerHTML=`Yeniləmə tarixi: <b>${s.renewText}</b>. O tarixdə hesabınıza yenidən 3 fırlatma əlavə olunacaq.`;
-      q("bbBtn").textContent="Əlavə fırlatma al — 9.90 AZN";
+      q("bbTitle").textContent="Bu ayki sirlərin bitib";
+      q("bbText").innerHTML=`Yeniləmə tarixi: <b>${s.renewText}</b>. O tarixdə hesabınıza yenidən 3 sirr əlavə olunacaq.`;
+      q("bbBtn").textContent="Əlavə sirr al — 9.90 AZN";
       return false;
     }
     bb.classList.add("hidden"); area.classList.remove("hidden");
-    hint.textContent=`Bu ay ${s.spinsLeft} fırlatma haqqınız qalıb.`;
+    hint.textContent=`✦ Bu ay ${s.spinsLeft} sirrin qalıb. Nə çıxacaq — bilinmir.`;
     return true;
   }
 
@@ -56,7 +62,7 @@
     curKey=k;
     currentShops = DATA[k].shops.slice();
     document.querySelectorAll(".cat").forEach(c=>c.classList.toggle("active",c.dataset.k===k));
-    title.textContent="2. "+DATA[k].name+" çarxını fırlat";
+    title.textContent="2. "+DATA[k].name+" — sirri aç";
     sec.classList.add("show");
     absAngle = 0;
     cv.style.transition="none";
@@ -75,8 +81,11 @@
     currentShops.forEach((s,i)=>{
       const a0=i*step-Math.PI/2, a1=a0+step;
       ctx.beginPath(); ctx.moveTo(R,R); ctx.arc(R,R,R-4,a0,a1); ctx.closePath();
-      ctx.fillStyle=COLORS[i%COLORS.length]; ctx.fill();
-      ctx.strokeStyle="#fff"; ctx.lineWidth= big?2:3; ctx.stroke();
+      const g=ctx.createRadialGradient(R,R,R*0.18,R,R,R);
+      const base=COLORS[i%COLORS.length];
+      g.addColorStop(0, shade(base,-38)); g.addColorStop(1, base);
+      ctx.fillStyle=g; ctx.fill();
+      ctx.strokeStyle="rgba(255,214,120,.55)"; ctx.lineWidth= big?1.2:2; ctx.stroke();
       ctx.save(); ctx.translate(R,R); ctx.rotate(a0+step/2);
       ctx.fillStyle="#fff"; ctx.textAlign="right"; ctx.textBaseline="middle";
       const fs = big?11:15, fs2 = big?12:17;
@@ -88,14 +97,19 @@
       ctx.fillText("-"+s.d+"%", R-16, big?9:14);
       ctx.restore();
     });
-    const hr = big?26:32;
-    ctx.beginPath(); ctx.arc(R,R,hr,0,2*Math.PI); ctx.fillStyle="#fff"; ctx.fill();
-    ctx.strokeStyle="#7b2ff7"; ctx.lineWidth=5; ctx.stroke();
-    ctx.fillStyle="#7b2ff7"; ctx.font=`bold ${big?12:15}px Segoe UI`; ctx.textAlign="center"; ctx.textBaseline="middle";
-    ctx.fillText("SPIN",R,R);
+    const hr = big?28:34;
+    const hg=ctx.createRadialGradient(R,R-hr*0.4,2,R,R,hr);
+    hg.addColorStop(0,"#2a1550"); hg.addColorStop(1,"#0d0620");
+    ctx.beginPath(); ctx.arc(R,R,hr,0,2*Math.PI); ctx.fillStyle=hg; ctx.fill();
+    ctx.strokeStyle="#ffcf5c"; ctx.lineWidth=3; ctx.stroke();
+    ctx.shadowColor="rgba(255,207,92,.9)"; ctx.shadowBlur=14;
+    ctx.fillStyle="#ffcf5c"; ctx.font=`bold ${big?20:24}px Segoe UI`;
+    ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillText("?",R,R+1);
+    ctx.shadowBlur=0;
   }
 
-  if(gate()) hint.textContent=`Bu ay ${subInfo().spinsLeft} fırlatma haqqınız qalıb.`;
+  if(gate()) hint.textContent=`✦ Bu ay ${subInfo().spinsLeft} sirrin qalıb. Nə çıxacaq — bilinmir.`;
 
   btn.onclick=()=>{
     if(spinning) return;
@@ -123,10 +137,14 @@
 
     spinning=true; btn.disabled=true;
     consumeSpin();
+    btn.textContent="✦ Sirr açılır...";
+    document.querySelector(".wheel-outer").classList.add("spinning");
     cv.style.transform = `rotate(${absAngle}deg)`;
 
     setTimeout(()=>{
       spinning=false; btn.disabled=false;
+      btn.textContent="🔮 Sirri aç";
+      document.querySelector(".wheel-outer").classList.remove("spinning");
       /* 3) KUPON — həmin qalibdən, ID ilə bağlı */
       const catName = winner.catKey && DATA[winner.catKey] ? DATA[winner.catKey].name : DATA[curKey].name;
       const c={ id:Date.now(), segId:winner.id, shop:winner.n, disc:winner.d, cat:catName,
@@ -139,8 +157,8 @@
       q("modal").classList.remove("hidden");
       const s=subInfo();
       hint.textContent = s.canSpin
-        ? `Bu ay ${s.spinsLeft} fırlatma haqqınız qalıb.`
-        : `Bu ayki fırlatma haqqınız bitdi. Yeniləmə: ${s.renewText}`;
+        ? `✦ Bu ay ${s.spinsLeft} sirrin qalıb.`
+        : `Bu ayki sirlərin bitdi. Yeniləmə: ${s.renewText}`;
     },5200);
   }
 
