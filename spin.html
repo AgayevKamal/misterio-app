@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Çarx — Misterio</title>
+<script src="theme.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
 </head>
@@ -20,6 +21,7 @@
     <span class="logo-txt">Misterio</span>
   </a>
   <nav class="nav"><a href="pricing.html">Qiymət</a><a href="add-company.html">Şirkət əlavə et</a></nav>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Tema">☀️</button>
   <a class="avatar" href="profile.html" title="Profil">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
       <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
@@ -39,7 +41,7 @@
     </div>
 
     <div id="spinArea">
-      <h2 class="sec-title">1. Sirrini seç</h2>
+      <h2 class="sec-title">1. Kateqoriya seç</h2>
       <div id="cats" class="cats"></div>
     </div>
   </section>
@@ -49,7 +51,7 @@
     <div class="wheel-box">
       <div class="pointer"></div>
       <div class="wheel-outer"><canvas id="wheel" width="520" height="520"></canvas></div>
-      <button id="spinBtn" class="btn big">🔮 Sirri aç</button>
+      <button id="spinBtn" class="btn big">🔮 Çarxı fırlat</button>
       <p class="hint" id="hint"></p>
     </div>
   </section>
@@ -58,7 +60,7 @@
 <div class="modal hidden" id="modal">
   <div class="modal-card">
     <div class="confetti">🎉</div>
-    <h3>Sirr açıldı!</h3>
+    <h3>Təbriklər!</h3>
     <p class="win" id="winTxt"></p>
     <p class="sub" id="winCat"></p>
     <p class="sub">Kupon "Kuponlarım" bölməsinə əlavə olundu.</p>

@@ -29,21 +29,21 @@ function shade(hex,amt){
     if(!s.active){
       bb.classList.remove("hidden"); area.classList.add("hidden"); sec.classList.remove("show");
       q("bbIc").textContent="🔒";
-      q("bbTitle").textContent="Sirr kilidlidir";
-      q("bbText").textContent="Çarxın arxasında nə gizləndiyini görmək üçün abunəliyi aktivləşdirin — 9.90 AZN, ayda 3 sirr.";
+      q("bbTitle").textContent="Çarx kilidlidir";
+      q("bbText").textContent="Çarxın arxasında nə gizləndiyini görmək üçün abunəliyi aktivləşdirin — 9.90 AZN, ayda 3 fırlatma.";
       q("bbBtn").textContent="Abunə ol — 9.90 AZN/ay";
       return false;
     }
     if(!s.canSpin){
       bb.classList.remove("hidden"); area.classList.add("hidden"); sec.classList.remove("show");
       q("bbIc").textContent="⏳";
-      q("bbTitle").textContent="Bu ayki sirlərin bitib";
-      q("bbText").innerHTML=`Yeniləmə tarixi: <b>${s.renewText}</b>. O tarixdə hesabınıza yenidən 3 sirr əlavə olunacaq.`;
-      q("bbBtn").textContent="Əlavə sirr al — 9.90 AZN";
+      q("bbTitle").textContent="Bu ayki fırlatma haqqın bitib";
+      q("bbText").innerHTML=`Yeniləmə tarixi: <b>${s.renewText}</b>. O tarixdə hesabınıza yenidən 3 fırlatma əlavə olunacaq.`;
+      q("bbBtn").textContent="Əlavə fırlatma al — 9.90 AZN";
       return false;
     }
     bb.classList.add("hidden"); area.classList.remove("hidden");
-    hint.textContent=`✦ Bu ay ${s.spinsLeft} sirrin qalıb. Nə çıxacaq — bilinmir.`;
+    hint.textContent=`✦ Bu ay ${s.spinsLeft} fırlatma haqqın qalıb. Nə çıxacaq — bilinmir.`;
     return true;
   }
 
@@ -62,7 +62,7 @@ function shade(hex,amt){
     curKey=k;
     currentShops = DATA[k].shops.slice();
     document.querySelectorAll(".cat").forEach(c=>c.classList.toggle("active",c.dataset.k===k));
-    title.textContent="2. "+DATA[k].name+" — sirri aç";
+    title.textContent="2. "+DATA[k].name+" çarxını fırlat";
     sec.classList.add("show");
     absAngle = 0;
     cv.style.transition="none";
@@ -85,7 +85,9 @@ function shade(hex,amt){
       const base=COLORS[i%COLORS.length];
       g.addColorStop(0, shade(base,-38)); g.addColorStop(1, base);
       ctx.fillStyle=g; ctx.fill();
-      ctx.strokeStyle="rgba(255,214,120,.55)"; ctx.lineWidth= big?1.2:2; ctx.stroke();
+      ctx.strokeStyle= document.documentElement.getAttribute("data-theme")==="light"
+        ? "rgba(255,255,255,.85)" : "rgba(255,214,120,.55)";
+      ctx.lineWidth= big?1.2:2; ctx.stroke();
       ctx.save(); ctx.translate(R,R); ctx.rotate(a0+step/2);
       ctx.fillStyle="#fff"; ctx.textAlign="right"; ctx.textBaseline="middle";
       const fs = big?11:15, fs2 = big?12:17;
@@ -97,19 +99,21 @@ function shade(hex,amt){
       ctx.fillText("-"+s.d+"%", R-16, big?9:14);
       ctx.restore();
     });
+    const light = document.documentElement.getAttribute("data-theme")==="light";
     const hr = big?28:34;
     const hg=ctx.createRadialGradient(R,R-hr*0.4,2,R,R,hr);
-    hg.addColorStop(0,"#2a1550"); hg.addColorStop(1,"#0d0620");
+    if(light){ hg.addColorStop(0,"#ffffff"); hg.addColorStop(1,"#f0e8ff"); }
+    else     { hg.addColorStop(0,"#2a1550"); hg.addColorStop(1,"#0d0620"); }
     ctx.beginPath(); ctx.arc(R,R,hr,0,2*Math.PI); ctx.fillStyle=hg; ctx.fill();
-    ctx.strokeStyle="#ffcf5c"; ctx.lineWidth=3; ctx.stroke();
-    ctx.shadowColor="rgba(255,207,92,.9)"; ctx.shadowBlur=14;
-    ctx.fillStyle="#ffcf5c"; ctx.font=`bold ${big?20:24}px Segoe UI`;
+    ctx.strokeStyle= light?"#d97706":"#ffcf5c"; ctx.lineWidth=3; ctx.stroke();
+    ctx.shadowColor= light?"rgba(217,119,6,.5)":"rgba(255,207,92,.9)"; ctx.shadowBlur=14;
+    ctx.fillStyle= light?"#b45309":"#ffcf5c"; ctx.font=`bold ${big?20:24}px Segoe UI`;
     ctx.textAlign="center"; ctx.textBaseline="middle";
     ctx.fillText("?",R,R+1);
     ctx.shadowBlur=0;
   }
 
-  if(gate()) hint.textContent=`✦ Bu ay ${subInfo().spinsLeft} sirrin qalıb. Nə çıxacaq — bilinmir.`;
+  if(gate()) hint.textContent=`✦ Bu ay ${subInfo().spinsLeft} fırlatma haqqın qalıb. Nə çıxacaq — bilinmir.`;
 
   btn.onclick=()=>{
     if(spinning) return;
@@ -137,13 +141,13 @@ function shade(hex,amt){
 
     spinning=true; btn.disabled=true;
     consumeSpin();
-    btn.textContent="✦ Sirr açılır...";
+    btn.textContent="✦ Çarx fırlanır...";
     document.querySelector(".wheel-outer").classList.add("spinning");
     cv.style.transform = `rotate(${absAngle}deg)`;
 
     setTimeout(()=>{
       spinning=false; btn.disabled=false;
-      btn.textContent="🔮 Sirri aç";
+      btn.textContent="🔮 Çarxı fırlat";
       document.querySelector(".wheel-outer").classList.remove("spinning");
       /* 3) KUPON — həmin qalibdən, ID ilə bağlı */
       const catName = winner.catKey && DATA[winner.catKey] ? DATA[winner.catKey].name : DATA[curKey].name;
@@ -157,8 +161,8 @@ function shade(hex,amt){
       q("modal").classList.remove("hidden");
       const s=subInfo();
       hint.textContent = s.canSpin
-        ? `✦ Bu ay ${s.spinsLeft} sirrin qalıb.`
-        : `Bu ayki sirlərin bitdi. Yeniləmə: ${s.renewText}`;
+        ? `✦ Bu ay ${s.spinsLeft} fırlatma haqqın qalıb.`
+        : `Bu ayki fırlatma haqqın bitdi. Yeniləmə: ${s.renewText}`;
     },5200);
   }
 
@@ -166,4 +170,8 @@ function shade(hex,amt){
     q("modal").classList.add("hidden");
     gate();
   };
+
+  /* tema dəyişəndə çarxı yenidən çək */
+  new MutationObserver(()=>{ if(curKey) draw(); })
+    .observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 })();

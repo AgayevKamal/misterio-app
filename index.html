@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Misterio — Sürpriz endirim kuponları</title>
+<script src="theme.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
 </head>
@@ -23,6 +24,7 @@
     <a href="pricing.html">Qiymət</a>
     <a href="add-company.html">Şirkət əlavə et</a>
   </nav>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Tema">☀️</button>
   <a class="avatar" href="profile.html" title="Profil">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
       <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
@@ -32,15 +34,15 @@
 <main>
   <!-- QONAQ üçün hero -->
   <section class="hero" id="heroGuest">
-    <div class="badge">🔮 Sirli endirim platforması</div>
+    <div class="badge">🔮 Sürpriz endirim platforması</div>
     <h1>Bu gün səni <span class="grad">nə gözləyir?</span></h1>
     <p class="lead">Çarxın arxasında nə gizlənir — bilmirsən. Bakının onlarla məkanından biri, gözlənilməz bir endirim.
-       Ayda 3 sirr — cəmi 9.90 AZN.</p>
+       Ayda 3 fırlatma — cəmi 9.90 AZN.</p>
     <div class="row">
-      <a class="btn big" href="pricing.html">Sirri aç 🔮</a>
+      <a class="btn big" href="pricing.html">Çarxı fırlat 🔮</a>
       <a class="btn ghost big" id="signupBtn" href="auth.html?tab=signup">Hesab yarat</a>
     </div>
-    <p class="hint">Sirri açmaq üçün hesab və aktiv abunəlik tələb olunur.</p>
+    <p class="hint">Çarxı fırlatmaq üçün hesab və aktiv abunəlik tələb olunur.</p>
   </section>
 
   <!-- İSTİFADƏÇİ üçün hero -->
@@ -48,7 +50,7 @@
     <div class="badge" id="uBadge">✦ Xoş gəldin</div>
     <h1 id="uName">İstifadəçi</h1>
     <div class="stat-grid">
-      <div class="stat"><div class="s-ic">🎡</div><div class="s-val" id="sSpins">0</div><div class="s-lbl">Qalan sirr</div></div>
+      <div class="stat"><div class="s-ic">🎡</div><div class="s-val" id="sSpins">0</div><div class="s-lbl">Qalan fırlatma</div></div>
       <div class="stat"><div class="s-ic" id="sSubIc">🔒</div><div class="s-val" id="sSub">Deaktiv</div><div class="s-lbl">Abunəlik statusu</div></div>
       <div class="stat"><div class="s-ic">📅</div><div class="s-val small-val" id="sRenew">—</div><div class="s-lbl">Növbəti yenilənmə</div></div>
     </div>
@@ -59,22 +61,22 @@
   <!-- 3 izahat bloku (yalnız qonaq) -->
   <section class="wrap" id="infoBlocks">
     <div class="info-grid">
-      <div class="card info"><h3>🔮 Ayda 3 sirr</h3><p>Hər ay 3 dəfə çarxı fırlada bilərsən. Nə çıxacağını heç kim bilmir — bəlkə də gözlədiyindən yaxşısı.</p></div>
-      <div class="card info"><h3>💳 9.90 AZN / ay</h3><p>Aylıq təkrarlanan abunəlik. Free trial yoxdur — qoşulduğun gün ilk sirrini aça bilərsən.</p></div>
-      <div class="card info"><h3>✨ Avtomatik yenilənmə</h3><p>3 sirr bitəndə növbəti ay hesabın avtomatik yenilənir. İstədiyin vaxt ləğv edə bilərsən.</p></div>
+      <div class="card info"><h3>🔮 Ayda 3 fırlatma</h3><p>Hər ay 3 dəfə çarxı fırlada bilərsən. Nə çıxacağını əvvəlcədən heç kim bilmir.</p></div>
+      <div class="card info"><h3>💳 9.90 AZN / ay</h3><p>Aylıq təkrarlanan abunəlik. Free trial yoxdur — qoşulduğun gün ilk fırlatmanı edə bilərsən.</p></div>
+      <div class="card info"><h3>✨ Avtomatik yenilənmə</h3><p>3 fırlatma bitəndə növbəti ay hesabın avtomatik yenilənir. İstədiyin vaxt ləğv edə bilərsən.</p></div>
     </div>
   </section>
 
   <section class="wrap">
-    <h2 class="sec-title">Sirr necə açılır?</h2>
+    <h2 class="sec-title">Necə işləyir?</h2>
     <div class="steps">
       <div class="step"><div class="num">1</div><div class="ic">👤</div><h3>Hesab yarat</h3>
         <p>Email ilə qeydiyyatdan keç və poçtuna gələn 6 rəqəmli kodla hesabını təsdiqlə.</p></div>
       <div class="step"><div class="num">2</div><div class="ic">💳</div><h3>Abunə ol</h3>
-        <p>9.90 AZN/ay ödə və ayda 3 sirr açmaq hüququ qazan.</p></div>
+        <p>9.90 AZN/ay ödə və ayda 3 fırlatma hüququ qazan.</p></div>
       <div class="step"><div class="num">3</div><div class="ic">🔮</div><h3>Çarxı fırlat</h3>
         <p>Kateqoriya seç (və ya "Hamısı") — çarx təsadüfi dayanır. Nəticəni əvvəlcədən heç kim bilmir.</p></div>
-      <div class="step"><div class="num">4</div><div class="ic">🎟️</div><h3>Sirri istifadə et</h3>
+      <div class="step"><div class="num">4</div><div class="ic">🎟️</div><h3>Kuponu istifadə et</h3>
         <p>Kupon "Kuponlarım"a düşür. Kassada kodu göstər — hər kupon 1 dəfəlikdir.</p></div>
     </div>
   </section>
@@ -82,12 +84,12 @@
   <section class="wrap">
     <h2 class="sec-title">Kateqoriyalar</h2>
     <div class="cats" id="catsPreview"></div>
-    <p class="hint center">Sirli çarx yalnız hesaba daxil olduqdan sonra açılır.</p>
+    <p class="hint center">Çarx yalnız hesaba daxil olduqdan sonra açılır.</p>
   </section>
 
   <section class="wrap cta">
     <h2>Sənə nə qismət olacaq?</h2>
-    <a class="btn big" id="ctaBtn" href="pricing.html">Sirri aç 🔮</a>
+    <a class="btn big" id="ctaBtn" href="pricing.html">İndi başla 🔮</a>
   </section>
 </main>
 
@@ -122,18 +124,18 @@ if(u && u.verified){
   q("sRenew").textContent=s.active?s.renewText:"—";
   const acts=q("uActions");
   if(s.canSpin){
-    acts.innerHTML=`<a class="btn big" href="spin.html">Sirri aç 🔮</a>
+    acts.innerHTML=`<a class="btn big" href="spin.html">Çarxı fırlat 🔮</a>
                     <a class="btn ghost big" href="profile.html">Kuponlarım</a>`;
-    q("uHint").textContent=`Bu ay ${s.spinsLeft} sirrin qalıb.`;
+    q("uHint").textContent=`Bu ay ${s.spinsLeft} fırlatma haqqın qalıb.`;
   } else if(s.active){
-    acts.innerHTML=`<a class="btn big" href="pricing.html">Əlavə sirr al</a>
+    acts.innerHTML=`<a class="btn big" href="pricing.html">Əlavə fırlatma al</a>
                     <a class="btn ghost big" href="profile.html">Kuponlarım</a>`;
-    q("uHint").innerHTML=`⚠️ Bu ayki sirlərin bitib. Yeniləmə tarixi: <b>${s.renewText}</b>`;
+    q("uHint").innerHTML=`⚠️ Bu ayki fırlatma haqqın bitib. Yeniləmə tarixi: <b>${s.renewText}</b>`;
   } else {
     acts.innerHTML=`<a class="btn big" href="pricing.html">Abunə ol — 9.90 AZN/ay</a>`;
-    q("uHint").textContent="Sirri açmaq üçün abunəlik aktiv olmalıdır.";
+    q("uHint").textContent="Fırlatmaq üçün abunəlik aktiv olmalıdır.";
   }
-  q("ctaBtn").textContent = s.canSpin ? "Sirri aç 🔮" : "Abunəliyə bax";
+  q("ctaBtn").textContent = s.canSpin ? "Çarxı fırlat 🔮" : "Abunəliyə bax";
   q("ctaBtn").href = s.canSpin ? "spin.html" : "pricing.html";
 }
 </script>

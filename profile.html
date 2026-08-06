@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Profil — Misterio</title>
+<script src="theme.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
 </head>
@@ -20,6 +21,7 @@
     <span class="logo-txt">Misterio</span>
   </a>
   <nav class="nav"><a href="pricing.html">Qiymət</a><a href="add-company.html">Şirkət əlavə et</a></nav>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Tema">☀️</button>
   <a class="avatar" href="profile.html" title="Profil">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
       <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
@@ -58,7 +60,7 @@
 
   <section class="wrap">
     <h2 class="sec-title">Kuponlarım</h2>
-    <p class="hint" style="margin:-8px 0 16px">Hər kart bir sirri saxlayır — açmaq üçün "Sirri aç" düyməsinə bas.</p>
+    <p class="hint" style="margin:-8px 0 16px">Detalları və kupon kodunu görmək üçün "Bax" düyməsinə bas.</p>
     <div id="coupons" class="coupons"></div>
   </section>
 </main>

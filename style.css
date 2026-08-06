@@ -4,24 +4,50 @@
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   /* dərinlik */
-  --bg0:#07040f;          /* ən tünd */
-  --bg1:#120a24;          /* tünd bənövşəyi */
+  --bg0:#07040f;
+  --bg1:#120a24;
   --bg2:#1b0f38;
-  --panel:rgba(28,16,56,.72);
-  --panel-2:rgba(38,22,74,.78);
-  --line:rgba(168,130,255,.18);
+  --panel:rgba(32,19,64,.82);
+  --panel-2:rgba(44,26,86,.86);
+  --line:rgba(190,155,255,.30);
   /* vurğular */
-  --gold:#ffcf5c;
-  --gold-2:#ff9d3d;
-  --neon:#a855ff;
-  --neon-2:#6d3bff;
-  --pink:#ff4d8d;
-  --cyan:#3ddcff;
-  --ink:#f3eeff;
-  --soft:#a99ec9;
-  --ok:#3ddc97;
-  --warn:#ffb547;
-  --danger:#ff5f7e;
+  --gold:#ffd76b;
+  --gold-2:#ffa64d;
+  --neon:#b366ff;
+  --neon-2:#7d4dff;
+  --pink:#ff5f9e;
+  --cyan:#5ce1ff;
+  --ink:#ffffff;          /* əsas mətn — tam ağ */
+  --ink-2:#ece5ff;        /* ikinci dərəcəli */
+  --soft:#c9bff0;         /* köməkçi mətn — əvvəl #a99ec9 idi */
+  --ok:#4dffab;
+  --warn:#ffc766;
+  --danger:#ff7b95;
+  --shadow:0 12px 34px rgba(0,0,0,.45);
+  --star-op:.55;
+}
+/* ---------- LIGHT MODE ---------- */
+html[data-theme="light"]{
+  --bg0:#f4f0ff;
+  --bg1:#ffffff;
+  --bg2:#efe8ff;
+  --panel:rgba(255,255,255,.92);
+  --panel-2:rgba(250,246,255,.96);
+  --line:rgba(120,70,200,.20);
+  --gold:#b8860b;
+  --gold-2:#d97706;
+  --neon:#7c3aed;
+  --neon-2:#6d28d9;
+  --pink:#db2777;
+  --cyan:#0891b2;
+  --ink:#150b2e;
+  --ink-2:#2a1a4d;
+  --soft:#5b4b7d;
+  --ok:#0f9d58;
+  --warn:#b45309;
+  --danger:#dc2626;
+  --shadow:0 10px 30px rgba(90,50,160,.14);
+  --star-op:0;
 }
 html{scroll-behavior:smooth}
 body{
@@ -39,6 +65,14 @@ body::before{
     radial-gradient(ellipse 60% 50% at 90% 20%, #5b1f6b 0%, transparent 55%),
     radial-gradient(ellipse 70% 60% at 5% 70%, #1d1160 0%, transparent 60%),
     linear-gradient(180deg,#0b0618 0%,#120a24 40%,#07040f 100%);
+  transition:opacity .35s;
+}
+html[data-theme="light"] body::before{
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, #e9d8ff 0%, transparent 62%),
+    radial-gradient(ellipse 60% 50% at 92% 18%, #ffe0f0 0%, transparent 58%),
+    radial-gradient(ellipse 70% 60% at 5% 72%, #dbe4ff 0%, transparent 62%),
+    linear-gradient(180deg,#faf7ff 0%,#f2ecff 45%,#f7f4ff 100%);
 }
 body::after{
   content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.55;
@@ -55,14 +89,17 @@ body::after{
     radial-gradient(1.6px 1.6px at 95% 12%, #ffe9a8, transparent);
   background-repeat:no-repeat;
   animation:twinkle 5.5s ease-in-out infinite alternate;
+  opacity:var(--star-op);
 }
-@keyframes twinkle{0%{opacity:.35}100%{opacity:.75}}
+@keyframes twinkle{0%{opacity:calc(var(--star-op)*.6)}100%{opacity:var(--star-op)}}
+html[data-theme="light"] body::after{display:none}
 a{text-decoration:none;color:inherit}
 
 /* ---------------- HEADER ---------------- */
 .hdr{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;
   padding:12px 20px;
   background:linear-gradient(100deg,rgba(18,10,36,.92),rgba(45,20,80,.92));
+  transition:background .3s;
   border-bottom:1px solid var(--line);
   backdrop-filter:blur(14px);
   box-shadow:0 8px 30px rgba(0,0,0,.55)}
@@ -433,3 +470,181 @@ main{flex:1;width:100%;position:relative;z-index:1}
 .wheel-outer.spinning{animation:rimSpin 2s linear infinite;
   box-shadow:0 0 90px rgba(255,207,92,.75),0 0 160px rgba(168,85,255,.5),inset 0 0 30px rgba(0,0,0,.5)}
 .wheel-box:has(.spinning)::before{animation:auraPulse 1s ease-in-out infinite alternate}
+
+/* ============================================
+   LIGHT MODE — komponent düzəlişləri
+   ============================================ */
+html[data-theme="light"] .hdr{
+  background:linear-gradient(100deg,#6d28d9,#9333ea 60%,#c026d3);
+  box-shadow:0 6px 24px rgba(120,60,200,.25)}
+html[data-theme="light"] .logo-txt{
+  background:linear-gradient(90deg,#fff,#ffe9a8 65%,#f0d9ff)}
+html[data-theme="light"] .nav a{color:rgba(255,255,255,.88)}
+html[data-theme="light"] .nav a:hover,
+html[data-theme="light"] .nav a.on{color:#ffe9a8;border-bottom-color:#ffe9a8;
+  text-shadow:0 0 12px rgba(255,233,168,.6)}
+html[data-theme="light"] .avatar{
+  background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5)}
+
+html[data-theme="light"] .card,
+html[data-theme="light"] .cat,
+html[data-theme="light"] .step,
+html[data-theme="light"] .stat,
+html[data-theme="light"] .welcome,
+html[data-theme="light"] .block-box,
+html[data-theme="light"] .faq details,
+html[data-theme="light"] .sw-btn{
+  background:var(--panel);box-shadow:var(--shadow)}
+
+html[data-theme="light"] .hero h1{text-shadow:none}
+html[data-theme="light"] .hero::before{
+  background:radial-gradient(circle,rgba(160,90,255,.18),transparent 68%)}
+html[data-theme="light"] .badge{
+  color:#7c3aed;background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.3);
+  box-shadow:0 0 20px rgba(124,58,237,.12)}
+html[data-theme="light"] .grad,
+html[data-theme="light"] .s-val,
+html[data-theme="light"] .win,
+html[data-theme="light"] .pc-num,
+html[data-theme="light"] .extra-price,
+html[data-theme="light"] .ftr-logo{
+  background:linear-gradient(92deg,#7c3aed,#db2777 60%,#c026d3);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-theme="light"] .card.info h3,
+html[data-theme="light"] .step h3,
+html[data-theme="light"] .extra-card h3,
+html[data-theme="light"] .cat.all .nm{color:#7c3aed}
+html[data-theme="light"] .card.info p,
+html[data-theme="light"] .step p,
+html[data-theme="light"] .lead,
+html[data-theme="light"] .sub,
+html[data-theme="light"] .hint,
+html[data-theme="light"] .cat .cnt,
+html[data-theme="light"] .s-lbl,
+html[data-theme="light"] .pf-mail,
+html[data-theme="light"] .faq p{color:var(--soft)}
+html[data-theme="light"] .pc-list li{color:#2a1a4d}
+
+html[data-theme="light"] .sec-title::before{
+  background:linear-gradient(180deg,#f59e0b,#7c3aed);box-shadow:0 0 10px rgba(245,158,11,.4)}
+html[data-theme="light"] .step .num{
+  background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;
+  box-shadow:0 3px 12px rgba(217,119,6,.4)}
+html[data-theme="light"] .cat:hover{box-shadow:0 16px 34px rgba(124,58,237,.2)}
+html[data-theme="light"] .cat.active{border-color:#7c3aed;
+  box-shadow:0 0 0 1px rgba(124,58,237,.35),0 14px 32px rgba(124,58,237,.2)}
+html[data-theme="light"] .cat.all{
+  background:linear-gradient(160deg,#fff,#fdf3e0)}
+html[data-theme="light"] .cat .ic,
+html[data-theme="light"] .step .ic,
+html[data-theme="light"] .s-ic,
+html[data-theme="light"] .sec-ic,
+html[data-theme="light"] .bb-ic{filter:none}
+
+html[data-theme="light"] .form input,
+html[data-theme="light"] .form select{
+  background:#fff;color:var(--ink);border-color:rgba(120,70,200,.28)}
+html[data-theme="light"] .form input::placeholder{color:#9d92b8}
+html[data-theme="light"] .form select option{background:#fff;color:var(--ink)}
+html[data-theme="light"] .form input:focus,
+html[data-theme="light"] .form select:focus{
+  border-color:#7c3aed;box-shadow:0 0 0 4px rgba(124,58,237,.12)}
+
+html[data-theme="light"] .modal{background:rgba(40,20,70,.45)}
+html[data-theme="light"] .modal-card{
+  background:#fff;border-color:rgba(120,70,200,.22);
+  box-shadow:0 30px 70px rgba(60,30,110,.28)}
+html[data-theme="light"] .modal-card::before{
+  background:linear-gradient(130deg,rgba(245,158,11,.5),transparent 40%,rgba(124,58,237,.45))}
+html[data-theme="light"] .code{
+  background:rgba(124,58,237,.07);border-color:rgba(217,119,6,.55);
+  color:#b45309;text-shadow:none}
+html[data-theme="light"] .terms{color:var(--soft)}
+html[data-theme="light"] .confetti{filter:none}
+
+html[data-theme="light"] .coupon{
+  background:linear-gradient(165deg,#fff,#faf6ff);
+  border-color:rgba(120,70,200,.2);box-shadow:var(--shadow)}
+html[data-theme="light"] .coupon:hover{
+  border-color:rgba(217,119,6,.5);box-shadow:0 20px 42px rgba(124,58,237,.2)}
+html[data-theme="light"] .coupon::before{
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(217,119,6,.12) 40deg,transparent 90deg)}
+html[data-theme="light"] .c-initial{
+  box-shadow:0 0 0 3px rgba(217,119,6,.2),0 6px 20px rgba(124,58,237,.35)}
+html[data-theme="light"] .c-initial::after{color:#d97706;filter:none}
+html[data-theme="light"] .c-status{
+  background:rgba(15,157,88,.1);color:#0f9d58;border-color:rgba(15,157,88,.3)}
+html[data-theme="light"] .empty{background:var(--panel)}
+
+html[data-theme="light"] .price-card{
+  background:linear-gradient(165deg,#fff,#fdfaff);
+  border-color:rgba(217,119,6,.4);
+  box-shadow:0 22px 50px rgba(90,50,160,.18)}
+html[data-theme="light"] .pc-tag{
+  background:linear-gradient(100deg,#f59e0b,#d97706);color:#fff;
+  box-shadow:0 4px 16px rgba(217,119,6,.45)}
+html[data-theme="light"] .pc-num{filter:none}
+html[data-theme="light"] .pc-cur{color:#d97706}
+html[data-theme="light"] .active-badge{
+  background:rgba(15,157,88,.09);border-color:rgba(15,157,88,.35)}
+html[data-theme="light"] .faq summary::before{color:#d97706}
+html[data-theme="light"] .pill{
+  background:rgba(124,58,237,.09);color:#6d28d9;border-color:rgba(124,58,237,.25)}
+html[data-theme="light"] .pill.ok{
+  background:rgba(15,157,88,.1);color:#0f9d58;border-color:rgba(15,157,88,.3)}
+html[data-theme="light"] .sub-state.on{
+  background:rgba(15,157,88,.1);border-color:rgba(15,157,88,.35)}
+html[data-theme="light"] .sub-state.off{
+  background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.3)}
+html[data-theme="light"] .warn{
+  background:rgba(180,83,9,.09);border-color:rgba(180,83,9,.3)}
+html[data-theme="light"] .err{
+  background:rgba(220,38,38,.08);color:#dc2626;border-color:rgba(220,38,38,.3)}
+html[data-theme="light"] .lock-msg{
+  background:rgba(180,83,9,.09);border-color:rgba(180,83,9,.3)}
+html[data-theme="light"] .demo-mail{
+  background:rgba(124,58,237,.07);border-color:rgba(124,58,237,.35)}
+html[data-theme="light"] .code-inline{color:#b45309;text-shadow:none}
+html[data-theme="light"] .comp-row{background:rgba(124,58,237,.06)}
+html[data-theme="light"] .disc-pill{
+  background:linear-gradient(100deg,#f59e0b,#d97706);color:#fff;
+  box-shadow:0 3px 12px rgba(217,119,6,.35)}
+html[data-theme="light"] .pay-fake{background:#faf7ff}
+html[data-theme="light"] .btn.ghost{
+  background:rgba(124,58,237,.07);color:#6d28d9;border-color:rgba(124,58,237,.35)}
+html[data-theme="light"] .btn.ghost:hover{background:rgba(124,58,237,.14);box-shadow:none}
+html[data-theme="light"] .btn.gold{
+  background:linear-gradient(100deg,#f59e0b,#d97706);color:#fff}
+html[data-theme="light"] .link{color:#b45309}
+html[data-theme="light"] .link:hover{text-shadow:none;text-decoration:underline}
+html[data-theme="light"] .logo svg{filter:none}
+html[data-theme="light"] .wheel-outer{
+  box-shadow:0 0 44px rgba(124,58,237,.35),0 0 90px rgba(217,119,6,.15),inset 0 0 24px rgba(0,0,0,.25)}
+html[data-theme="light"] .wheel-box::before{
+  background:radial-gradient(circle,rgba(124,58,237,.20),rgba(245,158,11,.08) 45%,transparent 70%)}
+html[data-theme="light"] #wheel{background:#fff}
+html[data-theme="light"] .pointer{
+  border-top-color:#d97706;filter:drop-shadow(0 3px 8px rgba(180,83,9,.5))}
+html[data-theme="light"] .ftr{
+  background:linear-gradient(180deg,rgba(245,240,255,.6),rgba(238,230,255,.95))}
+html[data-theme="light"] .ftr div:not(.ftr-logo){color:var(--soft)}
+html[data-theme="light"] .pf-av{box-shadow:0 6px 22px rgba(124,58,237,.4)}
+html[data-theme="light"] .sw-btn{color:var(--soft)}
+html[data-theme="light"] .sw-btn.active{color:#fff}
+
+/* ---------- KUPON KARTI: şəbəkə adı ---------- */
+.c-shop{position:relative;font-size:15px;font-weight:800;line-height:1.25;
+  color:var(--ink);max-width:100%;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;word-break:break-word;hyphens:auto}
+.c-cat{position:relative;font-size:11.5px;color:var(--soft);font-weight:600;margin-top:-6px}
+
+/* ---------- TEMA DÜYMƏSİ ---------- */
+.theme-btn{width:42px;height:42px;border-radius:50%;cursor:pointer;flex:0 0 auto;
+  display:grid;place-items:center;font-size:18px;line-height:1;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);
+  color:#fff;transition:.28s;margin-right:10px}
+.theme-btn:hover{transform:rotate(-18deg) scale(1.1);
+  background:rgba(255,255,255,.22);box-shadow:0 0 20px rgba(255,215,107,.5)}
+.theme-btn:active{transform:scale(.94)}
+@media(max-width:430px){.theme-btn{width:36px;height:36px;font-size:15px;margin-right:6px}}
