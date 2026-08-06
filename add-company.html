@@ -14,7 +14,7 @@
     <svg width="38" height="38" viewBox="0 0 48 48" aria-hidden="true">
       <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0" stop-color="#ff5f6d"/><stop offset="1" stop-color="#7b2ff7"/></linearGradient></defs>
-      <circle cx="24" cy="24" r="21" fill="#7b2ff7"/>
+      <circle cx="24" cy="24" r="21" fill="url(#lg)"/>
       <circle cx="24" cy="24" r="21" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 5"/>
       <path d="M24 9 L28 20 L39 20 L30 27 L33 38 L24 31 L15 38 L18 27 L9 20 L20 20 Z" fill="#fff" fill-opacity=".95"/>
       <circle cx="24" cy="24" r="4" fill="#7b2ff7"/></svg>
@@ -96,9 +96,6 @@
   </div>
 </div>
 
-<!-- print üçün gizli sahə (PDF məzmunu) -->
-<div id="printArea" class="hidden"></div>
-
 <footer class="ftr">
   <div class="ftr-logo">Misterio</div>
   <div>info@misterio.az · +994 70 562 12 69</div>
@@ -168,16 +165,12 @@ q("signBtn").onclick=()=>{
     status:"aktiv",
     emailSent:false, smsSent:false
   };
-  /* 1) şirkəti DB-yə yaz (localStorage) + çarxa əlavə */
   addCompany({id:rec.companyId.replace("custom-",""), name:pending.name, cat:pending.cat, disc:pending.disc, phone:pending.phone});
   refreshData();
-  /* 2) müqaviləni qeyd et */
   addContract(rec);
-  /* 3) PDF generasiya (jsPDF) */
   rec.pdf = makePdf(rec);
-  /* 4) email/SMS simulyasiyası */
   rec.emailSent=true; rec.smsSent=true;
-  addContract(rec); // yenilənmiş halı saxla
+  addContract(rec);
   lastContract=rec;
 
   q("contractModal").classList.add("hidden");
@@ -224,9 +217,6 @@ function makePdf(rec){
 }
 q("dlPdf").onclick=()=>{
   if(lastContract && lastContract.pdf && window.jspdf){
-    const { jsPDF } = window.jspdf;
-    const doc=new jsPDF();
-    // yenidən yarat (datauristring-dən açmaq əvəzinə birbaşa yüklə)
     const { jsPDF:J }=window.jspdf;
     const d=new J({unit:"pt",format:"a4"}); let y=60;
     d.setFontSize(18); d.text("Misterio — Tərəfdaşlıq Müqaviləsi",40,y); y+=30;
@@ -263,4 +253,3 @@ renderList();
 </script>
 </body>
 </html>
-
