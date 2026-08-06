@@ -27,7 +27,12 @@ function addMonth(d){
   if(n.getDate()<day) n.setDate(0);
   return n;
 }
-const fmtDate = d => new Date(d).toLocaleDateString("az-AZ",{day:"2-digit",month:"long",year:"numeric"});
+const AZ_MONTHS=["yanvar","fevral","mart","aprel","may","iyun",
+                 "iyul","avqust","sentyabr","oktyabr","noyabr","dekabr"];
+const fmtDate = d => {
+  const x=new Date(d);
+  return `${x.getDate()} ${AZ_MONTHS[x.getMonth()]} ${x.getFullYear()}`;
+};
 
 /* abunəliyi normallaşdır: dövr bitibsə fırlatmaları yenilə */
 function syncSubscription(u){

@@ -131,7 +131,7 @@
       const catName = winner.catKey && DATA[winner.catKey] ? DATA[winner.catKey].name : DATA[curKey].name;
       const c={ id:Date.now(), segId:winner.id, shop:winner.n, disc:winner.d, cat:catName,
         code:"MIST-"+Math.random().toString(36).slice(2,7).toUpperCase()+"-"+Math.floor(Math.random()*90+10),
-        date:new Date().toLocaleDateString("az-AZ") };
+        date: fmtDate(new Date()) };
       const u=Session.user();
       updateUser({coupons:(u.coupons||[]).concat([c])});
       q("winTxt").textContent=`${winner.n} — ${winner.d}% endirim`;
