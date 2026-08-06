@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qiymət — Misterio</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
+</head>
+<body>
+<header class="hdr">
+  <a class="logo" href="index.html">
+    <svg width="38" height="38" viewBox="0 0 48 48" aria-hidden="true">
+      <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ff5f6d"/><stop offset="1" stop-color="#7b2ff7"/></linearGradient></defs>
+      <circle cx="24" cy="24" r="21" fill="url(#lg)"/>
+      <circle cx="24" cy="24" r="21" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 5"/>
+      <path d="M24 9 L28 20 L39 20 L30 27 L33 38 L24 31 L15 38 L18 27 L9 20 L20 20 Z" fill="#fff" fill-opacity=".95"/>
+      <circle cx="24" cy="24" r="4" fill="#7b2ff7"/></svg>
+    <span class="logo-txt">Misterio</span>
+  </a>
+  <nav class="nav"><a href="pricing.html" class="on">Qiymət</a><a href="add-company.html">Şirkət əlavə et</a></nav>
+  <a class="avatar" href="profile.html" title="Profil">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+  </a>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="badge" id="welcomeBadge">🚀 Yeni gələnlər üçün fürsət</div>
+    <h1>Hər ay <span class="grad">3 sürpriz şans</span></h1>
+    <p class="lead">İndi qoşul, ilk fırlatmanı elə bu gün et. Bakının ən yaxşı restoran, kafe,
+       kurs və co-working məkanlarından endirim kuponları səni gözləyir.</p>
+  </section>
+
+  <section class="wrap">
+    <div class="price-wrap">
+      <div class="price-card">
+        <div class="pc-tag">ƏN POPULYAR</div>
+        <div class="pc-name">Misterio Aylıq</div>
+        <div class="pc-price"><span class="pc-num">9.90</span><span class="pc-cur">AZN</span><span class="pc-per">/ay</span></div>
+        <div class="pc-sub">aylıq təkrarlanan ödəniş</div>
+        <ul class="pc-list">
+          <li>✅ <b>Ayda 3 sürpriz fırlatma</b></li>
+          <li>✅ Bütün kateqoriyalara giriş (Restoran, Coffeeshop, Kurslar, Co-working, Anticafe, Kitab)</li>
+          <li>✅ "Hamısı" çarxı — bütün məkanlar bir çarxda</li>
+          <li>✅ Qazandığın kuponlar profilində saxlanılır</li>
+          <li>✅ 10%-dən 35%-ə qədər endirimlər</li>
+          <li>✅ İstədiyin vaxt ləğv edə bilərsən</li>
+        </ul>
+        <button class="btn big full" id="subBtn">İndi qoşul və endirim qazan</button>
+        <p class="pc-note" id="subNote">Free trial yoxdur — abunəlik dərhal aktivləşir.</p>
+      </div>
+
+      <div class="price-side">
+        <div class="card info"><h3>🎯 Niyə Misterio?</h3>
+          <p>Adi endirim saytlarında nə alacağını əvvəlcədən bilirsən. Burada isə hər fırlatma bir sürprizdir —
+             və çox vaxt gözlədiyindən daha yaxşı çıxır.</p></div>
+        <div class="card info"><h3>💸 Bir kupon abunəliyi ödəyir</h3>
+          <p>Orta hesabla bir restoran endirimi 15-30 AZN qənaət deməkdir. Ayda 3 kupon — abunəlik özünü ilk gün çıxarır.</p></div>
+        <div class="card info"><h3>🔁 Ləğvetmə şərtləri</h3>
+          <p>Abunəlik hər ay avtomatik yenilənir. Profil səhifəsindən bir kliklə ləğv edə bilərsən —
+             ləğv etdikdə cari dövrün sonuna qədər fırlatmaların qalır, sonrakı ay ödəniş alınmır.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2 class="sec-title">Əlavə fırlatma lazımdır?</h2>
+    <div class="card extra-card">
+      <div>
+        <h3>Tək fırlatma</h3>
+        <p class="sub">3 aylıq fırlatman bitibsə, növbəti ayı gözləmədən əlavə şans ala bilərsən.</p>
+      </div>
+      <div class="extra-right">
+        <div class="extra-price">9.90 AZN</div>
+        <button class="btn" id="extraBtn">Əlavə fırlatma al</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h2 class="sec-title">Tez-tez verilən suallar</h2>
+    <div class="faq">
+      <details><summary>Free trial varmı?</summary><p>Xeyr. Xidmət ödənişlidir — qeydiyyatdan sonra abunə olmaq lazımdır.</p></details>
+      <details><summary>3 fırlatma bitəndə nə olur?</summary><p>Növbəti ay avtomatik yenilənənə qədər fırlatma bağlanır. Yeniləmə tarixi profilində və ana səhifədə göstərilir. İstəsən əlavə fırlatma ala bilərsən.</p></details>
+      <details><summary>Kuponlar nə qədər etibarlıdır?</summary><p>Hər kupon 1 dəfəlikdir və qazanıldığı tarixdən etibarən 30 gün ərzində istifadə edilməlidir.</p></details>
+      <details><summary>Necə ləğv edim?</summary><p>Profil → Abunəlik → "Abunəliyi ləğv et". Növbəti ay ödəniş alınmır.</p></details>
+    </div>
+  </section>
+</main>
+
+<div class="modal hidden" id="payModal">
+  <div class="modal-card">
+    <div class="confetti">💳</div>
+    <h3 id="payTitle">Abunəliyi aktivləşdir</h3>
+    <p class="win">9.90 AZN</p>
+    <p class="sub" id="paySub">Aylıq təkrarlanan ödəniş. Nümunə axın — real ödəniş alınmır.</p>
+    <div class="pay-fake">
+      <div class="pay-row"><span>Kart</span><b>**** **** **** 4242</b></div>
+      <div class="pay-row"><span>Məbləğ</span><b>9.90 AZN</b></div>
+      <div class="pay-row"><span>Dövr</span><b id="payPeriod">Aylıq</b></div>
+      <div class="pay-row"><span>Hesab</span><b id="payAcc">—</b></div>
+    </div>
+    <div class="row">
+      <button class="btn ghost" id="payCancel">İmtina</button>
+      <button class="btn" id="payGo">Ödənişi təsdiqlə</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal hidden" id="okModal">
+  <div class="modal-card">
+    <div class="confetti">🎉</div>
+    <h3>Abunəliyin aktivdir!</h3>
+    <p class="win" id="okSpins">3 fırlatma</p>
+    <p class="sub" id="okRenew"></p>
+    <div class="row">
+      <a class="btn" href="spin.html">Çarxı fırlat 🎡</a>
+      <a class="btn ghost" href="profile.html">Profilim</a>
+    </div>
+  </div>
+</div>
+
+<footer class="ftr">
+  <div class="ftr-logo">Misterio</div>
+  <div>info@misterio.az · +994 70 562 12 69</div>
+  <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
+</footer>
+<script src="auth.js"></script>
+<script>
+const q=id=>document.getElementById(id);
+let mode="sub";
+
+function render(){
+  const u=Session.user();
+  if(!u||!u.verified){
+    q("subNote").textContent="Abunə olmaq üçün əvvəlcə hesab yaratmalısınız.";
+    return;
+  }
+  const s=subInfo();
+  q("payAcc").textContent=u.email;
+  if(s.active){
+    q("subBtn").textContent="Abunəliyin aktivdir ✅";
+    q("subBtn").disabled=true;
+    q("subNote").innerHTML=`Qalan fırlatma: <b>${s.spinsLeft}</b> · Yenilənmə: <b>${s.renewText}</b>`;
+  }
+}
+render();
+
+function openPay(m){
+  const u=Session.user();
+  if(!u||!u.verified){ location.href="auth.html?tab=signup&next=pricing.html"; return; }
+  mode=m;
+  q("payAcc").textContent=u.email;
+  q("payTitle").textContent = m==="sub" ? "Abunəliyi aktivləşdir" : "Əlavə fırlatma al";
+  q("payPeriod").textContent = m==="sub" ? "Aylıq (təkrarlanan)" : "Birdəfəlik";
+  q("paySub").textContent = m==="sub"
+    ? "Aylıq təkrarlanan ödəniş. Nümunə axın — real ödəniş alınmır."
+    : "Birdəfəlik ödəniş, hesabınıza +1 fırlatma əlavə olunur.";
+  q("payModal").classList.remove("hidden");
+}
+q("subBtn").onclick=()=>openPay("sub");
+q("extraBtn").onclick=()=>openPay("extra");
+q("payCancel").onclick=()=>q("payModal").classList.add("hidden");
+q("payGo").onclick=()=>{
+  q("payModal").classList.add("hidden");
+  if(mode==="sub"){
+    activateSubscription();
+    const s=subInfo();
+    q("okSpins").textContent=s.spinsLeft+" fırlatma hazırdır";
+    q("okRenew").textContent="Növbəti yenilənmə: "+s.renewText;
+  } else {
+    buyExtraSpin();
+    const s=subInfo();
+    q("okSpins").textContent="+1 fırlatma əlavə olundu ("+s.spinsLeft+" qalıb)";
+    q("okRenew").textContent="";
+  }
+  q("okModal").classList.remove("hidden");
+  render();
+};
+if(new URLSearchParams(location.search).get("welcome"))
+  q("welcomeBadge").textContent="✅ Hesabın təsdiqləndi — indi abunə ol";
+</script>
+</body>
+</html>

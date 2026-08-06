@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Şirkət əlavə et — Misterio</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
+</head>
+<body>
+<header class="hdr">
+  <a class="logo" href="index.html">
+    <svg width="38" height="38" viewBox="0 0 48 48" aria-hidden="true">
+      <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ff5f6d"/><stop offset="1" stop-color="#7b2ff7"/></linearGradient></defs>
+      <circle cx="24" cy="24" r="21" fill="url(#lg)"/>
+      <circle cx="24" cy="24" r="21" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 5"/>
+      <path d="M24 9 L28 20 L39 20 L30 27 L33 38 L24 31 L15 38 L18 27 L9 20 L20 20 Z" fill="#fff" fill-opacity=".95"/>
+      <circle cx="24" cy="24" r="4" fill="#7b2ff7"/></svg>
+    <span class="logo-txt">Misterio</span>
+  </a>
+  <nav class="nav"><a href="pricing.html">Qiymət</a><a href="add-company.html" class="on">Şirkət əlavə et</a></nav>
+  <a class="avatar" href="profile.html" title="Profil">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+      <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+  </a>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="badge">🤝 Tərəfdaş ol</div>
+    <h1>Şirkətini <span class="grad">çarxa əlavə et</span></h1>
+    <p class="lead">Məkanını Misterio çarxına əlavə et — minlərlə istifadəçi endirim kuponunu qazanıb
+       birbaşa sənə gəlsin.</p>
+  </section>
+
+  <section class="wrap">
+    <div class="add-grid">
+      <form class="card form" id="compForm">
+        <h3 class="sec-title">Şirkət məlumatları</h3>
+        <label>Şirkət / restoran adı *
+          <input id="cName" required maxlength="28" placeholder="məs. Dolma House"></label>
+        <label>Kateqoriya *
+          <select id="cCat" required></select></label>
+        <label>Endirim faizi (%) *
+          <input id="cDisc" type="number" min="5" max="90" required placeholder="məs. 20"></label>
+        <label>Əlaqə nömrəsi *
+          <input id="cPhone" required placeholder="+994 __ ___ __ __"></label>
+        <div class="err hidden" id="cErr"></div>
+        <button class="btn" type="submit">Çarxa əlavə et</button>
+      </form>
+
+      <div class="side-col">
+        <div class="card info"><h3>ℹ️ Necə işləyir?</h3>
+          <p>Formanı doldurduqdan sonra şirkətin dərhal seçdiyin kateqoriyaya və çarxa yeni seqment
+             kimi əlavə olunur. "Hamısı" çarxında da görünəcək.</p></div>
+        <div class="card info"><h3>📋 Əlavə edilmiş şirkətlər</h3>
+          <div id="compList" class="comp-list"></div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal hidden" id="okModal">
+  <div class="modal-card">
+    <div class="confetti">✅</div>
+    <h3>Şirkət əlavə olundu!</h3>
+    <p class="win" id="okTxt"></p>
+    <p class="sub" id="okSub"></p>
+    <div class="row">
+      <button class="btn ghost" id="okMore">Daha bir şirkət</button>
+      <a class="btn" href="spin.html">Çarxda gör 🎡</a>
+    </div>
+  </div>
+</div>
+
+<footer class="ftr">
+  <div class="ftr-logo">Misterio</div>
+  <div>info@misterio.az · +994 70 562 12 69</div>
+  <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
+</footer>
+<script src="auth.js"></script>
+<script src="data.js"></script>
+<script>
+const q=id=>document.getElementById(id);
+const sel=q("cCat");
+CATEGORY_LIST.forEach(c=>{
+  const o=document.createElement("option"); o.value=c.key; o.textContent=c.icon+" "+c.name; sel.appendChild(o);
+});
+
+function renderList(){
+  const list=customCompanies();
+  const box=q("compList");
+  if(!list.length){ box.innerHTML='<p class="sub">Hələ əlavə edilmiş şirkət yoxdur.</p>'; return; }
+  box.innerHTML="";
+  list.slice().reverse().forEach(c=>{
+    const cat=CATEGORY_LIST.find(x=>x.key===c.cat);
+    const d=document.createElement("div");
+    d.className="comp-row";
+    d.innerHTML=`<div><b>${c.name}</b><div class="sub">${cat?cat.icon+" "+cat.name:c.cat} · ${c.phone||"—"}</div></div>
+                 <span class="disc-pill">-${c.disc}%</span>`;
+    box.appendChild(d);
+  });
+}
+renderList();
+
+q("compForm").onsubmit=e=>{
+  e.preventDefault();
+  const err=q("cErr"); err.classList.add("hidden");
+  const name=q("cName").value.trim();
+  const cat=sel.value;
+  const disc=parseInt(q("cDisc").value,10);
+  const phone=q("cPhone").value.trim();
+  if(name.length<2){ err.textContent="Şirkət adı çox qısadır."; err.classList.remove("hidden"); return; }
+  if(!(disc>=5&&disc<=90)){ err.textContent="Endirim faizi 5-90 aralığında olmalıdır."; err.classList.remove("hidden"); return; }
+  if(phone.replace(/\D/g,"").length<7){ err.textContent="Əlaqə nömrəsi düzgün deyil."; err.classList.remove("hidden"); return; }
+  const exists = DATA[cat].shops.some(s=>s.n.toLowerCase()===name.toLowerCase());
+  if(exists){ err.textContent="Bu ad artıq həmin kateqoriyada mövcuddur."; err.classList.remove("hidden"); return; }
+
+  addCompany({id:Date.now(), name, cat, disc, phone});
+  refreshData();
+  const c=CATEGORY_LIST.find(x=>x.key===cat);
+  q("okTxt").textContent=`${name} — ${disc}%`;
+  q("okSub").textContent=`"${c.name}" kateqoriyasına və çarxa əlavə olundu. Ümumi seqment: ${DATA[cat].shops.length}`;
+  q("okModal").classList.remove("hidden");
+  q("compForm").reset();
+  renderList();
+};
+q("okMore").onclick=()=>q("okModal").classList.add("hidden");
+</script>
+</body>
+</html>

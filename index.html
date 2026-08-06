@@ -16,10 +16,13 @@
       <circle cx="24" cy="24" r="21" fill="url(#lg)"/>
       <circle cx="24" cy="24" r="21" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 5"/>
       <path d="M24 9 L28 20 L39 20 L30 27 L33 38 L24 31 L15 38 L18 27 L9 20 L20 20 Z" fill="#fff" fill-opacity=".95"/>
-      <circle cx="24" cy="24" r="4" fill="#7b2ff7"/>
-    </svg>
+      <circle cx="24" cy="24" r="4" fill="#7b2ff7"/></svg>
     <span class="logo-txt">Misterio</span>
   </a>
+  <nav class="nav">
+    <a href="pricing.html">Qiymət</a>
+    <a href="add-company.html">Şirkət əlavə et</a>
+  </nav>
   <a class="avatar" href="profile.html" title="Profil">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
       <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
@@ -27,16 +30,39 @@
 </header>
 
 <main>
-  <section class="hero">
+  <!-- QONAQ üçün hero -->
+  <section class="hero" id="heroGuest">
     <div class="badge">🎁 Sürpriz endirim platforması</div>
     <h1>Misterio — <span class="grad">sürprizin ünvanı</span></h1>
     <p class="lead">Restoranlardan kitab mağazalarına qədər onlarla məkanın endirim kuponu bir çarxda.
-       Hesab yarat, çarxı fırlat və qazandığın kuponu kassada göstər.</p>
+       Ayda 3 sürpriz şans — cəmi 9.90 AZN.</p>
     <div class="row">
-      <a class="btn big" href="spin.html">Çarxı fırlat 🎡</a>
-      <a class="btn ghost big" href="auth.html">Hesab yarat</a>
+      <a class="btn big" href="pricing.html">İndi qoşul və endirim qazan</a>
+      <a class="btn ghost big" id="signupBtn" href="auth.html?tab=signup">Hesab yarat</a>
     </div>
-    <p class="hint">Çarxı fırlatmaq üçün hesab tələb olunur.</p>
+    <p class="hint">Çarxı fırlatmaq üçün hesab və aktiv abunəlik tələb olunur.</p>
+  </section>
+
+  <!-- İSTİFADƏÇİ üçün hero -->
+  <section class="hero hidden" id="heroUser">
+    <div class="badge" id="uBadge">👋 Xoş gəldin</div>
+    <h1 id="uName">İstifadəçi</h1>
+    <div class="stat-grid">
+      <div class="stat"><div class="s-ic">🎡</div><div class="s-val" id="sSpins">0</div><div class="s-lbl">Qalan fırlatma</div></div>
+      <div class="stat"><div class="s-ic" id="sSubIc">🔒</div><div class="s-val" id="sSub">Deaktiv</div><div class="s-lbl">Abunəlik statusu</div></div>
+      <div class="stat"><div class="s-ic">📅</div><div class="s-val small-val" id="sRenew">—</div><div class="s-lbl">Növbəti yenilənmə</div></div>
+    </div>
+    <div class="row" id="uActions"></div>
+    <p class="hint" id="uHint"></p>
+  </section>
+
+  <!-- 3 izahat bloku (yalnız qonaq) -->
+  <section class="wrap" id="infoBlocks">
+    <div class="info-grid">
+      <div class="card info"><h3>🎁 Ayda 3 fırlatma</h3><p>Abunəlik ilə hər ay 3 sürpriz şans qazanırsan. Hər fırlatma yeni bir endirim kuponu deməkdir.</p></div>
+      <div class="card info"><h3>💳 9.90 AZN / ay</h3><p>Aylıq təkrarlanan abunəlik. Free trial yoxdur — qoşulduğun gün ilk fırlatmanı edə bilərsən.</p></div>
+      <div class="card info"><h3>🔄 Avtomatik yenilənmə</h3><p>3 fırlatma bitəndə növbəti ay hesabın avtomatik yenilənir. İstədiyin vaxt ləğv edə bilərsən.</p></div>
+    </div>
   </section>
 
   <section class="wrap">
@@ -44,10 +70,10 @@
     <div class="steps">
       <div class="step"><div class="num">1</div><div class="ic">👤</div><h3>Hesab yarat</h3>
         <p>Email ilə qeydiyyatdan keç və poçtuna gələn 6 rəqəmli kodla hesabını təsdiqlə.</p></div>
-      <div class="step"><div class="num">2</div><div class="ic">🗂️</div><h3>Kateqoriya seç</h3>
-        <p>Restoran, anticafe, co-working, kurslar, coffeeshop və ya kitab mağazaları.</p></div>
+      <div class="step"><div class="num">2</div><div class="ic">💳</div><h3>Abunə ol</h3>
+        <p>9.90 AZN/ay ödə və ayda 3 sürpriz fırlatma hüququ qazan.</p></div>
       <div class="step"><div class="num">3</div><div class="ic">🎡</div><h3>Çarxı fırlat</h3>
-        <p>Çarx təsadüfi dayanır — nəticə əvvəlcədən məlum deyil. Hər hesaba 1 pulsuz fırlatma.</p></div>
+        <p>Kateqoriya seç (və ya "Hamısı") — çarx təsadüfi dayanır, nəticə əvvəlcədən məlum deyil.</p></div>
       <div class="step"><div class="num">4</div><div class="ic">🎟️</div><h3>Kuponu istifadə et</h3>
         <p>Kupon "Kuponlarım"a düşür. Kassada kodu göstər — hər kupon 1 dəfəlikdir.</p></div>
     </div>
@@ -59,34 +85,57 @@
     <p class="hint center">Kateqoriya seçimi və çarx hesaba daxil olduqdan sonra açılır.</p>
   </section>
 
-  <section class="wrap">
-    <div class="info-grid">
-      <div class="card info"><h3>🎁 1 pulsuz fırlatma</h3><p>Hər təsdiqlənmiş hesaba bir pulsuz şans verilir. Hesab başına ayrıca sayılır.</p></div>
-      <div class="card info"><h3>💳 Əlavə fırlatma</h3><p>Növbəti fırlatmalar 9.90 ₼-dir. Ödəniş axını nümunə (demo) olaraq göstərilir.</p></div>
-      <div class="card info"><h3>🔒 Təhlükəsiz</h3><p>Məlumatlar yalnız sizin brauzerinizdə (localStorage) saxlanılır, serverə göndərilmir.</p></div>
-    </div>
-  </section>
-
   <section class="wrap cta">
     <h2>Şansını sınamağa hazırsan?</h2>
-    <a class="btn big" href="spin.html">Başla 🎉</a>
+    <a class="btn big" id="ctaBtn" href="pricing.html">İndi başla 🎉</a>
   </section>
 </main>
 
 <footer class="ftr">
   <div class="ftr-logo">Misterio</div>
-  <div>info@misterio.az · +994 50 418 27 63</div>
+  <div>info@misterio.az · +994 70 562 12 69</div>
   <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
 </footer>
 <script src="auth.js"></script>
 <script src="data.js"></script>
 <script>
-const box=document.getElementById("catsPreview");
-Object.values(DATA).forEach(v=>{
-  const d=document.createElement("a"); d.className="cat"; d.href="spin.html";
+const q=id=>document.getElementById(id);
+/* kateqoriya önizləmə */
+const box=q("catsPreview");
+Object.entries(DATA).forEach(([k,v])=>{
+  const d=document.createElement("a"); d.className="cat"+(v.isAll?" all":""); d.href="spin.html";
   d.innerHTML=`<div class="ic">${v.icon}</div><div class="nm">${v.name}</div><div class="cnt">${v.shops.length} məkan</div>`;
   box.appendChild(d);
 });
+
+/* istifadəçi statusuna görə ana səhifə */
+const u=Session.user();
+if(u && u.verified){
+  const s=subInfo();
+  q("heroGuest").classList.add("hidden");
+  q("infoBlocks").classList.add("hidden");
+  q("heroUser").classList.remove("hidden");
+  q("uName").textContent=u.name||u.email;
+  q("sSpins").textContent=s.spinsLeft;
+  q("sSub").textContent=s.active?"Aktiv":"Deaktiv";
+  q("sSubIc").textContent=s.active?"✅":"🔒";
+  q("sRenew").textContent=s.active?s.renewText:"—";
+  const acts=q("uActions");
+  if(s.canSpin){
+    acts.innerHTML=`<a class="btn big" href="spin.html">Çarxı fırlat 🎡</a>
+                    <a class="btn ghost big" href="profile.html">Kuponlarım</a>`;
+    q("uHint").textContent=`Bu ay ${s.spinsLeft} fırlatma haqqınız qalıb.`;
+  } else if(s.active){
+    acts.innerHTML=`<a class="btn big" href="pricing.html">Əlavə fırlatma al</a>
+                    <a class="btn ghost big" href="profile.html">Kuponlarım</a>`;
+    q("uHint").innerHTML=`⚠️ Bu ayki fırlatma haqqınız bitib. Yeniləmə tarixi: <b>${s.renewText}</b>`;
+  } else {
+    acts.innerHTML=`<a class="btn big" href="pricing.html">Abunə ol — 9.90 AZN/ay</a>`;
+    q("uHint").textContent="Fırlatmaq üçün abunəlik aktiv olmalıdır.";
+  }
+  q("ctaBtn").textContent = s.canSpin ? "Çarxı fırlat 🎡" : "Abunəliyə bax";
+  q("ctaBtn").href = s.canSpin ? "spin.html" : "pricing.html";
+}
 </script>
 </body>
 </html>

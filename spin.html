@@ -19,6 +19,7 @@
       <circle cx="24" cy="24" r="4" fill="#7b2ff7"/></svg>
     <span class="logo-txt">Misterio</span>
   </a>
+  <nav class="nav"><a href="pricing.html">Qiymət</a><a href="add-company.html">Şirkət əlavə et</a></nav>
   <a class="avatar" href="profile.html" title="Profil">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
       <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
@@ -28,16 +29,26 @@
 <main>
   <section class="wrap">
     <div class="welcome" id="welcome"></div>
-    <h2 class="sec-title">1. Kateqoriya seç</h2>
-    <div id="cats" class="cats"></div>
+
+    <!-- abunəlik yoxdursa / limit bitibsə -->
+    <div class="block-box hidden" id="blockBox">
+      <div class="bb-ic" id="bbIc">🔒</div>
+      <h2 id="bbTitle"></h2>
+      <p id="bbText"></p>
+      <a class="btn big" id="bbBtn" href="pricing.html">Abunə ol — 9.90 AZN/ay</a>
+    </div>
+
+    <div id="spinArea">
+      <h2 class="sec-title">1. Kateqoriya seç</h2>
+      <div id="cats" class="cats"></div>
+    </div>
   </section>
 
   <section class="wrap wheel-sec" id="wheelSec">
     <h2 class="sec-title" id="wheelTitle">2. Çarxı fırlat</h2>
     <div class="wheel-box">
       <div class="pointer"></div>
-      <div class="wheel-outer"><canvas id="wheel" width="420" height="420"></canvas></div>
-      <div id="lockMsg" class="lock-msg hidden">🔒 Növbəti fırlatma üçün ödəniş tələb olunur — 9.90 ₼</div>
+      <div class="wheel-outer"><canvas id="wheel" width="520" height="520"></canvas></div>
       <button id="spinBtn" class="btn big">🎁 Hədiyyə əldə et</button>
       <p class="hint" id="hint"></p>
     </div>
@@ -49,6 +60,7 @@
     <div class="confetti">🎉</div>
     <h3>Təbriklər!</h3>
     <p class="win" id="winTxt"></p>
+    <p class="sub" id="winCat"></p>
     <p class="sub">Kupon "Kuponlarım" bölməsinə əlavə olundu.</p>
     <div class="row">
       <a class="btn ghost" href="profile.html">Kuponlarım</a>
@@ -57,27 +69,9 @@
   </div>
 </div>
 
-<div class="modal hidden" id="payModal">
-  <div class="modal-card">
-    <div class="confetti">💳</div>
-    <h3>Ödəniş tələb olunur</h3>
-    <p class="win">9.90 ₼</p>
-    <p class="sub">Pulsuz fırlatma haqqınız istifadə olunub. Əlavə fırlatma üçün ödəniş edin (nümunə axın — real ödəniş alınmır).</p>
-    <div class="pay-fake">
-      <div class="pay-row"><span>Kart</span><b>**** **** **** 4242</b></div>
-      <div class="pay-row"><span>Məbləğ</span><b>9.90 ₼</b></div>
-      <div class="pay-row"><span>Hesab</span><b id="payAcc"></b></div>
-    </div>
-    <div class="row">
-      <button class="btn ghost" id="payCancel">İmtina</button>
-      <button class="btn" id="payGo">Ödə və fırlat</button>
-    </div>
-  </div>
-</div>
-
 <footer class="ftr">
   <div class="ftr-logo">Misterio</div>
-  <div>info@misterio.az · +994 50 418 27 63</div>
+  <div>info@misterio.az · +994 70 562 12 69</div>
   <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
 </footer>
 <script src="auth.js"></script>
