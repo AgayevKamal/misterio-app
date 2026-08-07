@@ -177,6 +177,7 @@
   <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
 </footer>
 
+<script src="db.js"></script>
 <script src="admin.js"></script>
 <script>
 const q=id=>document.getElementById(id);
@@ -195,8 +196,7 @@ if(!adminUser()){
   q("sideName").textContent=u.company||u.name||u.user;
   q("sideMail").textContent=u.email||u.user;
   q("sideAv").textContent=(u.company||u.user||"M").trim().charAt(0).toUpperCase();
-  renderDashboard();
-  renderOrders();
+  (async()=>{ await loadOrders(); renderDashboard(); renderOrders(); })();
 }
 
 q("logoutBtn").onclick=()=>{ adminLogout(); location.href="admin-login.html"; };
@@ -214,9 +214,9 @@ document.querySelectorAll(".sn-btn").forEach(b=>{
 
 /* ---- skan: nümunə + əl ilə ---- */
 const SAMPLE_CODES=["MIST-X7Q2K-24","MIST-AB91C-15","MIST-ZP38M-30","MIST-LK55N-20","MIST-RT22B-10"];
-q("simScan").onclick=()=>{
-  const code=SAMPLE_CODES[Math.floor(Math.random()*SAMPLE_CODES.length)];
-  loadCoupon(code);
+q("simScan").onclick=async()=>{
+  hideErr();
+  showErr("Skan simulyasiyası üçün istifadəçinin qazandığı real kupon kodunu daxil edin (profil → kuponlarım).");
 };
 q("loadCode").onclick=()=>{
   const v=q("manualCode").value.trim().toUpperCase();
@@ -224,9 +224,9 @@ q("loadCode").onclick=()=>{
   loadCoupon(v);
 };
 
-function loadCoupon(code){
+async function loadCoupon(code){
   hideErr();
-  const c=lookupCoupon(code);
+  const c=await lookupCoupon(code);
   if(!c){ showErr("Kupon tapılmadı və ya artıq istifadə olunub: "+code); return; }
   q("emptyCheck").classList.add("hidden");
   q("couponCheck").classList.remove("hidden");
@@ -244,14 +244,14 @@ q("orderTotal").oninput=()=>{
   q("finalAmt").textContent=(t*(1-d/100)).toFixed(2)+" AZN";
 };
 
-q("orderForm").onsubmit=e=>{
+q("orderForm").onsubmit=async e=>{
   e.preventDefault();
   const total=parseFloat(q("orderTotal").value)||0;
   const d=parseFloat(q("discPct").value)||0;
   if(total<=0){ showErr("Məbləğ düzgün deyil."); return; }
   const code=q("ccCode").textContent;
-  const ok=addOrder(code,total,d);
-  if(!ok){ showErr("Bu kupon artıq istifadə olunub."); return; }
+  const ok=await addOrder(code,total,d);
+  if(!ok){ showErr("Bu kupon artıq istifadə olunub və ya tapılmadı."); return; }
   q("couponCheck").classList.add("hidden");
   q("emptyCheck").classList.remove("hidden");
   q("manualCode").value="";

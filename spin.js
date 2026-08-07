@@ -8,9 +8,10 @@ function shade(hex,amt){
   r=Math.max(0,Math.min(255,r)); g=Math.max(0,Math.min(255,g)); b=Math.max(0,Math.min(255,b));
   return "#"+((r<<16)|(g<<8)|b).toString(16).padStart(6,"0");
 }
-(function(){
-  let user = requireAuth();
+(async function(){
+  let user = await requireAuth();
   if(!user) return;
+  await loadCompanies();
 
   const q=id=>document.getElementById(id);
   q("welcome").innerHTML = `Xoş gəldin, <b>${user.name||user.email}</b> · <a class="link" href="profile.html">Profilim</a>`;
@@ -145,7 +146,7 @@ function shade(hex,amt){
     document.querySelector(".wheel-outer").classList.add("spinning");
     cv.style.transform = `rotate(${absAngle}deg)`;
 
-    setTimeout(()=>{
+    setTimeout(async ()=>{
       spinning=false; btn.disabled=false;
       btn.textContent="🔮 Çarxı fırlat";
       document.querySelector(".wheel-outer").classList.remove("spinning");
@@ -154,8 +155,8 @@ function shade(hex,amt){
       const c={ id:Date.now(), segId:winner.id, shop:winner.n, disc:winner.d, cat:catName,
         code:"MIST-"+Math.random().toString(36).slice(2,7).toUpperCase()+"-"+Math.floor(Math.random()*90+10),
         date: fmtDate(new Date()) };
-      const u=Session.user();
-      updateUser({coupons:(u.coupons||[]).concat([c])});
+      try{ await DB.addCoupon(Session.user().id, c); }
+      catch(e){ console.error("kupon yazıla bilmədi", e); alert("Kupon bazaya yazıla bilmədi: "+e.message); }
       q("winTxt").textContent=`${winner.n} — ${winner.d}% endirim`;
       q("winCat").textContent=catName;
       q("modal").classList.remove("hidden");

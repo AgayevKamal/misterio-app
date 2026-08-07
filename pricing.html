@@ -130,6 +130,7 @@
   <div>info@misterio.az · +994 70 562 12 69</div>
   <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
 </footer>
+<script src="db.js"></script>
 <script src="auth.js"></script>
 <script>
 const q=id=>document.getElementById(id);
@@ -148,7 +149,7 @@ function render(){
     q("subNote").innerHTML=`Qalan fırlatma: <b>${s.spinsLeft}</b> · Yenilənmə: <b>${s.renewText}</b>`;
   }
 }
-render();
+(async()=>{ await loadSession(); render(); })();
 
 function openPay(m){
   const u=Session.user();
@@ -165,15 +166,15 @@ function openPay(m){
 q("subBtn").onclick=()=>openPay("sub");
 q("extraBtn").onclick=()=>openPay("extra");
 q("payCancel").onclick=()=>q("payModal").classList.add("hidden");
-q("payGo").onclick=()=>{
+q("payGo").onclick=async()=>{
   q("payModal").classList.add("hidden");
   if(mode==="sub"){
-    activateSubscription();
+    await activateSubscription();
     const s=subInfo();
     q("okSpins").textContent=s.spinsLeft+" fırlatma səni gözləyir";
     q("okRenew").textContent="Növbəti yenilənmə: "+s.renewText;
   } else {
-    buyExtraSpin();
+    await buyExtraSpin();
     const s=subInfo();
     q("okSpins").textContent="+1 fırlatma əlavə olundu ("+s.spinsLeft+" qalıb)";
     q("okRenew").textContent="";

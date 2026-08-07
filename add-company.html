@@ -47,6 +47,10 @@
           <input id="cDisc" type="number" min="5" max="90" required placeholder="məs. 20"></label>
         <label>Əlaqə nömrəsi *
           <input id="cPhone" required placeholder="+994 __ ___ __ __"></label>
+        <label>Admin paneli üçün email *
+          <input id="cEmail" type="email" required placeholder="restoran@mail.az"></label>
+        <label>Admin paneli şifrəsi *
+          <input id="cPass" type="password" required minlength="6" placeholder="ən azı 6 simvol"></label>
         <div class="err hidden" id="cErr"></div>
         <button class="btn" type="submit">Davam et → Müqavilə</button>
       </form>
@@ -102,11 +106,13 @@
   <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="db.js"></script>
 <script src="auth.js"></script>
 <script src="data.js"></script>
 <script>
 const q=id=>document.getElementById(id);
 const sel=q("cCat");
+loadCompanies().then(()=>renderList());
 CATEGORY_LIST.forEach(c=>{
   const o=document.createElement("option"); o.value=c.key; o.textContent=c.icon+" "+c.name; sel.appendChild(o);
 });
@@ -138,7 +144,11 @@ q("compForm").onsubmit=e=>{
   if(name.length<2){ err.textContent="Şirkət adı çox qısadır."; err.classList.remove("hidden"); return; }
   if(!(disc>=5&&disc<=90)){ err.textContent="Endirim faizi 5-90 aralığında olmalıdır."; err.classList.remove("hidden"); return; }
   if(phone.replace(/\D/g,"").length<7){ err.textContent="Əlaqə nömrəsi düzgün deyil."; err.classList.remove("hidden"); return; }
-  pending={name,cat,disc,phone};
+  const email=(q("cEmail")?q("cEmail").value.trim().toLowerCase():"");
+  const pass=(q("cPass")?q("cPass").value:"");
+  if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(email)){ err.textContent="Admin paneli üçün düzgün email daxil edin."; err.classList.remove("hidden"); return; }
+  if(pass.length<6){ err.textContent="Admin paneli şifrəsi ən azı 6 simvol olmalıdır."; err.classList.remove("hidden"); return; }
+  pending={name,cat,disc,phone,email,pass};
   q("contractText").innerHTML=contractHTML(pending);
   q("agreeChk").checked=false;
   q("signBtn").disabled=true;
@@ -151,26 +161,33 @@ q("contractCancel").onclick=()=>q("contractModal").classList.add("hidden");
 
 /* ---------- İmzala → sistem prosesi (simulyasiya) ---------- */
 let lastContract=null;
-q("signBtn").onclick=()=>{
+q("signBtn").onclick=async()=>{
   if(!q("agreeChk").checked || !pending) return;
+  q("signBtn").disabled=true;
   const ts=new Date();
   const rec={
     id:"C-"+ts.getTime(),
-    companyId:"custom-"+ts.getTime(),
     companyName:pending.name,
     cat:pending.cat, disc:pending.disc, phone:pending.phone,
     signedAt:ts.toISOString(),
     ip:clientIp(),
     version:CONTRACT_VERSION,
-    status:"aktiv",
-    emailSent:false, smsSent:false
+    status:"aktiv"
   };
-  addCompany({id:rec.companyId.replace("custom-",""), name:pending.name, cat:pending.cat, disc:pending.disc, phone:pending.phone});
-  refreshData();
-  addContract(rec);
+  try{
+    const row = await addCompany({
+      name:pending.name, cat:pending.cat, disc:pending.disc, phone:pending.phone,
+      email:pending.email, pass:pending.pass,
+      contractId:rec.id, signedAt:rec.signedAt
+    });
+    rec.companyId = row.id;
+  }catch(e){
+    q("contractErr").textContent="Baza xətası: "+e.message+" (bu email artıq qeydiyyatdadır?)";
+    q("contractErr").classList.remove("hidden");
+    q("signBtn").disabled=false;
+    return;
+  }
   rec.pdf = makePdf(rec);
-  rec.emailSent=true; rec.smsSent=true;
-  addContract(rec);
   lastContract=rec;
 
   q("contractModal").classList.add("hidden");
@@ -180,7 +197,8 @@ q("signBtn").onclick=()=>{
     `<div>📄 Müqavilə: <b>${rec.id}</b> · ${CONTRACT_VERSION}</div>
      <div>🕒 İmzalanma: ${ts.toLocaleString("az-AZ")}</div>
      <div>🌐 IP: ${rec.ip}</div>
-     <div>✅ DB statusu: <b>aktiv</b> · 📧 email + 📱 SMS göndərildi</div>`;
+     <div>✅ Supabase <code>companies</code> cədvəlinə yazıldı · ID: <b>${rec.companyId}</b></div>
+     <div>🔐 Admin paneli girişi: <b>${pending.email}</b> · şifrə: təyin etdiyiniz şifrə</div>`;
   q("okModal").classList.remove("hidden");
   q("compForm").reset();
   renderList();

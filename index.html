@@ -98,12 +98,16 @@
   <div>info@misterio.az · +994 70 562 12 69</div>
   <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
 </footer>
+<script src="db.js"></script>
 <script src="auth.js"></script>
 <script src="data.js"></script>
 <script>
 const q=id=>document.getElementById(id);
-/* kateqoriya önizləmə */
+(async function(){
+/* kateqoriyalar Supabase-dəki şirkətlərlə birlikdə */
+await loadCompanies();
 const box=q("catsPreview");
+box.innerHTML="";
 Object.entries(DATA).forEach(([k,v])=>{
   const d=document.createElement("a"); d.className="cat"+(v.isAll?" all":""); d.href="spin.html";
   d.innerHTML=`<div class="ic">${v.icon}</div><div class="nm">${v.name}</div><div class="cnt">${v.shops.length} məkan</div>`;
@@ -111,7 +115,7 @@ Object.entries(DATA).forEach(([k,v])=>{
 });
 
 /* istifadəçi statusuna görə ana səhifə */
-const u=Session.user();
+const u=await loadSession();
 if(u && u.verified){
   const s=subInfo();
   q("heroGuest").classList.add("hidden");
@@ -138,6 +142,7 @@ if(u && u.verified){
   q("ctaBtn").textContent = s.canSpin ? "Çarxı fırlat 🔮" : "Abunəliyə bax";
   q("ctaBtn").href = s.canSpin ? "spin.html" : "pricing.html";
 }
+})();
 </script>
 </body>
 </html>

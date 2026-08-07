@@ -95,13 +95,13 @@
   <div>info@misterio.az · +994 70 562 12 69</div>
   <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
 </footer>
+<script src="db.js"></script>
 <script src="auth.js"></script>
 <script>
 const q=id=>document.getElementById(id);
 const params=new URLSearchParams(location.search);
 const next=params.get("next")||"index.html";
 
-/* yalnız 1 seksiya görünür */
 function showSec(name){
   ["secLogin","secSignup","secVerify"].forEach(s=>q(s).classList.add("hidden"));
   q(name).classList.remove("hidden");
@@ -122,51 +122,75 @@ if(params.get("tab")==="signup") showSec("secSignup");
 const err=(el,m)=>{el.textContent=m;el.classList.remove("hidden")};
 const hide=el=>el.classList.add("hidden");
 const gen=()=>String(Math.floor(100000+Math.random()*900000));
-
-if(Session.user() && Session.user().verified) location.href=next;
 let pending=null;
 
-q("signupForm").onsubmit=e=>{
-  e.preventDefault(); hide(q("sErr"));
-  const email=q("sEmail").value.trim().toLowerCase();
-  if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(email)) return err(q("sErr"),"Email formatı düzgün deyil.");
-  if(q("sPass").value!==q("sPass2").value) return err(q("sErr"),"Şifrələr uyğun gəlmir.");
-  const ex=Users.get(email);
-  if(ex && ex.verified) return err(q("sErr"),"Bu email artıq qeydiyyatdadır. Daxil olun.");
-  const user={name:q("sName").value.trim(),email,phone:q("sPhone").value.trim(),
-    pass:q("sPass").value,verified:false,code:gen(),
-    sub:null,coupons:[],payments:[],created:new Date().toISOString()};
-  Users.put(user); pending=email;
-  q("vEmail").textContent=email; q("vCode").textContent=user.code;
-  showSec("secVerify");
-};
-
-q("loginForm").onsubmit=e=>{
-  e.preventDefault(); hide(q("lErr"));
-  const email=q("lEmail").value.trim().toLowerCase();
-  const u=Users.get(email);
-  if(!u) return err(q("lErr"),"Belə istifadəçi tapılmadı. Qeydiyyatdan keçin.");
-  if(u.pass!==q("lPass").value) return err(q("lErr"),"Şifrə yanlışdır.");
-  if(!u.verified){
-    pending=email; u.code=gen(); Users.put(u);
-    q("vEmail").textContent=email; q("vCode").textContent=u.code;
-    return showSec("secVerify");
+/* artıq daxil olubsa yönləndir */
+(async()=>{
+  if(Session.uid()){
+    const u = await loadSession();
+    if(u && u.verified) location.href=next;
   }
-  Session.login(email); location.href=next;
+})();
+
+q("signupForm").onsubmit=async e=>{
+  e.preventDefault(); hide(q("sErr"));
+  const btn=e.target.querySelector("button[type=submit]"); btn.disabled=true;
+  try{
+    const email=q("sEmail").value.trim().toLowerCase();
+    if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(email)) return err(q("sErr"),"Email formatı düzgün deyil.");
+    if(q("sPass").value!==q("sPass2").value) return err(q("sErr"),"Şifrələr uyğun gəlmir.");
+    const ex=await DB.userByEmail(email);
+    if(ex && ex.verified) return err(q("sErr"),"Bu email artıq qeydiyyatdadır. Daxil olun.");
+    const code=gen();
+    let user;
+    if(ex){
+      user = await DB.updateUser(ex.id, {name:q("sName").value.trim(), phone:q("sPhone").value.trim(),
+              pass_hash: await sha256(q("sPass").value), code});
+    }else{
+      user = await DB.createUser({name:q("sName").value.trim(), email,
+              phone:q("sPhone").value.trim(), pass:q("sPass").value, code});
+    }
+    pending=user;
+    q("vEmail").textContent=email; q("vCode").textContent=code;
+    showSec("secVerify");
+  }catch(ex){ err(q("sErr"),"Baza xətası: "+ex.message); }
+  finally{ btn.disabled=false; }
 };
 
-q("verifyForm").onsubmit=e=>{
+q("loginForm").onsubmit=async e=>{
+  e.preventDefault(); hide(q("lErr"));
+  const btn=e.target.querySelector("button[type=submit]"); btn.disabled=true;
+  try{
+    const email=q("lEmail").value.trim().toLowerCase();
+    const u=await DB.userByEmail(email);
+    if(!u) return err(q("lErr"),"Belə istifadəçi tapılmadı. Qeydiyyatdan keçin.");
+    if(!await DB.checkPass(u, q("lPass").value)) return err(q("lErr"),"Şifrə yanlışdır.");
+    if(!u.verified){
+      const code=gen();
+      await DB.updateUser(u.id,{code});
+      pending=u;
+      q("vEmail").textContent=email; q("vCode").textContent=code;
+      return showSec("secVerify");
+    }
+    Session.login(u.id); location.href=next;
+  }catch(ex){ err(q("lErr"),"Baza xətası: "+ex.message); }
+  finally{ btn.disabled=false; }
+};
+
+q("verifyForm").onsubmit=async e=>{
   e.preventDefault(); hide(q("vErr"));
-  const u=Users.get(pending);
-  if(!u) return err(q("vErr"),"Xəta baş verdi, yenidən cəhd edin.");
-  if(q("vInput").value.trim()!==u.code) return err(q("vErr"),"Kod yanlışdır.");
-  u.verified=true; u.code=null; Users.put(u);
-  Session.login(u.email);
+  if(!pending) return err(q("vErr"),"Xəta baş verdi, yenidən cəhd edin.");
+  const fresh=await DB.userByEmail(pending.email);
+  if(q("vInput").value.trim()!==String(fresh.code)) return err(q("vErr"),"Kod yanlışdır.");
+  await DB.updateUser(fresh.id,{verified:true, code:null});
+  Session.login(fresh.id);
   location.href = "pricing.html?welcome=1";
 };
-q("resend").onclick=()=>{
-  const u=Users.get(pending); if(!u) return;
-  u.code=gen(); Users.put(u); q("vCode").textContent=u.code;
+q("resend").onclick=async()=>{
+  if(!pending) return;
+  const code=gen();
+  await DB.updateUser(pending.id,{code});
+  q("vCode").textContent=code;
 };
 </script>
 </body>

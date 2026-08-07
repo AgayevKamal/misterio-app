@@ -63,6 +63,7 @@
   <div class="small">Bütün hüquqlar qorunur © 2026 Misterio</div>
 </footer>
 
+<script src="db.js"></script>
 <script src="admin.js"></script>
 <script>
 const q=id=>document.getElementById(id);
@@ -75,13 +76,16 @@ document.querySelectorAll(".demo-row").forEach(r=>{
   r.onclick=()=>{ q("aUser").value=r.dataset.u; q("aPass").value=r.dataset.p; hideErr(); };
 });
 
-q("adminForm").onsubmit=e=>{
+q("adminForm").onsubmit=async e=>{
   e.preventDefault(); hideErr();
-  const u=q("aUser").value.trim().toLowerCase();
-  const p=q("aPass").value;
-  const ok=adminLogin(u,p);
-  if(!ok){ showErr("İstifadəçi adı və ya şifrə yanlışdır."); return; }
-  location.href="admin.html";
+  const btn=e.target.querySelector("button[type=submit]"); btn.disabled=true;
+  try{
+    const u=q("aUser").value.trim().toLowerCase();
+    const p=q("aPass").value;
+    const ok=await adminLogin(u,p);
+    if(!ok){ showErr("İstifadəçi adı və ya şifrə yanlışdır."); return; }
+    location.href="admin.html";
+  } finally { btn.disabled=false; }
 };
 </script>
 </body>

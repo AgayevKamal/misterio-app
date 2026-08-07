@@ -1,8 +1,9 @@
 /* Misterio — profil, abunəlik və kuponlar */
-(function(){
-  let user = requireAuth();
+(async function(){
+  let user = await requireAuth();
   if(!user) return;
   const q=id=>document.getElementById(id);
+  let COUPONS = [];
 
   function maskName(name){
     const s=(name||"İstifadəçi").trim();
@@ -55,9 +56,9 @@
         </div>
       </div>`;
     const cb=q("cancelSub");
-    if(cb) cb.onclick=()=>{
+    if(cb) cb.onclick=async()=>{
       if(confirm("Abunəliyi ləğv etmək istədiyinizə əminsiniz? Növbəti ay ödəniş alınmayacaq.")){
-        cancelSubscription(); head(); renderSub();
+        await cancelSubscription(); head(); renderSub();
       }
     };
   }
@@ -69,9 +70,9 @@
   q("pPhone").value=user.phone||"";
   q("pCity").value=user.city||"";
 
-  q("profForm").onsubmit=e=>{
+  q("profForm").onsubmit=async e=>{
     e.preventDefault();
-    updateUser({name:q("pName").value.trim(),phone:q("pPhone").value.trim(),city:q("pCity").value.trim()});
+    await updateUser({name:q("pName").value.trim(),phone:q("pPhone").value.trim(),city:q("pCity").value.trim()});
     head(); render();
     const s=q("saved"); s.classList.remove("hidden"); setTimeout(()=>s.classList.add("hidden"),2000);
   };
@@ -91,15 +92,21 @@
     return (sp>max*0.5 ? cut.slice(0,sp) : cut).trim()+"…";
   }
 
+  async function loadCoupons(){
+    try{ COUPONS = await DB.coupons(user.id); }
+    catch(e){ console.error("kuponlar yüklənmədi", e); COUPONS=[]; }
+    render();
+  }
+
   function render(){
     user=Session.user();
-    const list=user.coupons||[];
+    const list=COUPONS;
     if(!list.length){
       box.innerHTML='<div class="empty">🔮 Hələ kuponun yoxdur. <a class="link" href="spin.html">Çarxı fırlat</a> və ilk kuponunu qazan.</div>';
       return;
     }
     box.innerHTML="";
-    list.slice().reverse().forEach(c=>{
+    list.slice().forEach(c=>{
       const d=document.createElement("div");
       d.className="coupon";
       d.innerHTML=`
@@ -123,17 +130,17 @@
     q("cTerms").innerHTML=`
       <li>Kupon yalnız 1 dəfə istifadə oluna bilər.</li>
       <li>Digər kampaniya və endirimlərlə birləşdirilmir.</li>
-      <li>Qazanılma tarixi: ${c.date} · Kateqoriya: ${c.cat}</li>
+      <li>Qazanılma tarixi: ${fmtDate(c.created_at)} · Kateqoriya: ${c.cat}</li>
       <li>Qazanıldığı tarixdən 30 gün ərzində istifadə edilməlidir.</li>
       <li>Kodu kassada təqdim edin, şəxsiyyət vəsiqəsi tələb oluna bilər.</li>`;
     cm.classList.remove("hidden");
   }
 
   q("cDismiss").onclick=()=>cm.classList.add("hidden");
-  q("cClose").onclick=()=>{
-    const u=Session.user();
-    updateUser({coupons:(u.coupons||[]).filter(x=>x.id!==openId)});
-    cm.classList.add("hidden"); render();
+  q("cClose").onclick=async()=>{
+    try{ await DB.useCoupon(openId); }catch(e){ console.error(e); }
+    cm.classList.add("hidden");
+    await loadCoupons();
   };
-  render();
+  await loadCoupons();
 })();

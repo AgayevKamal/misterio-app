@@ -1,23 +1,15 @@
-/* Misterio — ortaq: auth, abunəlik, storage */
-const LS = {
-  get:(k,f)=>{try{const v=localStorage.getItem(k);return v===null?f:JSON.parse(v)}catch(e){return f}},
-  set:(k,v)=>localStorage.setItem(k,JSON.stringify(v)),
-  del:k=>localStorage.removeItem(k)
-};
-
+/* Misterio — ortaq: auth, abunəlik (Supabase backed)
+   localStorage yalnız aktiv sessiyanın user id-sini saxlayır. */
+const SESSION_KEY = "mist_uid";
 const PLAN = { price:"9.90 AZN", priceNum:9.90, spins:3, period:"ay" };
 
-const Users = {
-  all: ()=>LS.get("mist_users",{}),
-  save: u=>LS.set("mist_users",u),
-  get: e=>Users.all()[String(e).toLowerCase()] || null,
-  put: u=>{const a=Users.all(); a[u.email.toLowerCase()]=u; Users.save(a)}
-};
+let CURRENT_USER = null;
+
 const Session = {
-  email: ()=>LS.get("mist_session",null),
-  login: e=>LS.set("mist_session",String(e).toLowerCase()),
-  logout: ()=>LS.del("mist_session"),
-  user: ()=>{const e=Session.email(); return e?Users.get(e):null}
+  uid: ()=>localStorage.getItem(SESSION_KEY),
+  login: id=>localStorage.setItem(SESSION_KEY, id),
+  logout: ()=>{ localStorage.removeItem(SESSION_KEY); CURRENT_USER=null; },
+  user: ()=>CURRENT_USER
 };
 
 /* ---------- abunəlik ---------- */
@@ -34,56 +26,66 @@ const fmtDate = d => {
   return `${x.getDate()} ${AZ_MONTHS[x.getMonth()]} ${x.getFullYear()}`;
 };
 
-/* abunəliyi normallaşdır: dövr bitibsə fırlatmaları yenilə */
-function syncSubscription(u){
-  if(!u) return u;
-  if(!u.sub || !u.sub.active) return u;
+/* dövr bitibsə fırlatmaları yenilə (Supabase-də) */
+async function syncSubscription(u){
+  if(!u || !u.sub || !u.sub.active) return u;
   const now = new Date();
   let renew = new Date(u.sub.renewAt);
   if(now >= renew){
-    /* aylıq təkrarlanan ödəniş — demo: avtomatik yenilənir */
     while(now >= renew){ renew = addMonth(renew); }
     u.sub.renewAt = renew.toISOString();
     u.sub.spinsLeft = PLAN.spins;
-    Users.put(u);
+    await DB.updateUser(u.id, {sub:u.sub});
   }
   return u;
 }
 
-function activateSubscription(){
-  const u = Session.user(); if(!u) return null;
+async function loadSession(){
+  const id = Session.uid();
+  if(!id){ CURRENT_USER=null; return null; }
+  try{
+    const r = await sbGet("users", `id=eq.${id}&limit=1`);
+    CURRENT_USER = (r && r[0]) || null;
+    if(CURRENT_USER){
+      CURRENT_USER.sub = CURRENT_USER.sub || {};
+      await syncSubscription(CURRENT_USER);
+    }
+  }catch(e){ console.error("session load", e); CURRENT_USER=null; }
+  return CURRENT_USER;
+}
+
+async function activateSubscription(){
+  const u = CURRENT_USER; if(!u) return null;
   const now = new Date();
-  u.sub = {
-    active:true,
-    startedAt: now.toISOString(),
-    renewAt: addMonth(now).toISOString(),
-    spinsLeft: PLAN.spins,
-    price: PLAN.priceNum
-  };
+  u.sub = { active:true, startedAt:now.toISOString(), renewAt:addMonth(now).toISOString(),
+            spinsLeft:PLAN.spins, price:PLAN.priceNum, totalSpins:(u.sub&&u.sub.totalSpins)||0 };
   u.payments = (u.payments||[]).concat([{amount:PLAN.priceNum, date:now.toISOString(), type:"subscription"}]);
-  Users.put(u); return u;
+  await DB.updateUser(u.id, {sub:u.sub, payments:u.payments});
+  return u;
 }
-function cancelSubscription(){
-  const u = Session.user(); if(!u || !u.sub) return null;
+async function cancelSubscription(){
+  const u = CURRENT_USER; if(!u || !u.sub) return null;
   u.sub.active=false; u.sub.canceledAt=new Date().toISOString();
-  Users.put(u); return u;
+  await DB.updateUser(u.id, {sub:u.sub});
+  return u;
 }
-function buyExtraSpin(){
-  const u = Session.user(); if(!u) return null;
+async function buyExtraSpin(){
+  const u = CURRENT_USER; if(!u) return null;
   u.sub = u.sub || {active:false, spinsLeft:0, renewAt:addMonth(new Date()).toISOString()};
   u.sub.spinsLeft = (u.sub.spinsLeft||0) + 1;
   u.payments = (u.payments||[]).concat([{amount:PLAN.priceNum, date:new Date().toISOString(), type:"extra"}]);
-  Users.put(u); return u;
+  await DB.updateUser(u.id, {sub:u.sub, payments:u.payments});
+  return u;
 }
-function consumeSpin(){
-  const u = Session.user(); if(!u || !u.sub) return null;
+async function consumeSpin(){
+  const u = CURRENT_USER; if(!u || !u.sub) return null;
   u.sub.spinsLeft = Math.max(0,(u.sub.spinsLeft||0)-1);
   u.sub.totalSpins = (u.sub.totalSpins||0)+1;
-  Users.put(u); return u;
+  await DB.updateUser(u.id, {sub:u.sub});
+  return u;
 }
 function subInfo(){
-  let u = Session.user(); if(!u) return null;
-  u = syncSubscription(u);
+  const u = CURRENT_USER; if(!u) return null;
   const s = u.sub || {};
   return {
     active: !!s.active,
@@ -94,22 +96,28 @@ function subInfo(){
   };
 }
 
-function requireAuth(){
-  const u = Session.user();
-  if(!u || !u.verified){ location.href = "auth.html?next=" + encodeURIComponent(location.pathname.split("/").pop()||"index.html"); return null; }
-  return syncSubscription(u);
+/* səhifə girişi: sessiyanı Supabase-dən yüklə, yoxdursa auth-a at */
+async function requireAuth(){
+  const u = await loadSession();
+  if(!u || !u.verified){
+    location.href = "auth.html?next=" + encodeURIComponent(location.pathname.split("/").pop()||"index.html");
+    return null;
+  }
+  return u;
 }
-function updateUser(patch){
-  const u = Session.user(); if(!u) return null;
-  Object.assign(u, patch); Users.put(u); return u;
+async function updateUser(patch){
+  const u = CURRENT_USER; if(!u) return null;
+  Object.assign(u, patch);
+  await DB.updateUser(u.id, patch);
+  return u;
 }
 
 /* header */
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded", async ()=>{
   const av=document.querySelector(".avatar");
-  if(av){
-    const u=Session.user();
-    if(u&&u.verified){ av.title=u.name||u.email; av.classList.add("on"); }
+  if(av && Session.uid()){
+    const u = CURRENT_USER || await loadSession();
+    if(u && u.verified){ av.title=u.name||u.email; av.classList.add("on"); }
   }
   const out=document.getElementById("logoutBtn");
   if(out) out.onclick=()=>{ Session.logout(); location.href="index.html"; };

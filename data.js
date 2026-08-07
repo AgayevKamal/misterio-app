@@ -24,14 +24,26 @@ const BASE_DATA = {
 const COLORS = ["#6d3bff","#a855ff","#c026d3","#ff4d8d","#ff7a45","#ffcf5c",
                 "#3ddcff","#2d9bf0","#7c4dff","#e0479e","#f59e0b","#4dd4ac"];
 
-/* istifadəçilərin əlavə etdiyi şirkətlər — localStorage */
-function customCompanies(){
-  try{ return JSON.parse(localStorage.getItem("mist_companies")) || [] }catch(e){ return [] }
+/* istifadəçilərin əlavə etdiyi şirkətlər — SUPABASE (companies cədvəli)
+   Səhifə yüklənəndə loadCompanies() bir dəfə çağırılır, nəticə
+   yaddaşda (CUSTOM_COMPANIES) saxlanılır ki, çarx sinxron işləsin. */
+let CUSTOM_COMPANIES = [];
+async function loadCompanies(){
+  try{
+    const rows = await DB.companies();
+    CUSTOM_COMPANIES = rows.filter(r=>r.cat).map(r=>({
+      id:r.id, name:r.name, cat:r.cat, disc:r.disc, phone:r.phone
+    }));
+  }catch(e){ console.error("companies yüklənmədi", e); CUSTOM_COMPANIES=[]; }
+  refreshData();
+  return CUSTOM_COMPANIES;
 }
-function addCompany(c){
-  const list = customCompanies();
-  list.push(c);
-  localStorage.setItem("mist_companies", JSON.stringify(list));
+function customCompanies(){ return CUSTOM_COMPANIES; }
+async function addCompany(c){
+  const row = await DB.addCompany(c);
+  CUSTOM_COMPANIES.push({id:row.id, name:row.name, cat:row.cat, disc:row.disc, phone:row.phone});
+  refreshData();
+  return row;
 }
 
 /* ---------- Müqavilə / Contract (frontend simulyasiyası) ----------
@@ -40,14 +52,9 @@ function addCompany(c){
    Hər müqavilə: id, companyId, signedAt(timestamp), ip, version,
    pdf(base64 və ya blob url), status:"aktiv". */
 const CONTRACT_VERSION = "v1.0";
-function contracts(){
-  try{ return JSON.parse(localStorage.getItem("mist_contracts")) || [] }catch(e){ return [] }
-}
-function addContract(c){
-  const list = contracts();
-  list.push(c);
-  localStorage.setItem("mist_contracts", JSON.stringify(list));
-}
+/* müqavilə metadatası companies cədvəlində (contract_id, signed_at, status) saxlanılır */
+function contracts(){ return CUSTOM_COMPANIES; }
+function addContract(c){ return c; }
 function clientIp(){
   /* real IP yalnız backend-dən gəlir; frontend simulyasiyasında
      local şəbəkə/ixa məlumatı kimi göstərilir */
