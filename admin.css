@@ -2,6 +2,11 @@
    MISTERIO — Şirkət Admin Paneli (dashboard / iş üslubu)
    Əsas style.css-dəki rəng dəyişənlərini istifadə edir.
    ============================================================ */
+/* spesifikliyi artır: admin.css sonradan yüklənir, .gate-screen / .admin-shell /
+   .custom-range-un display qaydası .hidden-i üstələməsin deyə ayrıca qeyd edirik */
+.gate-screen.hidden,
+.admin-shell.hidden,
+.custom-range.hidden{display:none}
 .admin-tag{
   margin-left:auto;margin-right:14px;font-size:13px;font-weight:700;
   color:var(--gold);background:rgba(255,207,92,.10);
