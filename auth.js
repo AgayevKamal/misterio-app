@@ -47,9 +47,14 @@ async function loadSession() {
   return CURRENT_USER;
 }
 
+/* abunəliyi serverdə aktiv et (real ödəniş Epoint qoşulanda buraxılacaq) */
 async function activateSubscription() {
-  // MVP: trial verilib, real abunəlik /api/payment-callback-dən gələcək
   if (MA && MA.abuneOldu) MA.abuneOldu();
+  try {
+    const r = await DB.payment("sub");
+    if (r && r.user) { CURRENT_USER = r.user; Session.login(r.user); return CURRENT_USER; }
+  } catch (e) { console.error("activate:", e.message); }
+  // fallback: local yenilə (server cavabı gəlməsə də UI yenilənsin)
   if (CURRENT_USER) { CURRENT_USER.sub = CURRENT_USER.sub || {}; CURRENT_USER.sub.active = true; }
   return CURRENT_USER;
 }
@@ -58,8 +63,13 @@ async function cancelSubscription() {
   if (CURRENT_USER && CURRENT_USER.sub) CURRENT_USER.sub.active = false;
   return CURRENT_USER;
 }
+/* əlavə fırlatma — serverdə +1 */
 async function buyExtraSpin() {
   if (MA && MA.elaveFirlatma) MA.elaveFirlatma();
+  try {
+    const r = await DB.payment("extra");
+    if (r && r.user) { CURRENT_USER = r.user; Session.login(r.user); return CURRENT_USER; }
+  } catch (e) { console.error("extra:", e.message); }
   if (CURRENT_USER && CURRENT_USER.sub) {
     CURRENT_USER.sub.spinsLeft = (CURRENT_USER.sub.spinsLeft || 0) + 1;
   }
