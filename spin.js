@@ -10,8 +10,8 @@ function shade(hex, amt) {
 (async function () {
   let user = await requireAuth();
   if (!user) return;
-  await refreshData();
-
+  /* ƏVVƏLCƏ Supabase-dən bütün şirkətləri yüklə ki, çarx onlarla çəkilsin */
+  await loadCompanies();
   const q = id => document.getElementById(id);
   q("welcome").innerHTML = `Xoş gəldin, <b>${user.name || user.email}</b> · <a class="link" href="profile.html">Profilim</a>`;
 
@@ -76,7 +76,7 @@ function shade(hex, amt) {
 
   function draw() {
     const n = currentShops.length, R = cv.width / 2, step = 2 * Math.PI / n;
-    const big = n > 10;
+    const big = n > 8;
     ctx.clearRect(0, 0, cv.width, cv.height);
     currentShops.forEach((s, i) => {
       const a0 = i * step - Math.PI / 2, a1 = a0 + step;
@@ -90,27 +90,36 @@ function shade(hex, amt) {
       ctx.lineWidth = big ? 1.2 : 2; ctx.stroke();
       ctx.save(); ctx.translate(R, R); ctx.rotate(a0 + step / 2);
       ctx.fillStyle = "#fff"; ctx.textAlign = "right"; ctx.textBaseline = "middle";
-      const fs = big ? 11 : 15, fs2 = big ? 12 : 17;
-      let nm = s.n; const maxLen = big ? 14 : 18;
-      if (nm.length > maxLen) nm = nm.slice(0, maxLen - 1) + "…";
+      const fs = big ? 12 : 15, fs2 = big ? 13 : 17;
+      let nm = s.n; const maxLen = big ? 16 : 20;
+      if (nm.length > maxLen) nm = nm.length > 18 ? nm.slice(0, 15) + "…" : nm;
       ctx.font = `bold ${fs}px Segoe UI, sans-serif`;
-      ctx.fillText(nm, R - 16, big ? -5 : -6);
+      ctx.fillText(nm, R - 18, big ? -6 : -7);
       ctx.font = `bold ${fs2}px Segoe UI, sans-serif`;
-      ctx.fillText("-" + s.d + "%", R - 16, big ? 9 : 14);
+      ctx.fillText("-" + s.d + "%", R - 18, big ? 9 : 14);
       ctx.restore();
     });
     const light = document.documentElement.getAttribute("data-theme") === "light";
-    const hr = big ? 28 : 34;
+    /* mərkəz dairəsi — balaca, məkan adlarını örtməsin */
+    const hr = big ? 22 : 28;
     const hg = ctx.createRadialGradient(R, R - hr * 0.4, 2, R, R, hr);
     if (light) { hg.addColorStop(0, "#ffffff"); hg.addColorStop(1, "#f0e8ff"); }
     else { hg.addColorStop(0, "#2a1550"); hg.addColorStop(1, "#0d0620"); }
     ctx.beginPath(); ctx.arc(R, R, hr, 0, 2 * Math.PI); ctx.fillStyle = hg; ctx.fill();
     ctx.strokeStyle = light ? "#d97706" : "#ffcf5c"; ctx.lineWidth = 3; ctx.stroke();
-    ctx.shadowColor = light ? "rgba(217,119,6,.5)" : "rgba(255,207,92,.9)"; ctx.shadowBlur = 14;
-    ctx.fillStyle = light ? "#b45309" : "#ffcf5c"; ctx.font = `bold ${big ? 20 : 24}px Segoe UI`;
+    ctx.shadowColor = light ? "rgba(217,119,6,.5)" : "rgba(255,207,92,.9)"; ctx.shadowBlur = 12;
+    ctx.fillStyle = light ? "#b45309" : "#ffcf5c"; ctx.font = `bold ${big ? 16 : 20}px Segoe UI`;
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText("?", R, R + 1);
     ctx.shadowBlur = 0;
+    /* OX göstəricisi (yuxarıda, sabit) */
+    ctx.fillStyle = "#ffcf5c";
+    ctx.beginPath();
+    ctx.moveTo(R, R - cv.width/2 + 2);
+    ctx.lineTo(R - 12, R - cv.width/2 + 26);
+    ctx.lineTo(R + 12, R - cv.width/2 + 26);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = "#7b2ff7"; ctx.lineWidth = 2; ctx.stroke();
   }
 
   if (gate()) hint.textContent = `✦ Bu ay ${subInfo().spinsLeft} fırlatma haqqın qalıb. Nə çıxacaq — bilinmir.`;
