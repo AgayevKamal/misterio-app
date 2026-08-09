@@ -128,12 +128,6 @@ function shade(hex, amt) {
     btn.textContent = "✦ Çarx fırlanır...";
     document.querySelector(".wheel-outer").classList.add("spinning");
 
-    /* vizual qazananı server cavabından sonra yerləşdiririk;
-       əvvəlcə təsadüfi animasiya edirik (təkcə vizual) */
-    const visualTurns = 6 + Math.floor(Math.random() * 2);
-    absAngle += visualTurns * 360;
-    cv.style.transform = `rotate(${absAngle}deg)`;
-
     let res;
     try {
       res = await DB.spin(curKey);
@@ -145,12 +139,32 @@ function shade(hex, amt) {
       return;
     }
 
+    /* OXU MƏHZ QALİBİN SEQMENTİNƏ YÖNLƏNDİRİRİK
+       Server winnerId qaytarır → currentShops-da indeksi tapırıq.
+       draw() funksiyasında seqment i: [i*step - 90°, (i+1)*step - 90°] aralığında
+       (0° = yuxarı, əks-saat istiqaməti). Ox yuxarıda (0°) durur.
+       Oxun qalib seqmentin mərkəzini göstərməsi üçün çarxı
+       (90° + i*step + step/2) bucağına fırlatmaq lazımdır. */
+    const c = res.coupon;
+    const winnerIdx = currentShops.findIndex(s => s.id === res.winnerId);
+    const n = currentShops.length;
+    const step = 360 / n;
+    const idx = winnerIdx >= 0 ? winnerIdx : 0;
+    const centerDeg = 90 + idx * step + step / 2;        // seqment mərkəzi (çarxın öz koordinatında)
+    const jitter = (Math.random() - 0.5) * step * 0.5;    // seqment daxilində kiçik təsadüfi sapma
+    const targetMod = ((centerDeg + jitter) % 360 + 360) % 360;
+    const turns = 6 + Math.floor(Math.random() * 2);
+    const currentMod = ((absAngle % 360) + 360) % 360;
+    let delta = targetMod - currentMod;
+    if (delta < 0) delta += 360;
+    absAngle += turns * 360 + delta;
+    cv.style.transform = `rotate(${absAngle}deg)`;
+
     setTimeout(() => {
       spinning = false; btn.disabled = false;
       btn.textContent = "🔮 Çarxı fırlat";
       document.querySelector(".wheel-outer").classList.remove("spinning");
 
-      const c = res.coupon;
       // local sessiya məlumatını yenilə (fırlatma haqqı)
       if (CURRENT_USER && CURRENT_USER.sub) CURRENT_USER.sub.spinsLeft = res.spinsLeft;
       try {

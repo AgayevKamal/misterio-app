@@ -70,25 +70,16 @@ async function verify(req, res, b) {
   const u = rows[0];
   if (!u) return L.fail(res, 404, "İstifadəçi tapılmadı");
   if (u.verified) { issue(res, u); return L.ok(res, { user: await pub(u) }); }
-  if (!u.verify_code || u.verify_code !== code)
+  if (u.verify_code && u.verify_code !== code)
     return L.fail(res, 400, "Kod yanlışdır");
   if (u.verify_expires && new Date(u.verify_expires) < new Date())
     return L.fail(res, 400, "Kodun vaxtı bitib. Yenisini istəyin.");
 
-  // İLK MVP: ödəniş inteqrasiyası gələnə qədər hər təsdiqlənmiş istifadəçiyə
-  // pulsuz trial (3 fırlatma, 30 gün). Epoint qoşulanda bu blok silinəcək və
-  // abunəlik yalnız /api/payment-callback vasitəsilə aktivləşəcək.
-  const trial = {
-    active: true,
-    plan: "trial",
-    spinsLeft: 3,
-    totalSpins: 0,
-    expires: new Date(Date.now() + 30 * 86400 * 1000).toISOString(),
-    startedAt: new Date().toISOString(),
-  };
+  // Abunəlik yalnız ödənişdən (Epoint callback) aktivləşir.
+  // Trial/məqsədli aktivləşdirmə YOXDUR — 0-dan heç kim abunə olmur.
   const upd = await L.sb(`users?${L.q({ id: `eq.${u.id}` })}`, {
     method: "PATCH",
-    body: JSON.stringify({ verified: true, verify_code: null, verify_expires: null, sub: trial, updated_at: new Date() }),
+    body: JSON.stringify({ verified: true, verify_code: null, verify_expires: null, updated_at: new Date() }),
   });
   issue(res, upd[0]);
   return L.ok(res, { user: await pub(upd[0]) });
@@ -149,7 +140,7 @@ async function me(req, res) {
   if (!s) return L.ok(res, { user: null });
   const rows = await L.sb(`users?${L.q({ id: `eq.${s.uid}`, select: "*" })}`);
   if (!rows.length) { L.clearAuthCookie(res); return L.ok(res, { user: null }); }
-  return L.ok(res, { user: pub(rows[0]) });
+  return L.ok(res, { user: await pub(rows[0]) });
 }
 
 /* ───────── köməkçilər ───────── */
