@@ -13,7 +13,9 @@ function shade(hex, amt) {
   /* ƏVVƏLCƏ Supabase-dən bütün şirkətləri yüklə ki, çarx onlarla çəkilsin */
   await loadCompanies();
   const q = id => document.getElementById(id);
-  q("welcome").innerHTML = `Xoş gəldin, <b>${user.name || user.email}</b> · <a class="link" href="profile.html">Profilim</a>`;
+  /* XSS qorunması: istifadəçi adını təmizlə */
+  const esc = s => (s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  q("welcome").innerHTML = `Xoş gəldin, <b>${esc(user.name) || esc(user.email)}</b> · <a class="link" href="profile.html">Profilim</a>`;
 
   const catsEl = q("cats"), sec = q("wheelSec"), title = q("wheelTitle"),
     btn = q("spinBtn"), hint = q("hint"),
@@ -45,7 +47,7 @@ function shade(hex, amt) {
   Object.entries(DATA).forEach(([k, v]) => {
     const d = document.createElement("div");
     d.className = "cat" + (v.isAll ? " all" : ""); d.dataset.k = k;
-    d.innerHTML = `<div class="ic">${v.icon}</div><div class="nm">${v.name}</div><div class="cnt">${v.count || ""} məkan</div>`;
+    d.innerHTML = `<div class="ic">${esc(v.icon||"")}</div><div class="nm">${esc(v.name||"")}</div><div class="cnt">${esc(v.count || "")} məkan</div>`;
     d.onclick = () => select(k);
     catsEl.appendChild(d);
   });
