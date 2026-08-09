@@ -22,6 +22,43 @@ function shade(hex, amt) {
   let absAngle = 0;
   let currentShops = [];
 
+  /* ---- Spin səsi (Web Audio API, xarici fayl yoxdur) ---- */
+  let audioCtx = null;
+  function initAudio() {
+    if (!audioCtx) {
+      try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch (e) { audioCtx = null; }
+    }
+    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+    return audioCtx;
+  }
+  // Çarxın fırlanması zamanı "tick" səsi (hər seqment keçəndə)
+  function playTick() {
+    const ac = initAudio(); if (!ac) return;
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.type = "square"; o.frequency.value = 880;
+    g.gain.setValueAtTime(0.0001, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.12, ac.currentTime + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + 0.05);
+    o.connect(g); g.connect(ac.destination);
+    o.start(); o.stop(ac.currentTime + 0.06);
+  }
+  // Qalib seçiləndə "win" melodiyası (3 not)
+  function playWin() {
+    const ac = initAudio(); if (!ac) return;
+    const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+    notes.forEach((f, i) => {
+      const t = ac.currentTime + i * 0.12;
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = "triangle"; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.18, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.28);
+      o.connect(g); g.connect(ac.destination);
+      o.start(t); o.stop(t + 0.3);
+    });
+  }
+
   /* ---- kateqoriya siyahısı (API-dən, parolsuz) ---- */
   Object.entries(DATA).forEach(([k, v]) => {
     const d = document.createElement("div");
@@ -128,14 +165,19 @@ function shade(hex, amt) {
     if (spinning) return;
     if (!curKey) { alert("Əvvəlcə kateqoriya seçin"); return; }
     if (!gate()) return;
+    initAudio(); // istifadəçi klikində audio context aç
     spin();
   };
 
   async function spin() {
     spinning = true; btn.disabled = true;
+    initAudio(); // istifadəçi klikində audio context aç (autoplay qadağasını aş)
     MA.firlatma(DATA[curKey].name);
     btn.textContent = "✦ Çarx fırlanır...";
     document.querySelector(".wheel-outer").classList.add("spinning");
+
+    // Tick səsi: fırlatma müddətində seqmentlər keçdikcə
+    const tickInt = setInterval(playTick, 220);
 
     let res;
     try {
@@ -176,9 +218,11 @@ function shade(hex, amt) {
     cv.style.transform = `rotate(${absAngle}deg)`;
 
     setTimeout(() => {
+      clearInterval(tickInt);
       spinning = false; btn.disabled = false;
       btn.textContent = "🔮 Çarxı fırlat";
       document.querySelector(".wheel-outer").classList.remove("spinning");
+      playWin(); // qalib seçildi — win melodiyası
 
       // local sessiya məlumatını yenilə (fırlatma haqqı)
       if (CURRENT_USER && CURRENT_USER.sub) CURRENT_USER.sub.spinsLeft = res.spinsLeft;
