@@ -7,14 +7,15 @@
 const COLORS = ["#6d3bff","#a855ff","#c026d3","#ff4d8d","#ff7a45","#ffcf5c",
                 "#3ddcff","#2d9bf0","#7c4dff","#e0479e","#f59e0b","#4dd4ac"];
 
-/* Kateqoriya siyahısı (idarəetmə üçün sabit, amma məkanlar serverdən) */
+/* Kateqoriya siyahısı — açarlar MUTLAQA Supabase `cat` sahəsi ilə eyni olmalıdır
+   (spin.js DB.shops(k) çağıranda bu açarı birbaşa ötürür) */
 const CATEGORY_LIST = [
   {key:"restoran",  icon:"🍽️", name:"Restoran"},
-  {key:"anticafe",  icon:"🕹️", name:"Anticafe"},
-  {key:"coworking", icon:"💼", name:"Co-working"},
-  {key:"kurslar",   icon:"🎓", name:"Kurslar"},
-  {key:"coffee",    icon:"☕", name:"Coffeeshop"},
-  {key:"kitab",     icon:"📚", name:"Kitab mağazaları"}
+  {key:"coffeeshop",icon:"☕", name:"Coffeeshop"},
+  {key:"kurs",     icon:"🎓", name:"Kurslar"},
+  {key:"kitab",    icon:"📚", name:"Kitab mağazaları"},
+  {key:"anticafe", icon:"🕹️", name:"Anticafe"},
+  {key:"coworking",icon:"💼", name:"Co-working"}
 ];
 
 /* Supabase-dən gələn real məkanlar — yaddaşda saxlanılır ki,
