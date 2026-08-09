@@ -51,7 +51,7 @@
         <label>Admin paneli üçün email *
           <input id="cEmail" type="email" required placeholder="restoran@mail.az"></label>
         <label>Admin paneli şifrəsi *
-          <input id="cPass" type="password" required minlength="6" placeholder="ən azı 6 simvol"></label>
+          <input id="cPass" type="password" required minlength="8" placeholder="ən azı 8 simvol (hərf+rəqəm)"></label>
         <div class="err hidden" id="cErr"></div>
         <button class="btn" type="submit">Davam et → Müqavilə</button>
       </form>
@@ -177,13 +177,11 @@ q("signBtn").onclick=async()=>{
     status:"aktiv"
   };
   try{
-    const row = await addCompany({
+    const r = await addCompany({
       name:pending.name, cat:pending.cat, disc:pending.disc, phone:pending.phone,
-      email:pending.email, pass:pending.pass,
-      contractId:rec.id, signedAt:rec.signedAt
+      email:pending.email, password:pending.pass
     });
-    rec.companyId = row.id;
-    MA.sirketElaveEtdi(pending.cat);
+    if(r && r.company){ rec.companyId = r.company.id; MA.sirketElaveEtdi(pending.cat); }
   }catch(e){
     q("contractErr").textContent="Baza xətası: "+e.message+" (bu email artıq qeydiyyatdadır?)";
     q("contractErr").classList.remove("hidden");

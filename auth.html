@@ -32,7 +32,6 @@
 <main>
   <section class="wrap auth-wrap">
 
-    <!-- 2 seçim düyməsi -->
     <div class="switcher" id="switcher">
       <button class="sw-btn active" data-t="login">Daxil ol</button>
       <button class="sw-btn" data-t="signup">Qeydiyyatdan keç</button>
@@ -62,7 +61,7 @@
           <label>Ad Soyad<input id="sName" required placeholder="Kamal Ağayev"></label>
           <label>Email<input id="sEmail" type="email" required placeholder="siz@mail.com"></label>
           <label>Telefon<input id="sPhone" placeholder="+994 __ ___ __ __"></label>
-          <label>Şifrə<input id="sPass" type="password" required minlength="6" placeholder="ən azı 6 simvol"></label>
+          <label>Şifrə<input id="sPass" type="password" required minlength="8" placeholder="ən azı 8 simvol (hərf+rəqəm)"></label>
           <label>Şifrə təkrar<input id="sPass2" type="password" required placeholder="••••••••"></label>
           <div class="err hidden" id="sErr"></div>
           <button class="btn" type="submit">Qeydiyyatdan keç</button>
@@ -122,15 +121,11 @@ if(params.get("tab")==="signup") showSec("secSignup");
 
 const err=(el,m)=>{el.textContent=m;el.classList.remove("hidden")};
 const hide=el=>el.classList.add("hidden");
-const gen=()=>String(Math.floor(100000+Math.random()*900000));
-let pending=null;
 
 /* artıq daxil olubsa yönləndir */
 (async()=>{
-  if(Session.uid()){
-    const u = await loadSession();
-    if(u && u.verified) location.href=next;
-  }
+  const u = await loadSession();
+  if(u && u.verified) location.href=next;
 })();
 
 q("signupForm").onsubmit=async e=>{
@@ -140,22 +135,17 @@ q("signupForm").onsubmit=async e=>{
     const email=q("sEmail").value.trim().toLowerCase();
     if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(email)) return err(q("sErr"),"Email formatı düzgün deyil.");
     if(q("sPass").value!==q("sPass2").value) return err(q("sErr"),"Şifrələr uyğun gəlmir.");
-    const ex=await DB.userByEmail(email);
-    if(ex && ex.verified) return err(q("sErr"),"Bu email artıq qeydiyyatdadır. Daxil olun.");
-    const code=gen();
-    let user;
-    if(ex){
-      user = await DB.updateUser(ex.id, {name:q("sName").value.trim(), phone:q("sPhone").value.trim(),
-              pass_hash: await sha256(q("sPass").value), code});
-    }else{
-      user = await DB.createUser({name:q("sName").value.trim(), email,
-              phone:q("sPhone").value.trim(), pass:q("sPass").value, code});
-    }
-    pending=user;
+    if(q("sPass").value.length<8) return err(q("sErr"),"Şifrə ən azı 8 simvol olmalıdır.");
+    const r = await DB.register({
+      name:q("sName").value.trim(), email,
+      phone:q("sPhone").value.trim(), password:q("sPass").value
+    });
     MA.qeydiyyat(email);
-    q("vEmail").textContent=email; q("vCode").textContent=code;
+    q("vEmail").textContent=email;
+    q("vCode").textContent=r.demoCode || "(kod emailə göndərildi)";
     showSec("secVerify");
-  }catch(ex){ err(q("sErr"),"Baza xətası: "+ex.message); }
+    q("signupForm").dataset.email=email;
+  }catch(ex){ err(q("sErr"), ex.message); }
   finally{ btn.disabled=false; }
 };
 
@@ -163,38 +153,31 @@ q("loginForm").onsubmit=async e=>{
   e.preventDefault(); hide(q("lErr"));
   const btn=e.target.querySelector("button[type=submit]"); btn.disabled=true;
   try{
-    const email=q("lEmail").value.trim().toLowerCase();
-    const u=await DB.userByEmail(email);
-    if(!u) return err(q("lErr"),"Belə istifadəçi tapılmadı. Qeydiyyatdan keçin.");
-    if(!await DB.checkPass(u, q("lPass").value)) return err(q("lErr"),"Şifrə yanlışdır.");
-    if(!u.verified){
-      const code=gen();
-      await DB.updateUser(u.id,{code});
-      pending=u;
-      q("vEmail").textContent=email; q("vCode").textContent=code;
-      return showSec("secVerify");
-    }
+    const r = await DB.login(q("lEmail").value.trim(), q("lPass").value);
     MA.giris();
-    Session.login(u.id); location.href=next;
-  }catch(ex){ err(q("lErr"),"Baza xətası: "+ex.message); }
+    Session.login(r.user);
+    location.href=next;
+  }catch(ex){ err(q("lErr"), ex.message); }
   finally{ btn.disabled=false; }
 };
 
 q("verifyForm").onsubmit=async e=>{
   e.preventDefault(); hide(q("vErr"));
-  if(!pending) return err(q("vErr"),"Xəta baş verdi, yenidən cəhd edin.");
-  const fresh=await DB.userByEmail(pending.email);
-  if(q("vInput").value.trim()!==String(fresh.code)) return err(q("vErr"),"Kod yanlışdır.");
-  await DB.updateUser(fresh.id,{verified:true, code:null});
-  MA.dogrulandi();
-  Session.login(fresh.id);
-  location.href = "pricing.html?welcome=1";
+  const email = q("signupForm").dataset.email || q("vEmail").textContent;
+  try{
+    const r = await DB.verify(email, q("vInput").value.trim());
+    MA.dogrulandi();
+    Session.login(r.user);
+    location.href = "pricing.html?welcome=1";
+  }catch(ex){ err(q("vErr"), ex.message); }
 };
+
 q("resend").onclick=async()=>{
-  if(!pending) return;
-  const code=gen();
-  await DB.updateUser(pending.id,{code});
-  q("vCode").textContent=code;
+  const email = q("signupForm").dataset.email || q("vEmail").textContent;
+  try{
+    const r = await DB.resend(email);
+    if(r.demoCode) q("vCode").textContent=r.demoCode;
+  }catch(ex){ err(q("vErr"), ex.message); }
 };
 </script>
 </body>

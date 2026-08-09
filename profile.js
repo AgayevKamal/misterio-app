@@ -93,8 +93,13 @@
   }
 
   async function loadCoupons(){
-    try{ COUPONS = await DB.coupons(user.id); }
-    catch(e){ console.error("kuponlar yüklənmədi", e); COUPONS=[]; }
+    try{
+      // kuponlar sessiya user obyektində gəlir (server tərəfindən təmizlənmiş)
+      const u = Session.user();
+      // əlavə olaraq serverdən təzə siyahı çək
+      const me = await DB.me();
+      COUPONS = (me && me.coupons) ? me.coupons : (u.coupons || []);
+    }catch(e){ console.error("kuponlar yüklənmədi", e); COUPONS=[]; }
     render();
   }
 
@@ -140,9 +145,9 @@
   q("cDismiss").onclick=()=>cm.classList.add("hidden");
   q("cClose").onclick=async()=>{
     MA.kuponIstifade((COUPONS.find(x=>x.id===openId)||{}).shop||"");
-    try{ await DB.useCoupon(openId); }catch(e){ console.error(e); }
+    // İstifadəçi kuponu kassada şirkətə göstərir; statusu şirkət admini dəyişir.
+    // Burada kuponu "istifadə edildi" kimi işarələmək YOX, sadəcə UI bağlanır.
     cm.classList.add("hidden");
-    await loadCoupons();
   };
   await loadCoupons();
 })();

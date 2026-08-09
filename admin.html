@@ -186,21 +186,23 @@ const errEl=q("scanErr");
 function showErr(m){ errEl.textContent=m; errEl.classList.remove("hidden"); }
 function hideErr(){ errEl.classList.add("hidden"); }
 
-/* ---- session qoruma ---- */
-if(!adminUser()){
-  q("gateScreen").classList.remove("hidden");
-  q("adminShell").classList.add("hidden");
-} else {
+/* ---- session qoruma (cookie-based) ---- */
+(async () => {
+  const u = await adminUser();
+  if (!u) {
+    q("gateScreen").classList.remove("hidden");
+    q("adminShell").classList.add("hidden");
+    return;
+  }
   q("gateScreen").classList.add("hidden");
   q("adminShell").classList.remove("hidden");
-  const u=adminUser();
-  q("sideName").textContent=u.company||u.name||u.user;
-  q("sideMail").textContent=u.email||u.user;
-  q("sideAv").textContent=(u.company||u.user||"M").trim().charAt(0).toUpperCase();
-  (async()=>{ await loadOrders(); renderDashboard(); renderOrders(); })();
-}
+  q("sideName").textContent = u.name || u.email;
+  q("sideMail").textContent = u.email;
+  q("sideAv").textContent = (u.name || u.email || "M").trim().charAt(0).toUpperCase();
+  await loadOrders(); renderDashboard(); renderOrders();
+})();
 
-q("logoutBtn").onclick=()=>{ adminLogout(); location.href="admin-login.html"; };
+q("logoutBtn").onclick = async () => { await adminLogout(); location.href = "admin-login.html"; };
 
 /* ---- tab nav ---- */
 document.querySelectorAll(".sn-btn").forEach(b=>{
@@ -251,8 +253,8 @@ q("orderForm").onsubmit=async e=>{
   const d=parseFloat(q("discPct").value)||0;
   if(total<=0){ showErr("Məbləğ düzgün deyil."); return; }
   const code=q("ccCode").textContent;
-  const ok=await addOrder(code,total,d);
-  if(!ok){ showErr("Bu kupon artıq istifadə olunub və ya tapılmadı."); return; }
+  const r=await addOrder(code,total,d);
+  if(!r.ok){ showErr(r.error||"Bu kupon artıq istifadə olunub və ya tapılmadı."); return; }
   MA.sifarisTesdiq(total, d);
   q("couponCheck").classList.add("hidden");
   q("emptyCheck").classList.remove("hidden");

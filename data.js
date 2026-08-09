@@ -30,7 +30,7 @@ const COLORS = ["#6d3bff","#a855ff","#c026d3","#ff4d8d","#ff7a45","#ffcf5c",
 let CUSTOM_COMPANIES = [];
 async function loadCompanies(){
   try{
-    const rows = await DB.companies();
+    const rows = await DB.shops("");   // bütün aktiv məkanlar (API)
     CUSTOM_COMPANIES = rows.filter(r=>r.cat).map(r=>({
       id:r.id, name:r.name, cat:r.cat, disc:r.disc, phone:r.phone
     }));
@@ -40,9 +40,11 @@ async function loadCompanies(){
 }
 function customCompanies(){ return CUSTOM_COMPANIES; }
 async function addCompany(c){
-  const row = await DB.addCompany(c);
-  CUSTOM_COMPANIES.push({id:row.id, name:row.name, cat:row.cat, disc:row.disc, phone:row.phone});
-  refreshData();
+  const row = await DB.companyRegister(c);
+  if (row && row.company) {
+    CUSTOM_COMPANIES.push({id:row.company.id, name:row.company.name, cat:row.company.cat, disc:row.company.disc, phone:row.company.phone});
+    refreshData();
+  }
   return row;
 }
 
