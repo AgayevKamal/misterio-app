@@ -144,9 +144,18 @@
 
   q("cDismiss").onclick=()=>cm.classList.add("hidden");
   q("cClose").onclick=async()=>{
-    MA.kuponIstifade((COUPONS.find(x=>x.id===openId)||{}).shop||"");
-    // İstifadəçi kuponu kassada şirkətə göstərir; statusu şirkət admini dəyişir.
-    // Burada kuponu "istifadə edildi" kimi işarələmək YOX, sadəcə UI bağlanır.
+    const cp = COUPONS.find(x=>x.id===openId);
+    if (cp) {
+      MA.kuponIstifade(cp.shop||"");
+      try {
+        // Kuponu serverdə "istifadə edildi" kimi qeyd et (1 dəfəlik)
+        await DB.markCouponUsed(cp.id);
+        // Siyahıdan çıxar
+        COUPONS = COUPONS.filter(x=>x.id!==openId);
+        render();
+        const t=q("marked"); if(t){ t.classList.remove("hidden"); setTimeout(()=>t.classList.add("hidden"),2500); }
+      } catch(e){ console.error("markUsed:", e.message); }
+    }
     cm.classList.add("hidden");
   };
   await loadCoupons();

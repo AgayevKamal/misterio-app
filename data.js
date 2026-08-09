@@ -1,36 +1,29 @@
-/* Misterio — kateqoriya və məkan məlumatları */
-const BASE_DATA = {
-  restoran:  { icon:"🍽️", name:"Restoran", shops:[
-    {n:"Şirvanşah",d:15},{n:"Nar & Bar",d:20},{n:"Emerald",d:10},
-    {n:"Zeytun",d:25},{n:"Dolma House",d:30},{n:"Chinar",d:12}]},
-  anticafe:  { icon:"🕹️", name:"Anticafe", shops:[
-    {n:"Time Out",d:20},{n:"Cube Anticafe",d:15},{n:"Loft 21",d:25},
-    {n:"Play Room",d:10},{n:"Chill Zone",d:35},{n:"Board Bay",d:18}]},
-  coworking: { icon:"💼", name:"Co-working", shops:[
-    {n:"Innoland",d:20},{n:"The Space",d:15},{n:"Hub Baku",d:25},
-    {n:"Nest Co",d:12},{n:"Focus Point",d:30},{n:"Desk&Co",d:10}]},
-  kurslar:   { icon:"🎓", name:"Kurslar", shops:[
-    {n:"Code Academy",d:25},{n:"Lingua Pro",d:15},{n:"Design Lab",d:20},
-    {n:"Math Star",d:10},{n:"IELTS Center",d:30},{n:"Robotech",d:18}]},
-  coffee:    { icon:"☕", name:"Coffeeshop", shops:[
-    {n:"Coffee Moffie",d:15},{n:"Brew Bros",d:20},{n:"Espresso Lab",d:10},
-    {n:"Latte Land",d:25},{n:"Bean Street",d:30},{n:"Cup&Co",d:12}]},
-  kitab:     { icon:"📚", name:"Kitab mağazaları", shops:[
-    {n:"Libraff",d:15},{n:"Ali & Nino",d:20},{n:"Kitabevim",d:10},
-    {n:"Akademkitab",d:25},{n:"Qanun Nəşr",d:30},{n:"Book Point",d:18}]}
-};
+/* Misterio — kateqoriya və məkan məlumatları
+   ⚠️ MÜHÜM: brauzer öz yaddaşından HEÇ NƏ göstərmir.
+   Bütün məkanlar SUPABASE-dən gəlir (DB.shops). STATİK siyahı YOXDUR.
+   Bu, çarxın üzərindəki məkanların serverin seçdiyi qalib ilə eyni olmasını təmin edir. */
 
 /* mystery palitrası — tünd fon üzərində parlaq, lakin premium tonlar */
 const COLORS = ["#6d3bff","#a855ff","#c026d3","#ff4d8d","#ff7a45","#ffcf5c",
                 "#3ddcff","#2d9bf0","#7c4dff","#e0479e","#f59e0b","#4dd4ac"];
 
-/* istifadəçilərin əlavə etdiyi şirkətlər — SUPABASE (companies cədvəli)
-   Səhifə yüklənəndə loadCompanies() bir dəfə çağırılır, nəticə
-   yaddaşda (CUSTOM_COMPANIES) saxlanılır ki, çarx sinxron işləsin. */
+/* Kateqoriya siyahısı (idarəetmə üçün sabit, amma məkanlar serverdən) */
+const CATEGORY_LIST = [
+  {key:"restoran",  icon:"🍽️", name:"Restoran"},
+  {key:"anticafe",  icon:"🕹️", name:"Anticafe"},
+  {key:"coworking", icon:"💼", name:"Co-working"},
+  {key:"kurslar",   icon:"🎓", name:"Kurslar"},
+  {key:"coffee",    icon:"☕", name:"Coffeeshop"},
+  {key:"kitab",     icon:"📚", name:"Kitab mağazaları"}
+];
+
+/* Supabase-dən gələn real məkanlar — yaddaşda saxlanılır ki,
+   çarx sinxron işləsin (amma mənbə həmişə serverdir) */
 let CUSTOM_COMPANIES = [];
+
 async function loadCompanies(){
   try{
-    const rows = await DB.shops("");   // bütün aktiv məkanlar (API)
+    const rows = await DB.shops("");   // bütün aktiv məkanlar (API → Supabase)
     CUSTOM_COMPANIES = rows.filter(r=>r.cat).map(r=>({
       id:r.id, name:r.name, cat:r.cat, disc:r.disc, phone:r.phone
     }));
@@ -38,7 +31,9 @@ async function loadCompanies(){
   refreshData();
   return CUSTOM_COMPANIES;
 }
+
 function customCompanies(){ return CUSTOM_COMPANIES; }
+
 async function addCompany(c){
   const row = await DB.companyRegister(c);
   if (row && row.company) {
@@ -48,32 +43,29 @@ async function addCompany(c){
   return row;
 }
 
-/* ---------- Müqavilə / Contract (frontend simulyasiyası) ----------
-   Real backend qoşulanadək burada localStorage-da saxlanılır və
-   "DB-yə yazıldı / email göndərildi" simulyasiyası göstərilir.
-   Hər müqavilə: id, companyId, signedAt(timestamp), ip, version,
-   pdf(base64 və ya blob url), status:"aktiv". */
+/* ---------- Müqavilə / Contract (backend-də saxlanılır) ---------- */
 const CONTRACT_VERSION = "v1.0";
-/* müqavilə metadatası companies cədvəlində (contract_id, signed_at, status) saxlanılır */
 function contracts(){ return CUSTOM_COMPANIES; }
 function addContract(c){ return c; }
-function clientIp(){
-  /* real IP yalnız backend-dən gəlir; frontend simulyasiyasında
-     local şəbəkə/ixa məlumatı kimi göstərilir */
-  return "127.0.0.1 (local-sim)";
-}
+function clientIp(){ return "backend (server-dən gəlir)"; }
 
-/* DATA = baza + əlavə edilmiş şirkətlər, hər sektora unikal ID verilir */
+/* ============================================================
+   DATA qurulması — YALNIZ Supabase məkanlarından
+   BASE_DATA statik siyahısı SİLİNDİ. Çarx 100% server məlumatı ilə çəkilir.
+   ============================================================ */
 function buildData(){
-  const d = JSON.parse(JSON.stringify(BASE_DATA));
-  Object.keys(d).forEach(k=>{
-    d[k].shops = d[k].shops.map((s,i)=>({...s, id:`${k}-${i}`, catKey:k}));
-  });
-  customCompanies().forEach((c,i)=>{
+  const d = {};
+  CATEGORY_LIST.forEach(c => { d[c.key] = { icon:c.icon, name:c.name, shops:[] }; });
+
+  customCompanies().forEach(c=>{
     if(!d[c.cat]) return;
-    d[c.cat].shops.push({n:c.name, d:c.disc, phone:c.phone, id:`custom-${c.id||i}`, catKey:c.cat, custom:true});
+    d[c.cat].shops.push({
+      n:c.name, d:c.disc, phone:c.phone,
+      id:c.id, catKey:c.cat, custom:true
+    });
   });
-  /* "Hamısı" — bütün kateqoriyaların cəmi */
+
+  /* "Hamısı" — bütün kateqoriyaların cəmi (server məkanları) */
   const all = [];
   Object.keys(d).forEach(k=> d[k].shops.forEach(s=> all.push({...s})));
   const out = { all:{ icon:"✨", name:"Hamısı", shops:all, isAll:true } };
@@ -84,11 +76,4 @@ function buildData(){
 let DATA = buildData();
 function refreshData(){ DATA = buildData(); return DATA; }
 
-const CATEGORY_LIST = [
-  {key:"restoran",  icon:"🍽️", name:"Restoran"},
-  {key:"anticafe",  icon:"🕹️", name:"Anticafe"},
-  {key:"coworking", icon:"💼", name:"Co-working"},
-  {key:"kurslar",   icon:"🎓", name:"Kurslar"},
-  {key:"coffee",    icon:"☕", name:"Coffeeshop"},
-  {key:"kitab",     icon:"📚", name:"Kitab mağazaları"}
-];
+window.CATEGORY_LIST = CATEGORY_LIST;
