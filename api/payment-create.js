@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
 
   const b = L.body(req);
   const mode = b.mode === "extra" ? "extra" : "sub";
-  const amount = mode === "extra" ? 9.90 : 9.90;
+  const amount = mode === "extra" ? 4.90 : 9.90;
 
   try {
     const rows = await L.sb(`users?${L.q({ id: `eq.${s.uid}`, select: "*" })}`);
