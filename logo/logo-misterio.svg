@@ -1,26 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
-  <defs>
-    <style>
-      .ring{fill:none;stroke:#2e1065;stroke-width:2.4}
-      .thin{fill:none;stroke:#2e1065;stroke-width:1.1}
-      .q{fill:#9f7aea;font-family:Georgia,'Times New Roman',serif;font-weight:bold;font-size:15px}
-      .word{fill:#2e1065;font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:30px}
-      .br{fill:none;stroke:#2e1065;stroke-width:2.2}
-    </style>
-  </defs>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="38" height="38" fill="none" stroke="currentColor">
   <!-- outer double ring -->
-  <circle class="ring" cx="120" cy="120" r="112"/>
-  <circle class="thin" cx="120" cy="120" r="104"/>
-
-  <!-- 6-point star (hexagram) behind text -->
-  <g class="thin" opacity="0.55">
+  <circle cx="120" cy="120" r="112" stroke-width="2.4"/>
+  <circle cx="120" cy="120" r="104" stroke-width="1.1"/>
+  <!-- 6-point star (hexagram) -->
+  <g stroke-width="1.1" opacity="0.5">
     <polygon points="120,52 156,131 84,131"/>
     <polygon points="120,188 84,109 156,109"/>
   </g>
-
-  <!-- 8 question marks evenly on inner ring -->
-  <g class="q" text-anchor="middle">
+  <!-- 8 question marks -->
+  <g fill="currentColor" stroke="none" font-family="Georgia,'Times New Roman',serif" font-weight="bold" font-size="15" text-anchor="middle" opacity="0.55">
     <text x="120" y="36">?</text>
     <text x="178" y="56">?</text>
     <text x="204" y="112">?</text>
@@ -30,9 +18,6 @@
     <text x="50"  y="170">?</text>
     <text x="36"  y="112">?</text>
   </g>
-
-  <!-- center word with angle brackets -->
-  <g text-anchor="middle">
-    <text class="word" x="120" y="129">&lt; Misterio &gt;</text>
-  </g>
+  <!-- center word -->
+  <text x="120" y="129" fill="currentColor" stroke="none" font-family="Georgia,'Times New Roman',serif" font-weight="700" font-size="28" text-anchor="middle">&lt; Misterio &gt;</text>
 </svg>

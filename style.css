@@ -104,8 +104,8 @@ a{text-decoration:none;color:inherit}
   backdrop-filter:blur(14px);
   box-shadow:0 8px 30px rgba(0,0,0,.55)}
 .logo{display:flex;align-items:center;gap:10px}
-.logo svg,.logo img{filter:drop-shadow(0 0 10px rgba(168,85,255,.65));transition:transform .5s}
-.logo:hover svg{transform:rotate(20deg) scale(1.08)}
+.logo svg,.logo img{filter:drop-shadow(0 0 10px rgba(168,85,255,.65));transition:transform .5s;color:#fff}
+.logo:hover svg,.logo:hover img{transform:rotate(20deg) scale(1.08)}
 .logo-txt{font-size:24px;font-weight:800;letter-spacing:.6px;
   background:linear-gradient(90deg,#fff,#ffcf5c 60%,#a855ff);
   -webkit-background-clip:text;background-clip:text;color:transparent}
@@ -617,7 +617,7 @@ html[data-theme="light"] .btn.gold{
   background:linear-gradient(100deg,#f59e0b,#d97706);color:#fff}
 html[data-theme="light"] .link{color:#b45309}
 html[data-theme="light"] .link:hover{text-shadow:none;text-decoration:underline}
-html[data-theme="light"] .logo svg,html[data-theme="light"] .logo img{filter:none}
+html[data-theme="light"] .logo svg,html[data-theme="light"] .logo img{filter:none;color:#2e1065}
 html[data-theme="light"] .wheel-outer{
   box-shadow:0 0 44px rgba(124,58,237,.35),0 0 90px rgba(217,119,6,.15),inset 0 0 24px rgba(0,0,0,.25)}
 html[data-theme="light"] .wheel-box::before{
