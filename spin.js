@@ -159,7 +159,13 @@ function shade(hex, amt) {
     const n = currentShops.length;
     const step = 360 / n;
     const idx = winnerIdx >= 0 ? winnerIdx : 0;
-    const centerDeg = 90 + idx * step + step / 2;        // seqment mərkəzi (çarxın öz koordinatında)
+    /* DÜSTUR:
+       Segment i-nin çarx üzərindəki (fırlatmadan əvvəlki) mərkəz bucağı:
+         θ_i = i*step - 90° + step/2   (canvas: 0°=sağ, 90°=alt, 270°=əlavə/yuxarı)
+       Ox yuxarıda (270°) durur. Çarxı R dərəcə fırlatdıqda qalibin mərkəzi
+       ekranın 270°-nə düşməlidir:
+         θ_i + R ≡ 270° (mod 360)  =>  R ≡ 360 - (i*step + step/2) (mod 360) */
+    const centerDeg = 360 - (idx * step + step / 2);
     const jitter = (Math.random() - 0.5) * step * 0.5;    // seqment daxilində kiçik təsadüfi sapma
     const targetMod = ((centerDeg + jitter) % 360 + 360) % 360;
     const turns = 6 + Math.floor(Math.random() * 2);
