@@ -35,6 +35,7 @@ const DB = {
 
   /* çarx */
   async shops(cat)     { const r = await apiCall(`/shops?cat=${encodeURIComponent(cat || "")}`); return r.shops || []; },
+  async spin(cat)      { return apiCall("/spin", { method: "POST", body: { cat } }); },
   /* kuponu "istifadə edildi" kimi qeyd et (istifadəçi özü, profildən) */
   async markCouponUsed(couponId) {
     return apiCall("/coupon", { method: "POST", body: { action: "markUsed", couponId } });
