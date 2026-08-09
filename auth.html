@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Giriş / Qeydiyyat — Misterio</title>
 <script src="theme.js"></script>
+<script src="analytics.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
 </head>
@@ -151,6 +152,7 @@ q("signupForm").onsubmit=async e=>{
               phone:q("sPhone").value.trim(), pass:q("sPass").value, code});
     }
     pending=user;
+    MA.qeydiyyat(email);
     q("vEmail").textContent=email; q("vCode").textContent=code;
     showSec("secVerify");
   }catch(ex){ err(q("sErr"),"Baza xətası: "+ex.message); }
@@ -172,6 +174,7 @@ q("loginForm").onsubmit=async e=>{
       q("vEmail").textContent=email; q("vCode").textContent=code;
       return showSec("secVerify");
     }
+    MA.giris();
     Session.login(u.id); location.href=next;
   }catch(ex){ err(q("lErr"),"Baza xətası: "+ex.message); }
   finally{ btn.disabled=false; }
@@ -183,6 +186,7 @@ q("verifyForm").onsubmit=async e=>{
   const fresh=await DB.userByEmail(pending.email);
   if(q("vInput").value.trim()!==String(fresh.code)) return err(q("vErr"),"Kod yanlışdır.");
   await DB.updateUser(fresh.id,{verified:true, code:null});
+  MA.dogrulandi();
   Session.login(fresh.id);
   location.href = "pricing.html?welcome=1";
 };

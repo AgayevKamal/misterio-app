@@ -56,6 +56,7 @@ async function loadSession(){
 
 async function activateSubscription(){
   const u = CURRENT_USER; if(!u) return null;
+  MA.abuneOldu();
   const now = new Date();
   u.sub = { active:true, startedAt:now.toISOString(), renewAt:addMonth(now).toISOString(),
             spinsLeft:PLAN.spins, price:PLAN.priceNum, totalSpins:(u.sub&&u.sub.totalSpins)||0 };
@@ -65,12 +66,14 @@ async function activateSubscription(){
 }
 async function cancelSubscription(){
   const u = CURRENT_USER; if(!u || !u.sub) return null;
+  MA.abuneLegv();
   u.sub.active=false; u.sub.canceledAt=new Date().toISOString();
   await DB.updateUser(u.id, {sub:u.sub});
   return u;
 }
 async function buyExtraSpin(){
   const u = CURRENT_USER; if(!u) return null;
+  MA.elaveFirlatma();
   u.sub = u.sub || {active:false, spinsLeft:0, renewAt:addMonth(new Date()).toISOString()};
   u.sub.spinsLeft = (u.sub.spinsLeft||0) + 1;
   u.payments = (u.payments||[]).concat([{amount:PLAN.priceNum, date:new Date().toISOString(), type:"extra"}]);

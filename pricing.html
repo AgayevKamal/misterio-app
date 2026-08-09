@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Qiymət — Misterio</title>
 <script src="theme.js"></script>
+<script src="analytics.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
 </head>
@@ -149,6 +150,7 @@ function render(){
     q("subNote").innerHTML=`Qalan fırlatma: <b>${s.spinsLeft}</b> · Yenilənmə: <b>${s.renewText}</b>`;
   }
 }
+MA.qiymetBaxdi();
 (async()=>{ await loadSession(); render(); })();
 
 function openPay(m){
@@ -156,6 +158,7 @@ function openPay(m){
   if(!u||!u.verified){ location.href="auth.html?tab=signup&next=pricing.html"; return; }
   mode=m;
   q("payAcc").textContent=u.email;
+  MA.odenisAcdi(m);
   q("payTitle").textContent = m==="sub" ? "Abunəliyi aktivləşdir" : "Əlavə fırlatma al";
   q("payPeriod").textContent = m==="sub" ? "Aylıq (təkrarlanan)" : "Birdəfəlik";
   q("paySub").textContent = m==="sub"

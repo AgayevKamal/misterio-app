@@ -122,6 +122,7 @@
 
   function openC(c){
     openId=c.id;
+    MA.kuponBaxdi(c.shop);
     q("cInitial").textContent=initial(c.shop);
     q("cTitle").textContent=c.shop;
     q("cDisc").textContent=c.disc+"% endirim";
@@ -138,6 +139,7 @@
 
   q("cDismiss").onclick=()=>cm.classList.add("hidden");
   q("cClose").onclick=async()=>{
+    MA.kuponIstifade((COUPONS.find(x=>x.id===openId)||{}).shop||"");
     try{ await DB.useCoupon(openId); }catch(e){ console.error(e); }
     cm.classList.add("hidden");
     await loadCoupons();

@@ -33,6 +33,7 @@ function shade(hex,amt){
       q("bbTitle").textContent="Çarx kilidlidir";
       q("bbText").textContent="Çarxın arxasında nə gizləndiyini görmək üçün abunəliyi aktivləşdirin — 9.90 AZN, ayda 3 fırlatma.";
       q("bbBtn").textContent="Abunə ol — 9.90 AZN/ay";
+      MA.kilidGordu("abunelik_yoxdur");
       return false;
     }
     if(!s.canSpin){
@@ -41,6 +42,7 @@ function shade(hex,amt){
       q("bbTitle").textContent="Bu ayki fırlatma haqqın bitib";
       q("bbText").innerHTML=`Yeniləmə tarixi: <b>${s.renewText}</b>. O tarixdə hesabınıza yenidən 3 fırlatma əlavə olunacaq.`;
       q("bbBtn").textContent="Əlavə fırlatma al — 9.90 AZN";
+      MA.kilidGordu("firlatma_bitdi");
       return false;
     }
     bb.classList.add("hidden"); area.classList.remove("hidden");
@@ -61,6 +63,7 @@ function shade(hex,amt){
   function select(k){
     if(spinning) return;
     curKey=k;
+    MA.kateqoriyaSecdi(DATA[k].name);
     currentShops = DATA[k].shops.slice();
     document.querySelectorAll(".cat").forEach(c=>c.classList.toggle("active",c.dataset.k===k));
     title.textContent="2. "+DATA[k].name+" çarxını fırlat";
@@ -141,6 +144,7 @@ function shade(hex,amt){
     absAngle += turns*360 + delta;
 
     spinning=true; btn.disabled=true;
+    MA.firlatma(DATA[curKey].name);
     consumeSpin();
     btn.textContent="✦ Çarx fırlanır...";
     document.querySelector(".wheel-outer").classList.add("spinning");
@@ -155,8 +159,14 @@ function shade(hex,amt){
       const c={ id:Date.now(), segId:winner.id, shop:winner.n, disc:winner.d, cat:catName,
         code:"MIST-"+Math.random().toString(36).slice(2,7).toUpperCase()+"-"+Math.floor(Math.random()*90+10),
         date: fmtDate(new Date()) };
-      try{ await DB.addCoupon(Session.user().id, c); }
-      catch(e){ console.error("kupon yazıla bilmədi", e); alert("Kupon bazaya yazıla bilmədi: "+e.message); }
+      try{
+        await DB.addCoupon(Session.user().id, c);
+        MA.kuponQazandi(winner.n, winner.d, catName);
+      }catch(e){
+        console.error("kupon yazıla bilmədi", e);
+        MA.xeta("kupon_yazma", e.message);
+        alert("Kupon bazaya yazıla bilmədi: "+e.message);
+      }
       q("winTxt").textContent=`${winner.n} — ${winner.d}% endirim`;
       q("winCat").textContent=catName;
       q("modal").classList.remove("hidden");

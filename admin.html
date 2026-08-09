@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Şirkət Admin Paneli · Misterio</title>
 <script src="theme.js"></script>
+<script src="analytics.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="admin.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
@@ -252,6 +253,7 @@ q("orderForm").onsubmit=async e=>{
   const code=q("ccCode").textContent;
   const ok=await addOrder(code,total,d);
   if(!ok){ showErr("Bu kupon artıq istifadə olunub və ya tapılmadı."); return; }
+  MA.sifarisTesdiq(total, d);
   q("couponCheck").classList.add("hidden");
   q("emptyCheck").classList.remove("hidden");
   q("manualCode").value="";
