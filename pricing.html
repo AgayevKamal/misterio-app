@@ -102,11 +102,11 @@
   <div class="modal-card">
     <div class="confetti">💳</div>
     <h3 id="payTitle">Abunəliyi aktivləşdir</h3>
-    <p class="win">9.90 AZN</p>
+    <p class="win" id="payAmount">9.90 AZN</p>
     <p class="sub" id="paySub">Aylıq təkrarlanan ödəniş. Nümunə axın — real ödəniş alınmır.</p>
     <div class="pay-fake">
       <div class="pay-row"><span>Kart</span><b>**** **** **** 4242</b></div>
-      <div class="pay-row"><span>Məbləğ</span><b>9.90 AZN</b></div>
+      <div class="pay-row"><span>Məbləğ</span><b id="payAmountRow">9.90 AZN</b></div>
       <div class="pay-row"><span>Dövr</span><b id="payPeriod">Aylıq</b></div>
       <div class="pay-row"><span>Hesab</span><b id="payAcc">—</b></div>
     </div>
@@ -165,6 +165,8 @@ function openPay(m){
   MA.odenisAcdi(m);
   q("payTitle").textContent = m==="sub" ? "Abunəliyi aktivləşdir" : "Əlavə fırlatma al";
   q("payPeriod").textContent = m==="sub" ? "Aylıq (təkrarlanan)" : "Birdəfəlik";
+  q("payAmount").textContent = m==="sub" ? "9.90 AZN" : "4.90 AZN";
+  q("payAmountRow").textContent = m==="sub" ? "9.90 AZN" : "4.90 AZN";
   q("paySub").textContent = m==="sub"
     ? "Aylıq təkrarlanan ödəniş. Nümunə axın — real ödəniş alınmır."
     : "Birdəfəlik ödəniş, hesabınıza +1 fırlatma əlavə olunur.";
