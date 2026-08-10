@@ -174,7 +174,7 @@ const randInt = (n) => crypto.randomInt(0, n);
 
 /* ─────────── Resend email göndərmə ─────────── */
 const RESEND_KEY = process.env.RESEND_API_KEY;
-const FROM_EMAIL = process.env.RESEND_FROM || "Misterio <onboarding@resend.dev>";
+const FROM_EMAIL = process.env.RESEND_FROM || "Misterio <noreply@misterio.az>";
 
 async function sendEmail(to, subject, html) {
   if (!RESEND_KEY) { console.warn("⚠️ RESEND_API_KEY yoxdur — email göndərilmədi"); return false; }
