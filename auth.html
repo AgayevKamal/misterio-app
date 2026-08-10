@@ -146,7 +146,7 @@ q("signupForm").onsubmit=async e=>{
     });
     MA.qeydiyyat(email);
     q("vEmail").textContent=email;
-    q("vCode").textContent="✉️ Kod email ünvanına göndərildi (" + email + ")";
+    q("vCode").textContent=r.demoCode || "(kod emailə göndərildi)";
     showSec("secVerify");
     q("signupForm").dataset.email=email;
   }catch(ex){ err(q("sErr"), ex.message); }
@@ -180,7 +180,7 @@ q("resend").onclick=async()=>{
   const email = q("signupForm").dataset.email || q("vEmail").textContent;
   try{
     const r = await DB.resend(email);
-    q("vCode").textContent = r.emailSent ? "✉️ Yeni kod emailə göndərildi" : "⚠️ Kod göndərilmədi, yenidən yoxlayın";
+    if(r.demoCode) q("vCode").textContent=r.demoCode;
   }catch(ex){ err(q("vErr"), ex.message); }
 };
 </script>
