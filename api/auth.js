@@ -55,8 +55,9 @@ async function register(req, res, b) {
     }),
   });
   const u = rows[0];
-  // MVP: kod cavabda qaytarılır (email xidməti qoşulanda silinəcək)
-  return L.ok(res, { userId: u.id, email, demoCode: code });
+  // Demo rejim SONA ÇATDI: kod artıq frontend-ə qayıtmır, email-ə gedir
+  const sent = await L.sendEmail(email, "Misterio — Email təsdiqi", L.verifyEmailHtml(code, name));
+  return L.ok(res, { userId: u.id, email, emailSent: sent });
 }
 
 /* ───────── email doğrulama ───────── */
@@ -98,7 +99,8 @@ async function resend(req, res, b) {
     method: "PATCH", prefer: "return=minimal",
     body: JSON.stringify({ verify_code: code, verify_expires: new Date(Date.now() + 15 * 60 * 1000).toISOString() }),
   });
-  return L.ok(res, { demoCode: code });
+  const sent = await L.sendEmail(email, "Misterio — Təsdiq kodu", L.verifyEmailHtml(code, u.name));
+  return L.ok(res, { emailSent: sent });
 }
 
 /* ───────── giriş ───────── */

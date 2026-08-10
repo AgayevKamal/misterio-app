@@ -172,8 +172,39 @@ function randCode(len = 5) {
 }
 const randInt = (n) => crypto.randomInt(0, n);
 
+/* ─────────── Resend email göndərmə ─────────── */
+const RESEND_KEY = process.env.RESEND_API_KEY;
+const FROM_EMAIL = process.env.RESEND_FROM || "Misterio <onboarding@resend.dev>";
+
+async function sendEmail(to, subject, html) {
+  if (!RESEND_KEY) { console.warn("⚠️ RESEND_API_KEY yoxdur — email göndərilmədi"); return false; }
+  try {
+    const r = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from: FROM_EMAIL, to: [to], subject, html }),
+    });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) { console.error("Resend xətası:", j); return false; }
+    return true;
+  } catch (e) { console.error("email send err:", e.message); return false; }
+}
+
+function verifyEmailHtml(code, name) {
+  return `<div style="font-family:Segoe UI,Arial,sans-serif;max-width:420px;margin:0 auto;padding:24px;background:#0d0620;border-radius:16px">
+    <div style="text-align:center">
+      <div style="font-size:30px;font-weight:800;color:#ffcf5c;letter-spacing:1px">Misterio</div>
+      <p style="color:#fff;font-size:16px">Salam ${name || ""}!</p>
+      <p style="color:#cbb8ff;font-size:14px">Hesabını təsdiqləmək üçün aşağıdakı 6 rəqəmli kodu daxil et:</p>
+      <div style="font-size:34px;font-weight:800;letter-spacing:8px;color:#fff;background:#2a1550;padding:18px;border-radius:12px;margin:18px 0">${code}</div>
+      <p style="color:#9f7aea;font-size:12px">Kod 15 dəqiqə etibarlıdır.</p>
+    </div>
+  </div>`;
+}
+
 module.exports = {
   sb, q, hashPassword, verifyPassword, signToken, verifyToken,
   setAuthCookie, clearAuthCookie, readCookie, getUser, getCompany,
   rateLimit, json, ok, fail, only, body, clean, isEmail, randCode, randInt,
+  sendEmail, verifyEmailHtml,
 };
