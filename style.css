@@ -356,6 +356,17 @@ main{flex:1;width:100%;position:relative;z-index:1}
 .pc-list li{font-size:15px;line-height:1.5;color:#e2d9f7}
 .pc-note{margin-top:14px;font-size:13px;color:var(--soft);text-align:center}
 .price-side{display:grid;gap:14px}
+@media(max-width:480px){
+  .price-card{padding:26px 18px 22px;border-radius:20px}
+  .pc-num{font-size:48px}
+  .pc-cur{font-size:18px}
+  .pc-name{font-size:15px}
+  .pc-list li{font-size:14px}
+  .extra-card{flex-direction:column;align-items:stretch;text-align:center;gap:12px}
+  .extra-right{justify-content:center;flex-wrap:wrap}
+  .extra-card h3{font-size:17px}
+  .sec-title{font-size:22px}
+}
 .active-badge{width:100%;text-align:center;font-weight:800;font-size:17px;padding:16px;
   border-radius:30px;color:var(--ok);background:rgba(61,220,151,.1);
   border:1.5px solid rgba(61,220,151,.45)}
