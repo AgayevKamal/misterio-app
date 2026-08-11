@@ -181,13 +181,11 @@ function openPay(m){
     : "Birdəfəlik ödəniş, hesabınıza +1 fırlatma əlavə olunur.";
   q("payModal").classList.remove("hidden");
 }
-window.onCountryChange=()=>{ updatePrices(); render(); I18N.apply(); };
 q("subBtn").onclick=()=>openPay("sub");
 q("extraBtn").onclick=()=>openPay("extra");
 q("payCancel").onclick=()=>q("payModal").classList.add("hidden");
 q("payGo").onclick=async()=>{
 q("payModal").classList.add("hidden");
-const country="AZ";
 if(mode==="sub"){
     await activateSubscription();
     const s=subInfo();
