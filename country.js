@@ -8,68 +8,56 @@
   "use strict";
   const I18N = window.I18N;
 
-  function buildModal() {
-    if (document.getElementById("countryModal")) return;
-    const m = document.createElement("div");
-    m.id = "countryModal";
-    m.className = "country-modal";
-    m.innerHTML = `
-      <div class="country-box">
-        <h2 data-i18n="country.choose">Ölkənizi seçin</h2>
-        <p data-i18n="country.chooseSub">Dil və valyuta üçün ölkə seçin</p>
-        <div class="country-opts">
-          <button class="country-opt" data-c="AZ"><span>🇦🇿</span> <b data-i18n="country.az">Azərbaycan</b></button>
-          <button class="country-opt" data-c="DE"><span>🇩🇪</span> <b data-i18n="country.de">Almaniya</b></button>
-          <button class="country-opt" data-c="UZ"><span>🇺🇿</span> <b data-i18n="country.uz">Özbəkistan</b></button>
-        </div>
+  function buildDropdown() {
+    if (document.getElementById("countryDD")) return;
+    const d = document.createElement("div");
+    d.id = "countryDD";
+    d.className = "country-dd";
+    d.innerHTML = `
+      <button class="country-dd-btn" id="countryBtn">
+        <span id="countryFlag">🇦🇿</span> <span id="countryName">Azerbaijan</span> ▾
+      </button>
+      <div class="country-dd-menu" id="countryMenu">
+        <button class="country-dd-item" data-c="AZ"><span>🇦🇿</span> Azerbaijan</button>
+        <button class="country-dd-item" data-c="DE"><span>🇩🇪</span> Germany</button>
+        <button class="country-dd-item" data-c="UZ"><span>🇺🇿</span> Uzbekistan</button>
       </div>`;
-    document.body.appendChild(m);
-    m.querySelectorAll(".country-opt").forEach((b) => {
+    document.body.appendChild(d);
+    // toggle
+    d.querySelector("#countryBtn").onclick = (e) => {
+      e.stopPropagation();
+      d.querySelector("#countryMenu").classList.toggle("show");
+    };
+    // seçim
+    d.querySelectorAll(".country-dd-item").forEach((b) => {
       b.onclick = () => {
         I18N.setCountry(b.getAttribute("data-c"));
-        m.classList.remove("show");
-        setTimeout(() => m.remove(), 300);
+        d.querySelector("#countryMenu").classList.remove("show");
+        updateDD();
       };
     });
+    // xaricə kliklə bağla
+    document.addEventListener("click", () => d.querySelector("#countryMenu").classList.remove("show"));
   }
 
-  function showModal() {
-    buildModal();
-    const m = document.getElementById("countryModal");
-    if (m) m.classList.add("show");
-  }
-
-  function showFloat() {
-    let f = document.getElementById("countryFloat");
-    if (!f) {
-      f = document.createElement("div");
-      f.id = "countryFloat";
-      f.className = "country-float";
-      f.setAttribute("data-i18n", "country.change");
-      f.textContent = "🌍 Ölkə dəyiş";
-      document.body.appendChild(f);
-      f.onclick = showModal;
-    }
-    f.classList.add("show");
+  function updateDD() {
+    const c = I18N.getCountry();
+    const flag = document.getElementById("countryFlag");
+    const name = document.getElementById("countryName");
+    if (flag) flag.textContent = c.flag;
+    if (name) name.textContent = c.name;
   }
 
   function init() {
     I18N.apply();
-    const saved = localStorage.getItem("mist_country");
-    if (!saved) {
-      setTimeout(showModal, 2000);
-    } else {
-      // Seçim varsa, yuxarıda kiçik bildiriş göstər
-      setTimeout(showFloat, 3000);
-    }
-    document.addEventListener("click", (e) => {
-      if (e.target.closest("#countryChange")) showModal();
-    });
+    buildDropdown();
+    updateDD();
+    // hər dəfə dil dəyişəndə dropdown yenilə
+    const origSet = I18N.setCountry;
+    I18N.setCountry = (code) => { origSet(code); updateDD(); };
   }
 
   if (document.readyState === "loading")
     document.addEventListener("DOMContentLoaded", init);
   else init();
-
-  window.showCountryModal = showModal;
 })();

@@ -714,20 +714,12 @@ html[data-theme="light"] .sw-btn.active{color:#fff}
   .hero h1{font-size:23px}
 }
 
-/* ───────── Ölkə seçimi modalı ───────── */
-.country-modal{position:fixed;inset:0;background:rgba(7,4,15,.82);display:none;align-items:center;justify-content:center;z-index:9999;opacity:0;transition:opacity .3s}
-.country-modal.show{display:flex;opacity:1}
-.country-box{background:linear-gradient(160deg,#1a0d33,#0d0620);border:1px solid #3a1f6b;border-radius:18px;padding:32px 28px;max-width:380px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:countryPop .35s ease}
-@keyframes countryPop{from{transform:scale(.9) translateY(-20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
-.country-box h2{color:#ffcf5c;font-size:22px;margin:0 0 8px}
-.country-box p{color:#cbb8ff;font-size:14px;margin:0 0 22px}
-.country-opts{display:flex;flex-direction:column;gap:12px}
-.country-opt{display:flex;align-items:center;gap:12px;padding:14px 18px;background:#2a1550;border:1px solid #4a2a8a;border-radius:12px;color:#fff;font-size:16px;cursor:pointer;transition:.2s}
-.country-opt:hover{background:#3a1f6b;border-color:#a855ff;transform:translateY(-2px)}
-.country-opt span{font-size:24px}
-#countryChange{color:#9f7aea;cursor:pointer;font-size:13px;text-decoration:underline}
-#countryChange:hover{color:#ffcf5c}
-/* Footer-dəki düyməni yuxarıda bildiriş kimi göstər */
-.country-float{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9998;background:linear-gradient(160deg,#3a1f6b,#2a1550);border:1px solid #a855ff;border-radius:30px;padding:10px 20px;color:#fff;font-size:14px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.4);display:none}
-.country-float.show{display:block;animation:countryFloatIn .4s ease}
-@keyframes countryFloatIn{from{transform:translateX(-50%) translateY(-30px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+/* ───────── Ölkə seçimi dropdown ───────── */
+.country-dd{position:fixed;top:14px;right:14px;z-index:9998}
+.country-dd-btn{display:flex;align-items:center;gap:6px;background:rgba(42,21,80,.9);border:1px solid #4a2a8a;color:#fff;font-size:13px;padding:8px 12px;border-radius:24px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);position:relative;z-index:9999}
+.country-dd-btn:hover{border-color:#a855ff}
+.country-dd-menu{display:none;position:absolute;top:44px;right:0;background:#1a0d33;border:1px solid #4a2a8a;border-radius:12px;overflow:hidden;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:9999}
+.country-dd-menu.show{display:block;animation:ddIn .2s ease}
+@keyframes ddIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.country-dd-item{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:none;border:0;color:#fff;font-size:14px;cursor:pointer;text-align:left}
+.country-dd-item:hover{background:#2a1550}
