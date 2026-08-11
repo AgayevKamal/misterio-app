@@ -6,6 +6,8 @@
 <title>Çarx — Misterio</title>
 <script src="theme.js"></script>
 <script src="analytics.js"></script>
+<script src="i18n.js"></script>
+<script src="country.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
 </head>
@@ -46,17 +48,17 @@
     </div>
 
     <div id="spinArea">
-      <h2 class="sec-title">1. Kateqoriya seç</h2>
+      <h2 class="sec-title" data-i18n="spin.cat">1. Kateqoriya seç</h2>
       <div id="cats" class="cats"></div>
     </div>
   </section>
 
   <section class="wrap wheel-sec" id="wheelSec">
-    <h2 class="sec-title" id="wheelTitle">2. Çarxı fırlat</h2>
+    <h2 class="sec-title" id="wheelTitle" data-i18n="spin.title">2. Çarxı fırlat</h2>
     <div class="wheel-box">
       <div class="pointer"></div>
       <div class="wheel-outer"><canvas id="wheel" width="520" height="520"></canvas></div>
-      <button id="spinBtn" class="btn big">🔮 Çarxı fırlat</button>
+      <button id="spinBtn" class="btn big" data-i18n="spin.btn">🔮 Çarxı fırlat</button>
       <p class="hint" id="hint"></p>
     </div>
   </section>
@@ -85,5 +87,8 @@
 <script src="auth.js"></script>
 <script src="data.js"></script>
 <script src="spin.js"></script>
+<footer style="text-align:center;padding:24px;color:#9f7aea;font-size:13px">
+  <span id="countryChange" data-i18n="country.change">Ölkə dəyiş</span>
+</footer>
 </body>
 </html>

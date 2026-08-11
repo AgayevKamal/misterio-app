@@ -6,6 +6,8 @@
 <title>Qiymət — Misterio</title>
 <script src="theme.js"></script>
 <script src="analytics.js"></script>
+<script src="i18n.js"></script>
+<script src="country.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
 </head>
@@ -46,7 +48,7 @@
       <div class="price-card">
         <div class="pc-tag">ƏN POPULYAR</div>
         <div class="pc-name">Misterio Aylıq</div>
-        <div class="pc-price"><span class="pc-num">9.90</span><span class="pc-cur">AZN</span><span class="pc-per">/ay</span></div>
+        <div class="pc-price"><span class="pc-num" id="subNum">9.90</span><span class="pc-cur" id="subCur">AZN</span><span class="pc-per" id="subPer" data-i18n="pricing.perMonth">/ay</span></div>
         <div class="pc-sub">aylıq təkrarlanan ödəniş</div>
         <ul class="pc-list">
           <li>✦ <b>Ayda 3 sürpriz fırlatma</b></li>
@@ -81,7 +83,7 @@
         <p class="sub">Bu ayki 3 fırlatman bitibsə, növbəti ayı gözləmədən əlavə şans ala bilərsən.</p>
       </div>
       <div class="extra-right">
-        <div class="extra-price">4.90 AZN</div>
+        <div class="extra-price" id="extraPrice">4.90 AZN</div>
         <button class="btn" id="extraBtn">Əlavə fırlatma al</button>
       </div>
     </div>
@@ -155,29 +157,40 @@ function render(){
   }
 }
 MA.qiymetBaxdi();
+(function(){ updatePrices(); I18N.apply(); })();
 (async()=>{ await loadSession(); render(); })();
 
+function updatePrices(){
+  const c=I18N.getCountry();
+  q("subNum").textContent=c.sub.toLocaleString(I18N.getLang());
+  q("subCur").textContent=c.cur;
+  q("extraPrice").textContent=c.extra.toLocaleString(I18N.getLang())+" "+c.cur;
+}
 function openPay(m){
   const u=Session.user();
   if(!u||!u.verified){ location.href="auth.html?tab=signup&next=pricing.html"; return; }
   mode=m;
+  const c=I18N.getCountry();
   q("payAcc").textContent=u.email;
   MA.odenisAcdi(m);
-  q("payTitle").textContent = m==="sub" ? "Abunəliyi aktivləşdir" : "Əlavə fırlatma al";
-  q("payPeriod").textContent = m==="sub" ? "Aylıq (təkrarlanan)" : "Birdəfəlik";
-  q("payAmount").textContent = m==="sub" ? "9.90 AZN" : "4.90 AZN";
-  q("payAmountRow").textContent = m==="sub" ? "9.90 AZN" : "4.90 AZN";
+  q("payTitle").textContent = I18N.t(m==="sub" ? "pay.title.sub" : "pay.title.extra");
+  q("payPeriod").textContent = I18N.t(m==="sub" ? "pay.period.sub" : "pay.period.extra");
+  const amt=(m==="sub"?c.sub:c.extra).toLocaleString(I18N.getLang())+" "+c.cur;
+  q("payAmount").textContent = amt;
+  q("payAmountRow").textContent = amt;
   q("paySub").textContent = m==="sub"
     ? "Aylıq təkrarlanan ödəniş. Nümunə axın — real ödəniş alınmır."
     : "Birdəfəlik ödəniş, hesabınıza +1 fırlatma əlavə olunur.";
   q("payModal").classList.remove("hidden");
 }
+window.onCountryChange=()=>{ updatePrices(); render(); I18N.apply(); };
 q("subBtn").onclick=()=>openPay("sub");
 q("extraBtn").onclick=()=>openPay("extra");
 q("payCancel").onclick=()=>q("payModal").classList.add("hidden");
 q("payGo").onclick=async()=>{
-  q("payModal").classList.add("hidden");
-  if(mode==="sub"){
+q("payModal").classList.add("hidden");
+const country=I18N.getCountry().code;
+if(mode==="sub"){
     await activateSubscription();
     const s=subInfo();
     q("okSpins").textContent=s.spinsLeft+" fırlatma səni gözləyir";
@@ -194,5 +207,8 @@ q("payGo").onclick=async()=>{
 if(new URLSearchParams(location.search).get("welcome"))
   q("welcomeBadge").textContent="✅ Hesabın təsdiqləndi — indi abunə ol";
 </script>
+<footer style="text-align:center;padding:24px;color:#9f7aea;font-size:13px">
+  <span id="countryChange" data-i18n="country.change">Ölkə dəyiş</span>
+</footer>
 </body>
 </html>

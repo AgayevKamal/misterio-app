@@ -54,9 +54,10 @@ const DB = {
   /* ödəniş (abunə / əlavə fırlatma) — serverdə aktiv edir */
   async payment(mode)  {
     // əvvəlcə ödəniş yaradıb abunəni aktiv edirik (demo rejimdə birbaşa)
-    const r = await apiCall("/payment-create", { method: "POST", body: { mode } });
+    const country = (window.I18N && window.I18N.getCountry().code) || "AZ";
+    const r = await apiCall("/payment-create", { method: "POST", body: { mode, country } });
     // sonra təzə sessiya məlumatını çək
-    try { const u = await DB.me(); if (u) return { ...r, user: u }; } catch {}
+    try { const u = await DB.me(); if (u) return { ...r, user: u }; } catch { }
     return r;
   },
 };

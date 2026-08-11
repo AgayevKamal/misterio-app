@@ -6,6 +6,8 @@
 <title>Misterio — Sürpriz endirim kuponları</title>
 <script src="theme.js"></script>
 <script src="analytics.js"></script>
+<script src="i18n.js"></script>
+<script src="country.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
 </head>
@@ -43,7 +45,7 @@
     <p class="lead">Çarxın arxasında nə gizlənir — bilmirsən. Bakının onlarla məkanından biri, gözlənilməz bir endirim.
        Ayda 3 fırlatma — cəmi 9.90 AZN.</p>
     <div class="row">
-      <a class="btn big" href="pricing.html">Çarxı fırlat 🔮</a>
+      <a class="btn big" href="pricing.html" data-i18n="hero.cta">Çarxı fırlat 🔮</a>
       <a class="btn ghost big" id="signupBtn" href="auth.html?tab=signup">Hesab yarat</a>
     </div>
     <p class="hint">Çarxı fırlatmaq üçün hesab və aktiv abunəlik tələb olunur.</p>
@@ -93,7 +95,7 @@
 
   <section class="wrap cta">
     <h2>Sənə nə qismət olacaq?</h2>
-    <a class="btn big" id="ctaBtn" href="pricing.html">İndi başla 🔮</a>
+    <a class="btn big" id="ctaBtn" href="pricing.html" data-i18n="hero.cta">İndi başla 🔮</a>
   </section>
 </main>
 
@@ -148,5 +150,8 @@ if(u && u.verified){
 }
 })();
 </script>
+<footer style="text-align:center;padding:24px;color:#9f7aea;font-size:13px">
+  <span id="countryChange" data-i18n="country.change">Ölkə dəyiş</span>
+</footer>
 </body>
 </html>
