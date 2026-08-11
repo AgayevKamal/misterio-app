@@ -24,15 +24,9 @@ module.exports = async (req, res) => {
 
   const b = L.body(req);
   const mode = b.mode === "extra" ? "extra" : "sub";
-  // Ölkəyə görə valyuta (frontend-dən gəlir, təhlükəsizlik üçün yenidən hesablanır)
-  const COUNTRY_PRICES = {
-    AZ: { sub: 9.90, extra: 4.90, cur: "AZN" },
-    DE: { sub: 29.99, extra: 13.99, cur: "EUR" },
-    UZ: { sub: 250000, extra: 100000, cur: "UZS" },
-  };
-  const ccode = (b.country && COUNTRY_PRICES[b.country]) ? b.country : "AZ";
-  const cp = COUNTRY_PRICES[ccode];
-  const amount = mode === "extra" ? cp.extra : cp.sub;
+  // Vahid valyuta (demo rejim)
+  const amount = mode === "extra" ? 4.90 : 9.90;
+  const cur = "AZN";
 
   try {
     const rows = await L.sb(`users?${L.q({ id: `eq.${s.uid}`, select: "*" })}`);
@@ -47,7 +41,7 @@ module.exports = async (req, res) => {
         active: true, plan: "Misterio Aylıq", amount: amount,
         spinsLeft: 3, totalSpins: 0,
         expires, startedAt: new Date().toISOString(),
-        method: "demo", currency: cp.cur,
+        method: "demo", currency: cur,
       };
       await L.sb(`users?${L.q({ id: `eq.${u.id}` })}`, {
         method: "PATCH", prefer: "return=minimal",

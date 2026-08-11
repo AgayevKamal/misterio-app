@@ -7,7 +7,7 @@
 <script src="theme.js"></script>
 <script src="analytics.js"></script>
 <script src="i18n.js"></script>
-<script src="country.js"></script>
+<script src="lang.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
 </head>
@@ -161,16 +161,14 @@ MA.qiymetBaxdi();
 (async()=>{ await loadSession(); render(); })();
 
 function updatePrices(){
-  const c=I18N.getCountry();
-  q("subNum").textContent=c.sub.toLocaleString(I18N.getLang());
-  q("subCur").textContent=c.cur;
-  q("extraPrice").textContent=c.extra.toLocaleString(I18N.getLang())+" "+c.cur;
+  q("subNum").textContent="9.90";
+  q("subCur").textContent="AZN";
+  q("extraPrice").textContent="4.90 AZN";
 }
 function openPay(m){
   const u=Session.user();
   if(!u||!u.verified){ location.href="auth.html?tab=signup&next=pricing.html"; return; }
   mode=m;
-  const c=I18N.getCountry();
   q("payAcc").textContent=u.email;
   MA.odenisAcdi(m);
   q("payTitle").textContent = I18N.t(m==="sub" ? "pay.title.sub" : "pay.title.extra");
@@ -189,7 +187,7 @@ q("extraBtn").onclick=()=>openPay("extra");
 q("payCancel").onclick=()=>q("payModal").classList.add("hidden");
 q("payGo").onclick=async()=>{
 q("payModal").classList.add("hidden");
-const country=I18N.getCountry().code;
+const country="AZ";
 if(mode==="sub"){
     await activateSubscription();
     const s=subInfo();
@@ -208,7 +206,6 @@ if(new URLSearchParams(location.search).get("welcome"))
   q("welcomeBadge").textContent="✅ Hesabın təsdiqləndi — indi abunə ol";
 </script>
 <footer style="text-align:center;padding:24px;color:#9f7aea;font-size:13px">
-  <span id="countryChange" data-i18n="country.change">Ölkə dəyiş</span>
 </footer>
 </body>
 </html>

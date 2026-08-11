@@ -714,12 +714,65 @@ html[data-theme="light"] .sw-btn.active{color:#fff}
   .hero h1{font-size:23px}
 }
 
-/* ───────── Ölkə seçimi dropdown ───────── */
-.country-dd{position:fixed;top:14px;right:14px;z-index:9998}
-.country-dd-btn{display:flex;align-items:center;gap:6px;background:rgba(42,21,80,.9);border:1px solid #4a2a8a;color:#fff;font-size:13px;padding:8px 12px;border-radius:24px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);position:relative;z-index:9999}
-.country-dd-btn:hover{border-color:#a855ff}
-.country-dd-menu{display:none;position:absolute;top:44px;right:0;background:#1a0d33;border:1px solid #4a2a8a;border-radius:12px;overflow:hidden;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:9999}
-.country-dd-menu.show{display:block;animation:ddIn .2s ease}
+/* ───────── Dil seçicisi dropdown ───────── */
+.lang-dd{position:fixed;top:14px;right:14px;z-index:9998}
+.lang-dd-btn{display:flex;align-items:center;gap:6px;background:rgba(42,21,80,.9);border:1px solid #4a2a8a;color:#fff;font-size:13px;padding:8px 12px;border-radius:24px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);position:relative;z-index:9999}
+.lang-dd-btn:hover{border-color:#a855ff}
+.lang-dd-menu{display:none;position:absolute;top:44px;right:0;background:#1a0d33;border:1px solid #4a2a8a;border-radius:12px;overflow:hidden;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:9999}
+.lang-dd-menu.show{display:block;animation:ddIn .2s ease}
 @keyframes ddIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-.country-dd-item{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:none;border:0;color:#fff;font-size:14px;cursor:pointer;text-align:left}
-.country-dd-item:hover{background:#2a1550}
+.lang-dd-item{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:none;border:0;color:#fff;font-size:14px;cursor:pointer;text-align:left}
+.lang-dd-item:hover{background:#2a1550}
+
+/* ───────── RESPONSIVE (mobil / planşet / noutbuk) ───────── */
+/* Noutbuk (1024px və aşağı) */
+@media(max-width:1024px){
+  .container,main,.wrap{max-width:92%;margin:0 auto}
+  .hero h1{font-size:32px}
+  .info-grid,.steps{grid-template-columns:repeat(2,1fr)}
+  .cats{grid-template-columns:repeat(3,1fr)}
+}
+/* Planşet (768px və aşağı) */
+@media(max-width:768px){
+  header{height:56px;padding:0 12px}
+  .logo-txt{font-size:18px}
+  header nav a{font-size:13px;margin-left:10px}
+  .hero{padding:32px 0}
+  .hero h1{font-size:26px;line-height:1.25}
+  .hero .lead{font-size:14px}
+  .row{flex-direction:column;gap:10px}
+  .btn.big,.btn.ghost.big{width:100%;text-align:center}
+  .info-grid,.steps{grid-template-columns:1fr;gap:12px}
+  .cats{grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .stat .s-val{font-size:20px}
+  .stat .s-lbl{font-size:10px}
+  .pc-card{flex-direction:column;text-align:center;padding:20px}
+  .pc-price{margin:10px 0}
+  .coupons{grid-template-columns:1fr}
+  .wheel-wrap{width:260px;height:260px;max-width:80vw}
+  .lang-dd{top:10px;right:10px}
+  .lang-dd-btn{font-size:12px;padding:7px 10px}
+  .lang-dd-menu{top:40px;min-width:140px}
+}
+/* Telefon (480px və aşağı) */
+@media(max-width:480px){
+  header nav a{font-size:12px;margin-left:8px}
+  .logo-svg{width:30px;height:30px}
+  .hero h1{font-size:22px}
+  .hero .badge{font-size:12px}
+  .cats{grid-template-columns:1fr 1fr;gap:8px}
+  .cat{font-size:13px;padding:10px}
+  .wheel-wrap{width:220px;height:220px}
+  .btn.big{font-size:15px;padding:13px 20px}
+  .sec-title{font-size:20px}
+  .info,.step{padding:16px}
+  .info h3,.step h3{font-size:15px}
+  .info p,.step p{font-size:13px}
+  .stat-grid{gap:6px}
+  .stat{padding:10px 4px}
+  .stat .s-ic{font-size:20px}
+  .footer{font-size:12px;padding:18px 10px}
+  .pc-title{font-size:18px}
+  .pc-num{font-size:30px}
+}
