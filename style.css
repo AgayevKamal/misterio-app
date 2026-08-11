@@ -696,8 +696,9 @@ html[data-theme="light"] .sw-btn.active{color:#fff}
   .cats{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
 }
 @media(max-width:600px){
-  .hdr{flex-wrap:wrap;gap:8px}
-  .nav{order:3;width:100%;justify-content:flex-start;margin:6px 0 0;flex-wrap:wrap}
+  /* HEADER: logo + tema + profil birinci sıra, nav aşağıda kompakt */
+  .hdr{flex-wrap:wrap;gap:8px;padding:10px 12px}
+  .nav{order:3;width:100%;justify-content:flex-start;margin:2px 0 0;gap:14px;flex-wrap:wrap}
   .nav a{font-size:13px;padding:4px 0}
   .logo-txt{font-size:19px}
   .theme-btn,.avatar{width:38px;height:38px}
@@ -715,63 +716,36 @@ html[data-theme="light"] .sw-btn.active{color:#fff}
   .c-initial{width:64px;height:64px;font-size:28px}
   .ftr{padding:26px 14px}
   .ftr-logo{font-size:20px}
-  /* modal və müqavilə mətni mobil üçün */
+  /* AUTH / FORM KARTLARI: tam enə yayılsın */
+  .auth-wrap,.add-grid,.price-wrap{max-width:100%;padding:0}
+  .auth-card,.form,.add-grid .card,.price-side .card{padding:20px 16px}
+  .auth-sec{max-width:100%}
+  .form input,.form select{font-size:16px;padding:13px 14px}
+  .auth-card .sub{font-size:14px}
+  /* PROFILE */
+  .prof-head{flex-direction:column;align-items:flex-start;text-align:left}
+  .prof-head .btn{margin-left:0;width:100%;margin-top:10px}
+  .sub-row{flex-direction:column;gap:14px}
+  .sub-actions{width:100%}
+  .sub-actions .btn{width:100%}
+  /* PRICING */
+  .price-card{padding:26px 18px 22px;border-radius:20px}
+  .pc-num{font-size:50px}
+  .pc-cur{font-size:18px}
+  .pc-name{font-size:15px}
+  .pc-list li{font-size:14px}
+  .extra-card{flex-direction:column;align-items:stretch;text-align:center;gap:12px}
+  .extra-right{justify-content:center;flex-wrap:wrap}
+  .extra-card h3{font-size:17px}
+  /* MODAL */
   .modal-card{padding:24px 18px}
   .contract-text{max-height:200px;font-size:13px}
   .contract-check{font-size:13px}
+  /* ADD COMPANY */
+  .add-grid{grid-template-columns:1fr}
+  .comp-row{flex-wrap:wrap;gap:8px}
 }
 @media(max-width:380px){
   .coupons,.cats{grid-template-columns:1fr}
   .hero h1{font-size:23px}
-}
-
-
-/* ───────── RESPONSIVE (mobil / planşet / noutbuk) ───────── */
-/* Noutbuk (1024px və aşağı) */
-@media(max-width:1024px){
-  .container,main,.wrap{max-width:92%;margin:0 auto}
-  .hero h1{font-size:32px}
-  .info-grid,.steps{grid-template-columns:repeat(2,1fr)}
-  .cats{grid-template-columns:repeat(3,1fr)}
-}
-/* Planşet (768px və aşağı) */
-@media(max-width:768px){
-  header{height:56px;padding:0 12px}
-  .logo-txt{font-size:18px}
-  header nav a{font-size:13px;margin-left:10px}
-  .hero{padding:32px 0}
-  .hero h1{font-size:26px;line-height:1.25}
-  .hero .lead{font-size:14px}
-  .row{flex-direction:column;gap:10px}
-  .btn.big,.btn.ghost.big{width:100%;text-align:center}
-  .info-grid,.steps{grid-template-columns:1fr;gap:12px}
-  .cats{grid-template-columns:repeat(2,1fr);gap:10px}
-  .stat-grid{grid-template-columns:repeat(3,1fr);gap:8px}
-  .stat .s-val{font-size:20px}
-  .stat .s-lbl{font-size:10px}
-  .pc-card{flex-direction:column;text-align:center;padding:20px}
-  .pc-price{margin:10px 0}
-  .coupons{grid-template-columns:1fr}
-  .wheel-wrap{width:260px;height:260px;max-width:80vw}
-}
-/* Telefon (480px və aşağı) */
-@media(max-width:480px){
-  header nav a{font-size:12px;margin-left:8px}
-  .logo-svg{width:30px;height:30px}
-  .hero h1{font-size:22px}
-  .hero .badge{font-size:12px}
-  .cats{grid-template-columns:1fr 1fr;gap:8px}
-  .cat{font-size:13px;padding:10px}
-  .wheel-wrap{width:220px;height:220px}
-  .btn.big{font-size:15px;padding:13px 20px}
-  .sec-title{font-size:20px}
-  .info,.step{padding:16px}
-  .info h3,.step h3{font-size:15px}
-  .info p,.step p{font-size:13px}
-  .stat-grid{gap:6px}
-  .stat{padding:10px 4px}
-  .stat .s-ic{font-size:20px}
-  .footer{font-size:12px;padding:18px 10px}
-  .pc-title{font-size:18px}
-  .pc-num{font-size:30px}
 }
