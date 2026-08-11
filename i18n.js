@@ -327,8 +327,9 @@
       if (lang === "az") return; // default, dəyişmə
       const map = I18N.STATIC[lang] || {};
       document.querySelectorAll("h1,h2,h3,p,span,b,a,button,label,div").forEach((el) => {
-        // yalnız saf mətn node-ləri (uşağı yox)
-        if (el.children.length > 0) return;
+        // yalnız saf mətn node-ləri (uşağı yox və ya yalnız text node)
+        if (el.childNodes.length > 1) return; // mətn + element varsa keç
+        if (el.childNodes.length === 1 && el.childNodes[0].nodeType !== 3) return;
         const txt = el.textContent.trim();
         if (map[txt]) el.textContent = map[txt];
       });
