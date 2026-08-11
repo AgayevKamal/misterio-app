@@ -7,7 +7,6 @@
 <script src="theme.js"></script>
 <script src="analytics.js"></script>
 <script src="i18n.js"></script>
-<script src="lang.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
 </head>
@@ -40,25 +39,25 @@
 <main>
   <!-- QONAQ üçün hero -->
   <section class="hero" id="heroGuest">
-    <div class="badge">🔮 Sürpriz endirim platforması</div>
-    <h1>Bu gün səni <span class="grad">nə gözləyir?</span></h1>
-    <p class="lead">Çarxın arxasında nə gizlənir — bilmirsən. Bakının onlarla məkanından biri, gözlənilməz bir endirim.
+    <div class="badge" data-i18n="hero.badge">🔮 Sürpriz endirim platforması</div>
+    <h1><span data-i18n="hero.title1">Bu gün səni</span> <span class="grad" data-i18n="hero.title2">nə gözləyir?</span></h1>
+    <p class="lead" data-i18n="hero.lead">Çarxın arxasında nə gizlənir — bilmirsən. Bakının onlarla məkanından biri, gözlənilməz bir endirim.
        Ayda 3 fırlatma — cəmi 9.90 AZN.</p>
     <div class="row">
       <a class="btn big" href="pricing.html" data-i18n="hero.cta">Çarxı fırlat 🔮</a>
-      <a class="btn ghost big" id="signupBtn" href="auth.html?tab=signup">Hesab yarat</a>
+      <a class="btn ghost big" id="signupBtn" href="auth.html?tab=signup" data-i18n="hero.signup">Hesab yarat</a>
     </div>
-    <p class="hint">Çarxı fırlatmaq üçün hesab və aktiv abunəlik tələb olunur.</p>
+    <p class="hint" data-i18n="hero.hint">Çarxı fırlatmaq üçün hesab və aktiv abunəlik tələb olunur.</p>
   </section>
 
   <!-- İSTİFADƏÇİ üçün hero -->
   <section class="hero hidden" id="heroUser">
-    <div class="badge" id="uBadge">✦ Xoş gəldin</div>
-    <h1 id="uName">İstifadəçi</h1>
+    <div class="badge" id="uBadge" data-i18n="user.badge">✦ Xoş gəldin</div>
+    <h1 id="uName" data-i18n="user.name">İstifadəçi</h1>
     <div class="stat-grid">
-      <div class="stat"><div class="s-ic">🎡</div><div class="s-val" id="sSpins">0</div><div class="s-lbl">Qalan fırlatma</div></div>
-      <div class="stat"><div class="s-ic" id="sSubIc">🔒</div><div class="s-val" id="sSub">Deaktiv</div><div class="s-lbl">Abunəlik statusu</div></div>
-      <div class="stat"><div class="s-ic">📅</div><div class="s-val small-val" id="sRenew">—</div><div class="s-lbl">Növbəti yenilənmə</div></div>
+      <div class="stat"><div class="s-ic">🎡</div><div class="s-val" id="sSpins">0</div><div class="s-lbl" data-i18n="user.spins">Qalan fırlatma</div></div>
+      <div class="stat"><div class="s-ic" id="sSubIc">🔒</div><div class="s-val" id="sSub">Deaktiv</div><div class="s-lbl" data-i18n="user.sub">Abunəlik statusu</div></div>
+      <div class="stat"><div class="s-ic">📅</div><div class="s-val small-val" id="sRenew">—</div><div class="s-lbl" data-i18n="user.renew">Növbəti yenilənmə</div></div>
     </div>
     <div class="row" id="uActions"></div>
     <p class="hint" id="uHint"></p>
@@ -67,35 +66,35 @@
   <!-- 3 izahat bloku (yalnız qonaq) -->
   <section class="wrap" id="infoBlocks">
     <div class="info-grid">
-      <div class="card info"><h3>🔮 Ayda 3 fırlatma</h3><p>Hər ay 3 dəfə çarxı fırlada bilərsən. Nə çıxacağını əvvəlcədən heç kim bilmir.</p></div>
-      <div class="card info"><h3>💳 9.90 AZN / ay</h3><p>Aylıq təkrarlanan abunəlik. Free trial yoxdur — qoşulduğun gün ilk fırlatmanı edə bilərsən.</p></div>
-      <div class="card info"><h3>✨ Avtomatik yenilənmə</h3><p>3 fırlatma bitəndə növbəti ay hesabın avtomatik yenilənir. İstədiyin vaxt ləğv edə bilərsən.</p></div>
+      <div class="card info"><h3 data-i18n="info.spinsTitle">🔮 Ayda 3 fırlatma</h3><p data-i18n="info.spinsDesc">Hər ay 3 dəfə çarxı fırlada bilərsən. Nə çıxacağını əvvəlcədən heç kim bilmir.</p></div>
+      <div class="card info"><h3 data-i18n="info.priceTitle">💳 9.90 AZN / ay</h3><p data-i18n="info.priceDesc">Aylıq təkrarlanan abunəlik. Free trial yoxdur — qoşulduğun gün ilk fırlatmanı edə bilərsən.</p></div>
+      <div class="card info"><h3 data-i18n="info.autoTitle">✨ Avtomatik yenilənmə</h3><p data-i18n="info.autoDesc">3 fırlatma bitəndə növbəti ay hesabın avtomatik yenilənir. İstədiyin vaxt ləğv edə bilərsən.</p></div>
     </div>
   </section>
 
   <section class="wrap">
-    <h2 class="sec-title">Necə işləyir?</h2>
+    <h2 class="sec-title" data-i18n="how.title">Necə işləyir?</h2>
     <div class="steps">
-      <div class="step"><div class="num">1</div><div class="ic">👤</div><h3>Hesab yarat</h3>
-        <p>Email ilə qeydiyyatdan keç və poçtuna gələn 6 rəqəmli kodla hesabını təsdiqlə.</p></div>
-      <div class="step"><div class="num">2</div><div class="ic">💳</div><h3>Abunə ol</h3>
-        <p>9.90 AZN/ay ödə və ayda 3 fırlatma hüququ qazan.</p></div>
-      <div class="step"><div class="num">3</div><div class="ic">🔮</div><h3>Çarxı fırlat</h3>
-        <p>Kateqoriya seç (və ya "Hamısı") — çarx təsadüfi dayanır. Nəticəni əvvəlcədən heç kim bilmir.</p></div>
-      <div class="step"><div class="num">4</div><div class="ic">🎟️</div><h3>Kuponu istifadə et</h3>
-        <p>Kupon "Kuponlarım"a düşür. Kassada kodu göstər — hər kupon 1 dəfəlikdir.</p></div>
+      <div class="step"><div class="num">1</div><div class="ic">👤</div><h3 data-i18n="step1.title">Hesab yarat</h3>
+        <p data-i18n="step1.desc">Email ilə qeydiyyatdan keç və poçtuna gələn 6 rəqəmli kodla hesabını təsdiqlə.</p></div>
+      <div class="step"><div class="num">2</div><div class="ic">💳</div><h3 data-i18n="step2.title">Abunə ol</h3>
+        <p data-i18n="step2.desc">9.90 AZN/ay ödə və ayda 3 fırlatma hüququ qazan.</p></div>
+      <div class="step"><div class="num">3</div><div class="ic">🔮</div><h3 data-i18n="step3.title">Çarxı fırlat</h3>
+        <p data-i18n="step3.desc">Kateqoriya seç (və ya "Hamısı") — çarx təsadüfi dayanır. Nəticəni əvvəlcədən heç kim bilmir.</p></div>
+      <div class="step"><div class="num">4</div><div class="ic">🎟️</div><h3 data-i18n="step4.title">Kuponu istifadə et</h3>
+        <p data-i18n="step4.desc">Kupon "Kuponlarım"a düşür. Kassada kodu göstər — hər kupon 1 dəfəlikdir.</p></div>
     </div>
   </section>
 
   <section class="wrap">
-    <h2 class="sec-title">Kateqoriyalar</h2>
+    <h2 class="sec-title" data-i18n="cats.title">Kateqoriyalar</h2>
     <div class="cats" id="catsPreview"></div>
-    <p class="hint center">Çarx yalnız hesaba daxil olduqdan sonra açılır.</p>
+    <p class="hint center" data-i18n="cats.hint">Çarx yalnız hesaba daxil olduqdan sonra açılır.</p>
   </section>
 
   <section class="wrap cta">
-    <h2>Sənə nə qismət olacaq?</h2>
-    <a class="btn big" id="ctaBtn" href="pricing.html" data-i18n="hero.cta">İndi başla 🔮</a>
+    <h2 data-i18n="cta.title">Sənə nə qismət olacaq?</h2>
+    <a class="btn big" id="ctaBtn" href="pricing.html" data-i18n="hero.cta2">İndi başla 🔮</a>
   </section>
 </main>
 

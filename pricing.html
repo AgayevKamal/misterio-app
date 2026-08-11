@@ -7,7 +7,6 @@
 <script src="theme.js"></script>
 <script src="analytics.js"></script>
 <script src="i18n.js"></script>
-<script src="lang.js"></script>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🎁</text></svg>">
 </head>
@@ -37,65 +36,65 @@
 
 <main>
   <section class="hero">
-    <div class="badge" id="welcomeBadge">🔮 Yeni gələnlər üçün fürsət</div>
-    <h1>Hər ay <span class="grad">3 sürpriz şans</span></h1>
-    <p class="lead">İndi qoşul, ilk fırlatmanı elə bu gün et. Çarxın arxasında Bakının ən yaxşı restoran, kafe,
+    <div class="badge" id="welcomeBadge" data-i18n="pricing.newBadge">🔮 Yeni gələnlər üçün fürsət</div>
+    <h1 data-i18n="pricing.heroTitle">Hər ay <span class="grad">3 sürpriz şans</span></h1>
+    <p class="lead" data-i18n="pricing.heroLead">İndi qoşul, ilk fırlatmanı elə bu gün et. Çarxın arxasında Bakının ən yaxşı restoran, kafe,
        kurs və co-working məkanları gizlənir — hansı sənə düşəcək, bilinmir.</p>
   </section>
 
   <section class="wrap">
     <div class="price-wrap">
       <div class="price-card">
-        <div class="pc-tag">ƏN POPULYAR</div>
-        <div class="pc-name">Misterio Aylıq</div>
+        <div class="pc-tag" data-i18n="pricing.popular">ƏN POPULYAR</div>
+        <div class="pc-name" data-i18n="pricing.planName">Misterio Aylıq</div>
         <div class="pc-price"><span class="pc-num" id="subNum">9.90</span><span class="pc-cur" id="subCur">AZN</span><span class="pc-per" id="subPer" data-i18n="pricing.perMonth">/ay</span></div>
-        <div class="pc-sub">aylıq təkrarlanan ödəniş</div>
+        <div class="pc-sub" data-i18n="pricing.recurring">aylıq təkrarlanan ödəniş</div>
         <ul class="pc-list">
-          <li>✦ <b>Ayda 3 sürpriz fırlatma</b></li>
-          <li>✦ Bütün kateqoriyalara giriş (Restoran, Coffeeshop, Kurslar, Co-working, Anticafe, Kitab)</li>
-          <li>✦ "Hamısı" çarxı — bütün məkanlar bir çarxda</li>
-          <li>✦ Qazandığın kuponlar profilində saxlanılır</li>
-          <li>✦ 10%-dən 40%-ə qədər endirimlər</li>
-          <li>✦ İstədiyin vaxt ləğv edə bilərsən</li>
+          <li data-i18n="pricing.perk1">✦ <b>Ayda 3 sürpriz fırlatma</b></li>
+          <li data-i18n="pricing.perk2">✦ Bütün kateqoriyalara giriş (Restoran, Coffeeshop, Kurslar, Co-working, Anticafe, Kitab)</li>
+          <li data-i18n="pricing.perk3">✦ "Hamısı" çarxı — bütün məkanlar bir çarxda</li>
+          <li data-i18n="pricing.perk4">✦ Qazandığın kuponlar profilində saxlanılır</li>
+          <li data-i18n="pricing.perk5">✦ 10%-dən 40%-ə qədər endirimlər</li>
+          <li data-i18n="pricing.perk6">✦ İstədiyin vaxt ləğv edə bilərsən</li>
         </ul>
-        <button class="btn big full" id="subBtn">İndi qoşul və qazanmağa başla 🔮</button>
-        <p class="pc-note" id="subNote">Free trial yoxdur — abunəlik dərhal aktivləşir.</p>
+        <button class="btn big full" id="subBtn" data-i18n="pricing.cta">İndi qoşul və qazanmağa başla 🔮</button>
+        <p class="pc-note" id="subNote" data-i18n="pricing.note">Free trial yoxdur — abunəlik dərhal aktivləşir.</p>
       </div>
 
       <div class="price-side">
-        <div class="card info"><h3>🔮 Niyə Misterio?</h3>
-          <p>Adi endirim saytlarında nə alacağını əvvəlcədən bilirsən. Burada isə hər fırlatma bir sürprizdir —
+        <div class="card info"><h3 data-i18n="pricing.whyTitle">🔮 Niyə Misterio?</h3>
+          <p data-i18n="pricing.whyDesc">Adi endirim saytlarında nə alacağını əvvəlcədən bilirsən. Burada isə hər fırlatma bir sürprizdir —
              və çox vaxt gözlədiyindən daha yaxşı çıxır.</p></div>
-        <div class="card info"><h3>💸 Bir kupon abunəliyi ödəyir</h3>
-          <p>Orta hesabla bir restoran endirimi 15-30 AZN qənaət deməkdir. Ayda 3 kupon — abunəlik özünü ilk gün çıxarır.</p></div>
-        <div class="card info"><h3>🔁 Ləğvetmə şərtləri</h3>
-          <p>Abunəlik hər ay avtomatik yenilənir. Profil səhifəsindən bir kliklə ləğv edə bilərsən —
+        <div class="card info"><h3 data-i18n="pricing.couponTitle">💸 Bir kupon abunəliyi ödəyir</h3>
+          <p data-i18n="pricing.couponDesc">Orta hesabla bir restoran endirimi 15-30 AZN qənaət deməkdir. Ayda 3 kupon — abunəlik özünü ilk gün çıxarır.</p></div>
+        <div class="card info"><h3 data-i18n="pricing.cancelTitle">🔁 Ləğvetmə şərtləri</h3>
+          <p data-i18n="pricing.cancelDesc">Abunəlik hər ay avtomatik yenilənir. Profil səhifəsindən bir kliklə ləğv edə bilərsən —
              ləğv etdikdə cari dövrün sonuna qədər fırlatmaların qalır, sonrakı ay ödəniş alınmır.</p></div>
       </div>
     </div>
   </section>
 
   <section class="wrap">
-    <h2 class="sec-title">Əlavə fırlatma lazımdır?</h2>
+    <h2 class="sec-title" data-i18n="pricing.extraTitle">Əlavə fırlatma lazımdır?</h2>
     <div class="card extra-card">
       <div>
-        <h3>Tək fırlatma</h3>
-        <p class="sub">Bu ayki 3 fırlatman bitibsə, növbəti ayı gözləmədən əlavə şans ala bilərsən.</p>
+        <h3 data-i18n="pricing.extraName">Tək fırlatma</h3>
+        <p class="sub" data-i18n="pricing.extraDesc">Bu ayki 3 fırlatman bitibsə, növbəti ayı gözləmədən əlavə şans ala bilərsən.</p>
       </div>
       <div class="extra-right">
         <div class="extra-price" id="extraPrice">4.90 AZN</div>
-        <button class="btn" id="extraBtn">Əlavə fırlatma al</button>
+        <button class="btn" id="extraBtn" data-i18n="pricing.extraBtn">Əlavə fırlatma al</button>
       </div>
     </div>
   </section>
 
   <section class="wrap">
-    <h2 class="sec-title">Tez-tez verilən suallar</h2>
+    <h2 class="sec-title" data-i18n="pricing.faqTitle">Tez-tez verilən suallar</h2>
     <div class="faq">
-      <details><summary>Free trial varmı?</summary><p>Xeyr. Xidmət ödənişlidir — qeydiyyatdan sonra abunə olmaq lazımdır.</p></details>
-      <details><summary>3 fırlatma bitəndə nə olur?</summary><p>Növbəti ay avtomatik yenilənənə qədər çarx bağlanır. Yeniləmə tarixi profilində və ana səhifədə göstərilir. İstəsən əlavə fırlatma ala bilərsən.</p></details>
-      <details><summary>Kuponlar nə qədər etibarlıdır?</summary><p>Hər kupon 1 dəfəlikdir və qazanıldığı tarixdən etibarən 30 gün ərzində istifadə edilməlidir.</p></details>
-      <details><summary>Necə ləğv edim?</summary><p>Profil → Abunəlik → "Abunəliyi ləğv et". Növbəti ay ödəniş alınmır.</p></details>
+      <details><summary data-i18n="pricing.faq1q">Free trial varmı?</summary><p data-i18n="pricing.faq1a">Xeyr. Xidmət ödənişlidir — qeydiyyatdan sonra abunə olmaq lazımdır.</p></details>
+      <details><summary data-i18n="pricing.faq2q">3 fırlatma bitəndə nə olur?</summary><p data-i18n="pricing.faq2a">Növbəti ay avtomatik yenilənənə qədər çarx bağlanır. Yeniləmə tarixi profilində və ana səhifədə göstərilir. İstəsən əlavə fırlatma ala bilərsən.</p></details>
+      <details><summary data-i18n="pricing.faq3q">Kuponlar nə qədər etibarlıdır?</summary><p data-i18n="pricing.faq3a">Hər kupon 1 dəfəlikdir və qazanıldığı tarixdən etibarən 30 gün ərzində istifadə edilməlidir.</p></details>
+      <details><summary data-i18n="pricing.faq4q">Necə ləğv edim?</summary><p data-i18n="pricing.faq4a">Profil → Abunəlik → "Abunəliyi ləğv et". Növbəti ay ödəniş alınmır.</p></details>
     </div>
   </section>
 </main>

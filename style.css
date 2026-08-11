@@ -714,15 +714,6 @@ html[data-theme="light"] .sw-btn.active{color:#fff}
   .hero h1{font-size:23px}
 }
 
-/* ───────── Dil seçicisi dropdown ───────── */
-.lang-dd{position:fixed;top:14px;right:14px;z-index:9998}
-.lang-dd-btn{display:flex;align-items:center;gap:6px;background:rgba(42,21,80,.9);border:1px solid #4a2a8a;color:#fff;font-size:13px;padding:8px 12px;border-radius:24px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);position:relative;z-index:9999}
-.lang-dd-btn:hover{border-color:#a855ff}
-.lang-dd-menu{display:none;position:absolute;top:44px;right:0;background:#1a0d33;border:1px solid #4a2a8a;border-radius:12px;overflow:hidden;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:9999}
-.lang-dd-menu.show{display:block;animation:ddIn .2s ease}
-@keyframes ddIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-.lang-dd-item{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:none;border:0;color:#fff;font-size:14px;cursor:pointer;text-align:left}
-.lang-dd-item:hover{background:#2a1550}
 
 /* ───────── RESPONSIVE (mobil / planşet / noutbuk) ───────── */
 /* Noutbuk (1024px və aşağı) */
@@ -751,9 +742,6 @@ html[data-theme="light"] .sw-btn.active{color:#fff}
   .pc-price{margin:10px 0}
   .coupons{grid-template-columns:1fr}
   .wheel-wrap{width:260px;height:260px;max-width:80vw}
-  .lang-dd{top:10px;right:10px}
-  .lang-dd-btn{font-size:12px;padding:7px 10px}
-  .lang-dd-menu{top:40px;min-width:140px}
 }
 /* Telefon (480px və aşağı) */
 @media(max-width:480px){
