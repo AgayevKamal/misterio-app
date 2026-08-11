@@ -39,15 +39,29 @@
     if (m) m.classList.add("show");
   }
 
+  function showFloat() {
+    let f = document.getElementById("countryFloat");
+    if (!f) {
+      f = document.createElement("div");
+      f.id = "countryFloat";
+      f.className = "country-float";
+      f.setAttribute("data-i18n", "country.change");
+      f.textContent = "🌍 Ölkə dəyiş";
+      document.body.appendChild(f);
+      f.onclick = showModal;
+    }
+    f.classList.add("show");
+  }
+
   function init() {
-    // Dərhal mövcud ölkəni tətbiq et (refresh-dən sonra bərpa)
     I18N.apply();
     const saved = localStorage.getItem("mist_country");
     if (!saved) {
-      // 2 saniyə sonra modal
       setTimeout(showModal, 2000);
+    } else {
+      // Seçim varsa, yuxarıda kiçik bildiriş göstər
+      setTimeout(showFloat, 3000);
     }
-    // Footer "Dəyiş" düyməsi
     document.addEventListener("click", (e) => {
       if (e.target.closest("#countryChange")) showModal();
     });
