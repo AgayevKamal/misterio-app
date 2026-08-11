@@ -145,7 +145,7 @@ let mode="sub";
 function render(){
   const u=Session.user();
   if(!u||!u.verified){
-    q("subNote").textContent="Abunə olmaq üçün əvvəlcə hesab yaratmalısınız.";
+    q("subNote").textContent="Abunə olmaq üçün aşağıdakı düyməni basın — demo rejimdə birbaşa aktiv olur.";
     return;
   }
   const s=subInfo();
@@ -156,8 +156,8 @@ function render(){
   }
 }
 MA.qiymetBaxdi();
-(function(){ updatePrices(); I18N.apply(); })();
-(async()=>{ await loadSession(); render(); })();
+(function(){ try{ updatePrices(); I18N.apply(); }catch(e){ console.warn(e); } })();
+(async()=>{ try{ await loadSession(); render(); }catch(e){ console.warn(e); } })();
 
 function updatePrices(){
   q("subNum").textContent="9.90";
@@ -165,14 +165,12 @@ function updatePrices(){
   q("extraPrice").textContent="4.90 AZN";
 }
 function openPay(m){
-  const u=Session.user();
-  if(!u||!u.verified){ location.href="auth.html?tab=signup&next=pricing.html"; return; }
   mode=m;
-  q("payAcc").textContent=u.email;
+  q("payAcc").textContent = (Session.user() && Session.user().email) || "demo@misterio.az";
   MA.odenisAcdi(m);
   q("payTitle").textContent = I18N.t(m==="sub" ? "pay.title.sub" : "pay.title.extra");
   q("payPeriod").textContent = I18N.t(m==="sub" ? "pay.period.sub" : "pay.period.extra");
-  const amt=(m==="sub"?c.sub:c.extra).toLocaleString(I18N.getLang())+" "+c.cur;
+  const amt=(m==="sub"?"9.90":"4.90")+" AZN";
   q("payAmount").textContent = amt;
   q("payAmountRow").textContent = amt;
   q("paySub").textContent = m==="sub"
@@ -184,18 +182,15 @@ q("subBtn").onclick=()=>openPay("sub");
 q("extraBtn").onclick=()=>openPay("extra");
 q("payCancel").onclick=()=>q("payModal").classList.add("hidden");
 q("payGo").onclick=async()=>{
-q("payModal").classList.add("hidden");
-if(mode==="sub"){
-    await activateSubscription();
-    const s=subInfo();
-    q("okSpins").textContent=s.spinsLeft+" fırlatma səni gözləyir";
-    q("okRenew").textContent="Növbəti yenilənmə: "+s.renewText;
-  } else {
-    await buyExtraSpin();
-    const s=subInfo();
-    q("okSpins").textContent="+1 fırlatma əlavə olundu ("+s.spinsLeft+" qalıb)";
-    q("okRenew").textContent="";
-  }
+  q("payModal").classList.add("hidden");
+  // DEMO rejim: real ödəniş yoxdur, birbaşa uğurlu sayılır
+  try {
+    if(mode==="sub"){ await activateSubscription(); }
+    else { await buyExtraSpin(); }
+  } catch(e){ console.warn("demo payment:", e.message); }
+  const s=subInfo() || { spinsLeft: 3, renewText: "—" };
+  q("okSpins").textContent = (s.spinsLeft || 3) + " fırlatma səni gözləyir";
+  q("okRenew").textContent = "Növbəti yenilənmə: " + (s.renewText || "—");
   q("okModal").classList.remove("hidden");
   render();
 };
