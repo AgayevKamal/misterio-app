@@ -69,7 +69,7 @@ function shade(hex, amt) {
       q("bbIc").textContent = "⏳";
       q("bbTitle").textContent = "Bu ayki fırlatma haqqın bitib";
       q("bbText").innerHTML = `Yeniləmə tarixi: <b>${s.renewText}</b>. O tarixdə hesabınıza yenidən 3 fırlatma əlavə olunacaq.`;
-      q("bbBtn").textContent = "Əlavə fırlatma al — 9.90 AZN";
+      q("bbBtn").textContent = "Əlavə fırlatma al — 4.90 AZN";
       MA.kilidGordu("firlatma_bitdi");
       return false;
     }

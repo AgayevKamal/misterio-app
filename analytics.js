@@ -80,8 +80,8 @@
     elaveFirlatma: function(){
       gtag("event","purchase",{
         transaction_id: "extra-" + Date.now(),
-        currency:"AZN", value: 9.90,
-        items:[{item_id:"extra_spin", item_name:"Əlavə fırlatma", price:9.90, quantity:1}]
+        currency:"AZN", value: 4.90,
+        items:[{item_id:"extra_spin", item_name:"Əlavə fırlatma", price:4.90, quantity:1}]
       });
     },
     abuneLegv: function(){ gtag("event","subscription_cancel"); },
