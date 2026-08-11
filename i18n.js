@@ -247,10 +247,65 @@
     },
   };
 
+  // ───────── Statik mətn xəritəsi (data-i18n yoxdursa) ─────────
+  // Yalnız DE və UZ üçün (AZ default-dur)
+  const STATIC = {
+    de: {
+      "Bu gün səni nə gözləyir?": "Was erwartet dich heute?",
+      "Çarxın arxasında nə gizlənir — bilmirsən. Bakının onlarla məkanından biri, gözlənilməz bir endirim.\n       Ayda 3 fırlatma — cəmi 9.90 AZN.": "Hinter dem Rad verbirgt sich Überraschung — du weißt es nicht. Einer von Bakus zahlreichen Orten, ein unerwarteter Rabatt.\n      3 Drehs pro Monat — nur 9,90 AZN.",
+      "Çarxı fırlatmaq üçün hesab və aktiv abunəlik tələb olunur.": "Zum Drehen brauchst du ein Konto und aktives Abo.",
+      "Hesab yarat": "Konto erstellen",
+      "🔮 Sürpriz endirim platforması": "🔮 Überraschungsrabatt-Plattform",
+      "Ayda 3 fırlatma": "3 Drehs pro Monat",
+      "Hər ay 3 dəfə çarxı fırlada bilərsən. Nə çıxacağını əvvəlcədən heç kim bilmir.": "Du kannst jeden Monat 3 Mal drehen. Niemand weiß vorher, was kommt.",
+      "💳 9.90 AZN / ay": "💳 9,90 AZN / Monat",
+      "Aylıq təkrarlanan abunəlik. Free trial yoxdur — qoşulduğun gün ilk fırlatmanı edə bilərsən.": "Monatlich wiederkehrendes Abo. Kein Free Trial — am Tag der Anmeldung kannst du drehen.",
+      "✨ Avtomatik yenilənmə": "✨ Automatische Verlängerung",
+      "3 fırlatma bitəndə növbəti ay hesabın avtomatik yenilənir. İstədiyin vaxt ləğv edə bilərsən.": "Wenn 3 Drehs aufgebraucht sind, verlängert sich dein Konto automatisch. Du kannst jederzeit kündigen.",
+      "Necə işləyir?": "Wie funktioniert es?",
+      "Hesab yarat": "Konto erstellen",
+      "Email ilə qeydiyyatdan keç və poçtuna gələn 6 rəqəmli kodla hesabını təsdiqlə.": "Registriere dich mit E-Mail und bestätige mit dem 6-stelligen Code.",
+      "Abunə ol": "Abonnieren",
+      "9.90 AZN/ay ödə və ayda 3 fırlatma hüququ qazan.": "Zahle 9,90 AZN/Monat und erhalte 3 Drehs pro Monat.",
+      "Çarxı fırlat": "Dreh das Rad",
+      "Kateqoriya seç (və ya \"Hamısı\") — çarx təsadüfi dayanır. Nəticəni əvvəlcədən heç kim bilmir.": "Kategorie wählen (oder \"Alle\") — das Rad stoppt zufällig. Niemand weiß das Ergebnis.",
+      "Kuponu istifadə et": "Gutschein einlösen",
+      "Kupon \"Kuponlarım\"a düşür. Kassada kodu göstər — hər kupon 1 dəfəlikdir.": "Der Gutschein landet in \"Meine Gutscheine\". Zeige den Code an der Kasse — jeder Gutschein ist einmalig.",
+      "Kateqoriyalar": "Kategorien",
+      "Çarx yalnız hesaba daxil olduqdan sonra açılır.": "Das Rad öffnet sich erst nach dem Login.",
+      "Sənə nə qismət olacaq?": "Was wird dir bestimmt?",
+    },
+    uz: {
+      "Bu gün səni nə gözləyir?": "Bugun seni nima kutyapti?",
+      "Çarxın arxasında nə gizlənir — bilmirsən. Bakının onlarla məkanından biri, gözlənilməz bir endirim.\n       Ayda 3 fırlatma — cəmi 9.90 AZN.": "G'ildirak ortida nima yashiringan — bilmaysan. Bokuning o'nta joyidan biri, kutilmagan chegirma.\n       Oyda 3 aylanish — faqat 9.90 AZN.",
+      "Çarxı fırlatmaq üçün hesab və aktiv abunəlik tələb olunur.": "G'ildirakni aylantirish uchun hisob va faol obuna kerak.",
+      "Hesab yarat": "Hisob yaratish",
+      "🔮 Sürpriz endirim platforması": "🔮 Kutilmagan chegirma platformasi",
+      "Ayda 3 fırlatma": "Oyda 3 ta aylanish",
+      "Hər ay 3 dəfə çarxı fırlada bilərsən. Nə çıxacağını əvvəlcədən heç kim bilmir.": "Har oyda 3 marta aylantirishing mumkin. Nima chiqishini hech kim oldindan bilmaydi.",
+      "💳 9.90 AZN / ay": "💳 9.90 AZN / oy",
+      "Aylıq təkrarlanan abunəlik. Free trial yoxdur — qoşulduğun gün ilk fırlatmanı edə bilərsən.": "Oylik takrorlanuvchi obuna. Bepul sinov yo'q — ulangan kuni birinchi aylanishni qila olasan.",
+      "✨ Avtomatik yenilənmə": "✨ Avtomatik yangilanish",
+      "3 fırlatma bitəndə növbəti ay hesabın avtomatik yenilənir. İstədiyin vaxt ləğv edə bilərsən.": "3 ta aylanish tugaganda keyingi oy hisobing avtomatik yangilanadi. Istagan vaqtda bekor qilishing mumkin.",
+      "Necə işləyir?": "Qanday ishlaydi?",
+      "Hesab yarat": "Hisob yaratish",
+      "Email ilə qeydiyyatdan keç və poçtuna gələn 6 rəqəmli kodla hesabını təsdiqlə.": "Email orqali ro'yxatdan o't va pochtangga kelgan 6 xonali kod bilan hisobingni tasdiqla.",
+      "Abunə ol": "Obuna bo'lish",
+      "9.90 AZN/ay ödə və ayda 3 fırlatma hüququ qazan.": "9.90 AZN/oy to'la va oyda 3 ta aylanish huquqini qozon.",
+      "Çarxı fırlat": "G'ildirakni aylantir",
+      "Kateqoriya seç (və ya \"Hamısı\") — çarx təsadüfi dayanır. Nəticəni əvvəlcədən heç kim bilmir.": "Kategoriya tanla (yoki \"Hammasi\") — g'ildirak tasodifiy to'xtaydi. Natijani hech kim oldindan bilmaydi.",
+      "Kuponu istifadə et": "Kupondan foydalanish",
+      "Kupon \"Kuponlarım\"a düşür. Kassada kodu göstər — hər kupon 1 dəfəlikdir.": "Kupon \"Mening kuponlarim\"ga tushadi. Kassada kodni ko'rsat — har bir kupon bir martalik.",
+      "Kateqoriyalar": "Kategoriyalar",
+      "Çarx yalnız hesaba daxil olduqdan sonra açılır.": "G'ildirak faqat hisobga kirgandan keyin ochiladi.",
+      "Sənə nə qismət olacaq?": "Senga nima nasib bo'ladi?",
+    },
+  };
   // ───────── API ─────────
   const I18N = {
     COUNTRIES,
     T,
+    STATIC,
     getLang: () => {
       const c = localStorage.getItem("mist_country") || "AZ";
       return (COUNTRIES[c] || COUNTRIES.AZ).lang;
@@ -261,12 +316,23 @@
       return (T[lang] && T[lang][key]) || (T.az[key]) || key;
     },
     apply: () => {
+      // 1. data-i18n atributu olanlar
       document.querySelectorAll("[data-i18n]").forEach((el) => {
         const key = el.getAttribute("data-i18n");
         const txt = I18N.t(key);
         if (txt) el.textContent = txt;
       });
-      document.documentElement.lang = I18N.getLang();
+      // 2. Məlum statik mətnləri tərcümə et (data-i18n yoxdursa)
+      const lang = I18N.getLang();
+      if (lang === "az") return; // default, dəyişmə
+      const map = I18N.STATIC[lang] || {};
+      document.querySelectorAll("h1,h2,h3,p,span,b,a,button,label,div").forEach((el) => {
+        // yalnız saf mətn node-ləri (uşağı yox)
+        if (el.children.length > 0) return;
+        const txt = el.textContent.trim();
+        if (map[txt]) el.textContent = map[txt];
+      });
+      document.documentElement.lang = lang;
     },
     setCountry: (code) => {
       localStorage.setItem("mist_country", code);

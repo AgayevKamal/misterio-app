@@ -40,6 +40,7 @@
   }
 
   function init() {
+    // Dərhal mövcud ölkəni tətbiq et (refresh-dən sonra bərpa)
     I18N.apply();
     const saved = localStorage.getItem("mist_country");
     if (!saved) {
