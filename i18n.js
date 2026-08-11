@@ -276,7 +276,7 @@
       "Sənə nə qismət olacaq?": "Was wird dir bestimmt?",
       "Çarxı fırlat 🔮": "Dreh das Rad 🔮",
       "İndi başla 🔮": "Jetzt starten 🔮",
-      "Hər ay <span class=\"grad\">3 sürpriz şans</span>": "Jeden Monat <span class=\"grad\">3 Überraschungschancen</span>",
+      "Hər ay 3 sürpriz şans": "Oyda 3 ta kutilmagan aylanish",
       "İndi qoşul, ilk fırlatmanı elə bu gün et. Çarxın arxasında Bakının ən yaxşı restoran, kafe,\n       kurs və co-working məkanları gizlənir — hansı sənə düşəcək, bilinmir.": "Tritt jetzt bei, dreh heute zum ersten Mal. Hinter dem Rad verbergen sich Bakus beste Restaurants, Cafés,\n      Kurse und Co-Working-Orte — was dir zufällt, weißt du nicht.",
       "Əlavə fırlatma lazımdır?": "Brauchst du einen extra Dreh?",
       "Tək fırlatma": "Einzelner Dreh",
@@ -398,23 +398,23 @@
       return (T[lang] && T[lang][key]) || (T.az[key]) || key;
     },
     apply: () => {
-      // 1. data-i18n atributu olanlar
       document.querySelectorAll("[data-i18n]").forEach((el) => {
         const key = el.getAttribute("data-i18n");
         const txt = I18N.t(key);
         if (txt) el.textContent = txt;
       });
-      // 2. Məlum statik mətnləri tərcümə et (data-i18n yoxdursa)
       const lang = I18N.getLang();
-      if (lang === "az") return; // default, dəyişmə
+      if (lang === "az") return;
       const map = I18N.STATIC[lang] || {};
-      document.querySelectorAll("h1,h2,h3,p,span,b,a,button,label,div").forEach((el) => {
-        // yalnız saf mətn node-ləri (uşağı yox və ya yalnız text node)
-        if (el.childNodes.length > 1) return; // mətn + element varsa keç
-        if (el.childNodes.length === 1 && el.childNodes[0].nodeType !== 3) return;
-        const txt = el.textContent.trim();
-        if (map[txt]) el.textContent = map[txt];
-      });
+      // Bütün elementləri yoxla (yalnız saf mətn olanlar)
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+      const nodes = [];
+      while (walker.nextNode()) {
+        const n = walker.currentNode;
+        const txt = n.textContent.trim();
+        if (txt.length > 1 && map[txt]) nodes.push([n, map[txt]]);
+      }
+      nodes.forEach(([n, tr]) => { n.textContent = tr; });
       document.documentElement.lang = lang;
     },
     setCountry: (code) => {
