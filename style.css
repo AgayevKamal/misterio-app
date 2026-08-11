@@ -696,12 +696,13 @@ html[data-theme="light"] .sw-btn.active{color:#fff}
   .cats{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
 }
 @media(max-width:600px){
-  /* HEADER: logo + tema + profil birinci sıra, nav aşağıda kompakt */
-  .hdr{flex-wrap:wrap;gap:8px;padding:10px 12px}
-  .nav{order:3;width:100%;justify-content:flex-start;margin:2px 0 0;gap:14px;flex-wrap:wrap}
-  .nav a{font-size:13px;padding:4px 0}
+  /* HEADER: logo solda, tema + profil sağda, nav aşağıda kompakt */
+  .hdr{flex-wrap:wrap;gap:8px 10px;padding:10px 12px;align-items:center}
+  .logo{margin-right:auto}
+  .nav{order:3;width:100%;justify-content:flex-start;margin:2px 0 0;gap:16px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:8px}
+  .nav a{font-size:14px;padding:4px 0}
   .logo-txt{font-size:19px}
-  .theme-btn,.avatar{width:38px;height:38px}
+  .theme-btn,.avatar{width:38px;height:38px;flex:0 0 auto}
   .hero{padding:30px 12px 8px}
   .hero h1{font-size:clamp(24px,8vw,32px);line-height:1.2}
   .hero .lead{font-size:14.5px;line-height:1.55;margin-top:12px}
