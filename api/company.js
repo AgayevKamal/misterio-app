@@ -101,9 +101,21 @@ async function sendContract(req, res, b) {
   const to = L.clean(b.email, 120).toLowerCase();
   if (!L.isEmail(to)) return L.fail(res, 400, "Müştəri email-i düzgün deyil");
 
-  const companyName = L.clean(b.companyName || b.name, 80);
-  const pdf = L.clean(b.pdf, 4_000_000); // datauristring (base64) — çox böyük ola bilər
   const id = L.clean(b.id || "", 40);
+  const companyName = L.clean(b.companyName || b.name, 80);
+
+  // PDF-i serverdə yaradıram (brauzer asılılığи yox)
+  let pdf = null;
+  try {
+    const r = await fetch(`${process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : ""}/api/contract-pdf`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(b),
+    });
+    const j = await r.json().catch(() => ({}));
+    if (r.ok && j.ok && j.pdf) pdf = j.pdf;
+  } catch (e) { console.error("pdf gen:", e.message); }
+
   const att = pdf ? L.pdfAttachment(pdf, `misterio-muqavile-${(id || "tesdiq").replace(/[^\w-]/g, "")}.pdf`) : null;
 
   const html = `<div style="font-family:Segoe UI,Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#0d0620;border-radius:16px">
@@ -128,7 +140,7 @@ async function sendContract(req, res, b) {
 
   const sent = await L.sendEmail(to, `Misterio — Tərəfdaşlıq Müqaviləsi imzalandı (#${id || ""})`, html, att ? [att] : null);
   if (!sent) return L.fail(res, 502, "Müqavilə email-ə göndərilə bilmədi (Resend xətası)");
-  return L.ok(res, { sent: true });
+  return L.ok(res, { sent: true, pdf: pdf || null });
 }
 
 function pubCompany(co) {
