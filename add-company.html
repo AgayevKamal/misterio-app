@@ -131,7 +131,7 @@ CATEGORY_LIST.forEach(c=>{
 function fmtDate(d){ return (d||new Date()).toLocaleDateString("az-AZ"); }
 function catName(k){ return (CATEGORY_LIST.find(x=>x.key===k)||{}).name || k; }
 
-function contractHTML(c){
+window.contractHTML = function(c){
   const today = fmtDate();
   return `
   <p style="text-align:center"><b>TƏRƏFDAŞLIQ VƏ ENDİRİM TƏMİNATI MÜQAVİLƏSİ</b><br>

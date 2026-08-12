@@ -8,7 +8,7 @@ const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
 
-const FONT = path.join(__dirname, "..", "assets", "DejaVuSans.ttf");
+const FONT = path.join(__dirname, "DejaVuSans.ttf");
 
 function catName(k) {
   const list = { restoran: "Restoran", coffeeshop: "Coffeeshop", kurs: "Kurslar",
