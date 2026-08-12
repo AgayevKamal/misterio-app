@@ -103,6 +103,34 @@ async function sendContract(req, res, b) {
 
   const id = L.clean(b.id || "", 40);
   const companyName = L.clean(b.companyName || b.name, 80);
+  const cat = L.clean(b.cat || "", 40);
+  const disc = parseInt(b.disc, 10) || 0;
+  const phone = L.clean(b.phone || "", 30);
+  const address = L.clean(b.address || "", 160);
+  const sign = L.clean(b.sign || "", 80);
+  const signedAt = L.clean(b.signedAt || "", 40);
+  const version = L.clean(b.version || "v1.0", 20);
+
+  // İmzalı müqavilənin nüsxəsini bizim bazada saxla (contracts cədvəli)
+  try {
+    await L.sb("contracts", {
+      method: "POST",
+      prefer: "return=minimal",
+      body: JSON.stringify({
+        contract_id: id,
+        company_name: companyName,
+        email: to,
+        cat,
+        disc,
+        phone,
+        address,
+        sign,
+        signed_at: signedAt || new Date().toISOString(),
+        version,
+        status: "aktiv",
+      }),
+    });
+  } catch (e) { console.error("contract db save:", e.message); }
 
   // PDF-i serverdə yaradıram (brauzer asılılığи yox)
   let pdf = null;

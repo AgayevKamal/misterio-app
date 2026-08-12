@@ -136,17 +136,16 @@
       if (r && r.company) { rec.companyId = r.company.id; if (window.MA && window.MA.sirketElaveEtdi) window.MA.sirketElaveEtdi(pending.cat); }
       return r;
     }).then(function () {
-      // 2) Uğur modalı
+      // 2) Uğur modalı (sadə)
       q("contractModal").classList.add("hidden");
       q("okTxt").textContent = pending.name + " — " + pending.disc + "%";
-      q("okSub").textContent = '"' + catName(pending.cat) + '" kateqoriyasına və çarxa əlavə olundu.';
+      q("okSub").textContent = "";
       q("okMeta").innerHTML =
-        '<div>📄 Müqavilə: <b>' + rec.id + '</b> · ' + rec.version + '</div>' +
-        '<div>🕒 İmzalanma: ' + ts.toLocaleString("az-AZ") + '</div>' +
-        '<div>🌐 IP: ' + rec.ip + '</div>' +
-        '<div>✅ Supabase <code>companies</code> cədvəlinə yazıldı · ID: <b>' + (rec.companyId || "—") + '</b></div>' +
-        '<div>🔐 Admin paneli girişi: <b>' + pending.email + '</b> · şifrə: təyin etdiyiniz şifrə</div>' +
-        '<div id="mailStatus" style="color:#ffcf5c">📧 Müqavilə email-ə göndərilir…</div>';
+        '<div style="font-size:15px;line-height:1.9;color:#fff">' +
+        '✅ Müqavilə uğurla imzalandı və şirkət əlavə edildi.<br>' +
+        '📄 Müqavilə PDF forması emailinizə göndərildi: <b>' + pending.email + '</b>' +
+        '<div id="mailStatus" style="color:#ffcf5c;margin-top:8px;font-size:13px">📧 Göndərilir…</div>' +
+        '</div>';
       q("okModal").classList.remove("hidden");
       q("compForm").reset();
       renderList();
@@ -166,7 +165,7 @@
         var ms = q("mailStatus");
         if (mr.ok && mj.ok) {
           lastContract = Object.assign({}, rec, { pdf: mj.pdf || null });
-          ms.textContent = "✅ Müqavilə PDF şəklində " + pending.email + " ünvanına göndərildi.";
+          ms.textContent = "✅ Müqavilə PDF forması emailinizə göndərildi.";
         } else {
           ms.textContent = "⚠️ Müqavilə yaradıldı, amma email göndərilmədi: " + (mj.error || "xəta");
         }
