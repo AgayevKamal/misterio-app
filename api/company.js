@@ -107,7 +107,9 @@ async function sendContract(req, res, b) {
   // PDF-i serverdə yaradıram (brauzer asılılığи yox)
   let pdf = null;
   try {
-    const r = await fetch("/api/contract-pdf", {
+    const host = req.headers["x-forwarded-host"] || req.headers.host || process.env.VERCEL_URL;
+    const base = host ? `https://${host}` : "";
+    const r = await fetch(`${base}/api/contract-pdf`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(b),
