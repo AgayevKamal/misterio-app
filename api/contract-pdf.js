@@ -28,7 +28,7 @@ function buildPdf(rec) {
     catch (e) { doc.font("Helvetica"); }
 
     const W = 495;
-    const wrap = (t) => doc.fontSize(10.5).width(t, W) ? doc.text(t, { width: W, align: "left" }) : doc.text(t);
+    const wrap = (t) => { doc.fontSize(10.5); doc.text(t, { width: W, align: "left" }); };
     const today = new Date().toLocaleDateString("az-AZ");
 
     doc.fontSize(16).text("Misterio — Tərəfdaşlıq və Endirim Təminatı Müqaviləsi", { align: "center" });
