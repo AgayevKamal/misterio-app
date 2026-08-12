@@ -15,6 +15,7 @@ module.exports = async (req, res) => {
     if (action === "register")return await companyRegister(req, res, b);
     if (action === "me")      return await companyMe(req, res);
     if (action === "logout")  { L.clearAuthCookie(res, "mist_admin"); return L.ok(res); }
+    if (action === "contract")return await sendContract(req, res, b);
     return L.fail(res, 400, "Naməlum əməliyyat");
   } catch (e) {
     console.error("company:", e.message);
@@ -91,6 +92,43 @@ async function companyMe(req, res) {
   const rows = await L.sb(`companies?${L.q({ id: `eq.${c.cid}`, select: "*" })}`);
   if (!rows.length) { L.clearAuthCookie(res, "mist_admin"); return L.ok(res, { company: null }); }
   return L.ok(res, { company: pubCompany(rows[0]) });
+}
+
+async function sendContract(req, res, b) {
+  if (!await L.rateLimit(req, "contract_mail", 5, 3600))
+    return L.fail(res, 429, "Çox cəhd. 1 saat sonra yoxlayın.");
+
+  const to = L.clean(b.email, 120).toLowerCase();
+  if (!L.isEmail(to)) return L.fail(res, 400, "Müştəri email-i düzgün deyil");
+
+  const companyName = L.clean(b.companyName || b.name, 80);
+  const pdf = L.clean(b.pdf, 4_000_000); // datauristring (base64) — çox böyük ola bilər
+  const id = L.clean(b.id || "", 40);
+  const att = pdf ? L.pdfAttachment(pdf, `misterio-muqavile-${(id || "tesdiq").replace(/[^\w-]/g, "")}.pdf`) : null;
+
+  const html = `<div style="font-family:Segoe UI,Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;background:#0d0620;border-radius:16px">
+    <div style="text-align:center">
+      <div style="font-size:30px;font-weight:800;color:#ffcf5c;letter-spacing:1px">Misterio</div>
+      <p style="color:#fff;font-size:17px;margin-top:8px">Tərəfdaşlıq müqaviləniz imzalandı ✅</p>
+    </div>
+    <p style="color:#cbb8ff;font-size:14px;line-height:1.6">
+      Hörmətli <b style="color:#fff">${companyName || "Tərəfdaş"}</b>,<br>
+      Misterio rəqəmsal endirim platforması ilə tərəfdaşlıq müqaviləniz uğurla imzalanmış və qeydə alınmışdır.
+      Müqavilənin imzalanmış nüsxəsi bu e-məktuba PDF fayl şəklində əlavə olunub.
+    </p>
+    <div style="background:#2a1550;border-radius:12px;padding:14px 18px;margin:16px 0">
+      <p style="color:#9f7aea;font-size:12px;margin:0 0 6px">Müqavilə №</p>
+      <p style="color:#fff;font-size:16px;font-weight:700;margin:0">${id || "—"}</p>
+    </div>
+    <p style="color:#9f7aea;font-size:12px">
+      Bu müqavilənin bir nüsxəsi Misterio tərəfindən də saxlanılır. Suallarınız üçün:
+      <a href="mailto:info@misterio.az" style="color:#ffcf5c">info@misterio.az</a>
+    </p>
+  </div>`;
+
+  const sent = await L.sendEmail(to, `Misterio — Tərəfdaşlıq Müqaviləsi imzalandı (#${id || ""})`, html, att ? [att] : null);
+  if (!sent) return L.fail(res, 502, "Müqavilə email-ə göndərilə bilmədi (Resend xətası)");
+  return L.ok(res, { sent: true });
 }
 
 function pubCompany(co) {

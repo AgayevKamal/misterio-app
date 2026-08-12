@@ -176,18 +176,28 @@ const randInt = (n) => crypto.randomInt(0, n);
 const RESEND_KEY = process.env.RESEND_API_KEY;
 const FROM_EMAIL = process.env.RESEND_FROM || "Misterio <noreply@misterio.az>";
 
-async function sendEmail(to, subject, html) {
+async function sendEmail(to, subject, html, attachments) {
   if (!RESEND_KEY) { console.warn("⚠️ RESEND_API_KEY yoxdur — email göndərilmədi"); return false; }
   try {
+    const payload = { from: FROM_EMAIL, to: Array.isArray(to) ? to : [to], subject, html };
+    if (attachments && attachments.length) payload.attachments = attachments;
     const r = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { "Authorization": `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ from: FROM_EMAIL, to: [to], subject, html }),
+      body: JSON.stringify(payload),
     });
     const j = await r.json().catch(() => ({}));
     if (!r.ok) { console.error("Resend xətası:", j); return false; }
     return true;
   } catch (e) { console.error("email send err:", e.message); return false; }
+}
+
+/* datauristring ("data:application/pdf;base64,....") → Resend attachment obyekti */
+function pdfAttachment(dataUri, filename) {
+  if (!dataUri || !dataUri.startsWith("data:")) return null;
+  const m = dataUri.match(/^data:([^;]+);base64,(.+)$/);
+  if (!m) return null;
+  return { filename: filename || "muqavile.pdf", content: m[2], content_type: m[1] };
 }
 
 function verifyEmailHtml(code, name) {
@@ -206,5 +216,5 @@ module.exports = {
   sb, q, hashPassword, verifyPassword, signToken, verifyToken,
   setAuthCookie, clearAuthCookie, readCookie, getUser, getCompany,
   rateLimit, json, ok, fail, only, body, clean, isEmail, randCode, randInt,
-  sendEmail, verifyEmailHtml,
+  sendEmail, pdfAttachment, verifyEmailHtml,
 };
