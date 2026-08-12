@@ -107,7 +107,7 @@ module.exports = async (req, res) => {
     const pdf = await buildPdf(rec);
     return L.ok(res, { pdf: "data:application/pdf;base64," + pdf });
   } catch (e) {
-    console.error("contract-pdf:", e.message);
-    return L.fail(res, 500, "PDF yaradıla bilmədi");
+    console.error("contract-pdf:", e.message, e.stack);
+    return L.fail(res, 500, "PDF xətası: " + e.message);
   }
 };
