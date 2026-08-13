@@ -677,6 +677,10 @@ html[data-theme="light"] .sw-btn.active{color:#fff}
   border-radius:12px;padding:14px 16px;margin:16px 0}
 .contract-text b{color:var(--gold)}
 .contract-text hr{border:none;border-top:1px solid var(--line);margin:10px 0}
+.contract-text .mhead{margin-bottom:10px}
+.contract-text .mh{font-size:13px;font-weight:700;color:var(--gold);margin:16px 0 6px;text-transform:uppercase;letter-spacing:.3px}
+.contract-text .mi{margin:2px 0;padding-left:4px}
+.contract-text p{margin:4px 0}
 .contract-check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink-2);
   text-align:left;cursor:pointer;background:rgba(61,220,151,.07);border:1px solid rgba(61,220,151,.3);
   border-radius:12px;padding:12px 14px;margin:4px 0}

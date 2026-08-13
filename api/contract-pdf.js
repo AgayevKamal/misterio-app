@@ -29,58 +29,62 @@ function buildPdf(rec) {
 
     const W = 495;
     const wrap = (t) => { doc.fontSize(10.5); doc.text(t, { width: W, align: "left" }); };
+    const head = (t) => { doc.fontSize(12).text(t); doc.fontSize(10.5); };
     const today = new Date().toLocaleDateString("az-AZ");
 
     doc.fontSize(16).text("Misterio — Tərəfdaşlıq və Endirim Təminatı Müqaviləsi", { align: "center" });
-    doc.moveDown(0.5);
+    doc.moveDown(0.3);
     doc.fontSize(10.5);
-    wrap(`Müqavilə nömrəsi: ${rec.id}   ·   Versiya: ${rec.version}   ·   Bağlanma tarixi: ${today}`);
+    wrap(`Bağlanma tarixi: ${today}`);
     doc.moveDown(0.5);
 
-    doc.fontSize(12).text("TƏRƏFLƏR");
-    doc.fontSize(10.5);
-    wrap("1. Misterio platformasının təmsilçisi Kamal Ağayev (Şəxs1): Fiziki şəxsin adı: Kamal Ağayev · VÖEN / şəxsiyyət vəsiqəsi №: 1203626292 · Vəzifəsi: Təsisçi.");
-    wrap(`2. Tərəfdaş müəssisə: Müəssisənin adı: ${rec.companyName} · Fəaliyyət kateqoriyası: ${catName(rec.cat)} · Ünvan: ${rec.address || "—"} · Əlaqə: ${rec.phone} / ${rec.email}.`);
+    head("Maddə 1. Tərəflər");
+    wrap("1.1. Misterio platformasının təmsilçisi Kamal Ağayev (Şəxs1): Fiziki şəxsin adı: Kamal Ağayev · VÖEN / şəxsiyyət vəsiqəsi №: 1203626292 · Vəzifəsi: Təsisçi.");
+    wrap(`1.2. Tərəfdaş müəssisə: Müəssisənin adı: ${rec.companyName} · Fəaliyyət kateqoriyası: ${catName(rec.cat)} · Ünvan: ${rec.address || "—"} · Əlaqə: ${rec.phone} / ${rec.email}.`);
     doc.moveDown(0.3);
 
-    doc.fontSize(12).text("1. Müqavilənin predmeti");
-    doc.fontSize(10.5);
-    wrap("1. Şəxs1 öz rəqəmsal tətbiqi (Misterio) vasitəsilə istifadəçilərə (Müştəri) Tərəfdaşın müəyyən etdiyi endirim faizini təqdim edən elektron kupon kodları təqdim edir.");
-    wrap("2. Tərəfdaş bu Müqaviləni imzalamaqla, aşağıdakı 2-ci bənddə göstərilən endirim şərtlərini Şəxs1 vasitəsilə gələn hər bir Müştəriyə tətbiq etməyi öhdəsinə götürür.");
-    wrap("3. Bu Müqavilə Tərəfdaşın Şəxs1-in platformasında qeydiyyatının rəsmi təsdiqi hesab olunur və Misterio çarxında (spin) iştirakı üçün əsasdır.");
+    head("Maddə 2. Müqavilənin predmeti");
+    wrap("2.1. Şəxs1 öz rəqəmsal tətbiqi (Misterio) vasitəsilə istifadəçilərə (Müştəri) Tərəfdaşın müəyyən etdiyi endirim faizini təqdim edən elektron kupon kodları təqdim edir.");
+    wrap("2.2. Tərəfdaş bu Müqaviləni imzalamaqla, aşağıdakı 3-cü Maddədə göstərilən endirim şərtlərini Şəxs1 vasitəsilə gələn hər bir Müştəriyə tətbiq etməyi öhdəsinə götürür.");
+    wrap("2.3. Bu Müqavilə Tərəfdaşın Şəxs1-in platformasında qeydiyyatının rəsmi təsdiqi hesab olunur və Misterio çarxında (spin) iştirakı üçün əsasdır.");
     doc.moveDown(0.3);
 
-    doc.fontSize(12).text("2. Razılaşdırılmış endirim şərtləri");
-    doc.fontSize(10.5);
+    head("Maddə 3. Razılaşdırılmış endirim şərtləri");
     wrap(`Təklif edilən endirim faizi (%): ${rec.disc}%. Tərəfdaş bu faizi, Müştəri tərəfindən etibarlı Misterio kupon kodu təqdim edildiyi hər halda heç bir istisna qoymadan tətbiq edir. Endirimin məbləği tamamilə Tərəfdaşın öz hesabına aiddir.`);
     doc.moveDown(0.3);
 
-    doc.fontSize(12).text("3. Tərəfdaşın öhdəlikləri");
-    doc.fontSize(10.5);
-    wrap("1. Kupon təqdim edən hər Müştəriyə kodun etibarlılığını yoxladıqdan sonra razılaşdırılmış faiz həcmində endirim tətbiq etmək. 2. Kodu əsassız rədd etməmək. 3. Hər sifarişi admin panel vasitəsilə qeydə almaq. 4. Dəyişiklik etməzdən ən azı 7 gün əvvəl yazılı bildirmək.");
+    head("Maddə 4. Tərəfdaşın öhdəlikləri");
+    wrap("4.1. Kupon təqdim edən hər Müştəriyə kodun etibarlılığını yoxladıqdan sonra razılaşdırılmış faiz həcmində endirim tətbiq etmək.");
+    wrap("4.2. Kodu əsassız rədd etməmək və ya süni maneələr yaratmamaq.");
+    wrap("4.3. Hər sifarişi admin panel vasitəsilə qeydə almaq.");
+    wrap("4.4. Dəyişiklik etməzdən ən azı 7 gün əvvəl yazılı bildirmək.");
     doc.moveDown(0.3);
 
-    doc.fontSize(12).text("4. Öhdəliyin pozulması və məsuliyyət");
-    doc.fontSize(10.5);
-    wrap("1. Endirimin əsassız tətbiq edilməməsi Müqavilənin pozulması sayılır. 2. Müştəriyə dəyən zərər Tərəfdaşın məsuliyyətindədir. 4. 3 və ya daha çox təsdiqlənmiş pozuntu Şəxs1-ə Tərəfdaşı birtərəfli çıxarmaq hüququ verir.");
+    head("Maddə 5. Öhdəliyin pozulması və məsuliyyət");
+    wrap("5.1. Endirimin əsassız tətbiq edilməməsi Müqavilənin pozulması sayılır.");
+    wrap("5.2. Müştəriyə dəyən zərər Tərəfdaşın məsuliyyətindədir.");
+    wrap("5.3. Şəxs1 birbaşa zərərə görə məsuliyyət daşımır, amma sübutları təqdim edə bilər.");
+    wrap("5.4. 3 və ya daha çox təsdiqlənmiş pozuntu Şəxs1-ə Tərəfdaşı birtərəfli çıxarmaq hüququ verir.");
     doc.moveDown(0.3);
 
-    doc.fontSize(12).text("5. Müqavilənin qüvvədə olma müddəti və ləğvi");
-    doc.fontSize(10.5);
-    wrap("1. İmzalandığı tarixdən qüvvəyə minir, müddətsizdir. 2. Hər Tərəf 14 gün əvvəl bildirişlə birtərəfli ləğv edə bilər. 3. Ləğv artıq verilmiş kuponlara təsir etmir.");
+    head("Maddə 6. Müqavilənin qüvvədə olma müddəti və ləğvi");
+    wrap("6.1. İmzalandığı tarixdən qüvvəyə minir, müddətsizdir.");
+    wrap("6.2. Hər Tərəf 14 gün əvvəl bildirişlə birtərəfli ləğv edə bilər.");
+    wrap("6.3. Ləğv artıq verilmiş kuponlara təsir etmir.");
     doc.moveDown(0.3);
 
-    doc.fontSize(12).text("6. Digər şərtlər");
-    doc.fontSize(10.5);
-    wrap("Azərbaycan Respublikası qanunvericiliyinə uyğundur. Mübahisələr danışıqlarla həll olunur, olmasa məhkəməyə göndərilir. 2 əsl nüsxədə, bərabər hüquqludur. Əlavələr yalnız yazılı və hər iki tərəfin imzası ilə qüvvəyə minir.");
+    head("Maddə 7. Digər şərtlər");
+    wrap("7.1. Azərbaycan Respublikası qanunvericiliyinə uyğundur.");
+    wrap("7.2. Mübahisələr danışıqlarla həll olunur, olmasa məhkəməyə göndərilir.");
+    wrap("7.3. 2 əsl nüsxədə, bərabər hüquqludur.");
+    wrap("7.4. Əlavələr yalnız yazılı və hər iki tərəfin imzası ilə qüvvəyə minir.");
     doc.moveDown(0.3);
 
-    doc.fontSize(12).text("7. Tərəflərin imzaları");
-    doc.fontSize(10.5);
+    head("Maddə 8. Tərəflərin imzaları");
     wrap(`ŞƏXS1: Kamal Ağayev, Təsisçi — Tarix: ${today}.`);
     wrap(`TƏRƏFDAŞ: ${rec.sign || "________________"} — Tarix: ${today}.`);
     doc.moveDown(0.3);
-    wrap(`İmzalanma: ${(new Date(rec.signedAt)).toLocaleString("az-AZ")} · IP: ${rec.ip} · Status: ${rec.status}`);
+    wrap(`İmzalanma: ${(new Date(rec.signedAt)).toLocaleString("az-AZ")} · Status: ${rec.status}`);
 
     doc.end();
   });

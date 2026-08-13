@@ -24,53 +24,67 @@
     return (d || new Date()).toLocaleDateString("az-AZ");
   }
 
-  // Müqavilə mətni — sənin göndərdiyin final mətn, __ yerləri forma ilə dolur
+  // Müqavilə mətni — təmiz hüquqi struktur
   function contractHTML(c) {
     var today = fmtDate();
+    var h = function (t) { return '<h3 class="mh">' + t + '</h3>'; };
+    var p = function (t) { return '<p>' + t + '</p>'; };
+    var li = function (t) { return '<p class="mi">' + t + '</p>'; };
     return '' +
-      '<p style="text-align:center"><b>TƏRƏFDAŞLIQ VƏ ENDİRİM TƏMİNATI MÜQAVİLƏSİ</b><br>("Misterio" Şəxs1 ilə Tərəfdaş arasında)</p>' +
-      '<p>Bu Müqavilə aşağıda göstərilən tərəflər arasında, Misterio rəqəmsal endirim platforması çərçivəsində əməkdaşlığın şərtlərini müəyyən etmək məqsədilə bağlanır.</p>' +
+      '<div class="mhead">' +
+      '<p style="text-align:center"><b>TƏRƏFDAŞLIQ VƏ ENDİRİM TƏMİNATI MÜQAVİLƏSİ</b></p>' +
+      '<p style="text-align:center">("Misterio" Şəxs1 ilə Tərəfdaş arasında)</p>' +
+      '</div>' +
+      p('Bu Müqavilə aşağıda göstərilən tərəflər arasında, Misterio rəqəmsal endirim platforması çərçivəsində əməkdaşlığın şərtlərini müəyyən etmək məqsədilə bağlanır.') +
       '<p><b>Bağlanma tarixi:</b> ' + today + '</p>' +
-      '<p><b>TƏRƏFLƏR</b></p>' +
-      '<p><b>1.</b> Misterio platformasının təmsilçisi Kamal Ağayev (bundan sonra — "Şəxs1"):<br>' +
-      '&nbsp;&nbsp;• Fiziki şəxsin adı: Kamal Ağayev<br>' +
-      '&nbsp;&nbsp;• VÖEN / şəxsiyyət vəsiqəsi №: 1203626292<br>' +
-      '&nbsp;&nbsp;• Təmsil edən şəxs, vəzifəsi: Təsisçi</p>' +
-      '<p><b>2.</b> Tərəfdaş müəssisə (bundan sonra — "Tərəfdaş"):<br>' +
-      '&nbsp;&nbsp;• Müəssisənin adı: <b>' + c.name + '</b><br>' +
-      '&nbsp;&nbsp;• Fəaliyyət kateqoriyası: <b>' + catName(c.cat) + '</b><br>' +
-      '&nbsp;&nbsp;• Ünvan: <b>' + c.addr + '</b><br>' +
-      '&nbsp;&nbsp;• Əlaqə telefonu / e-mail: <b>' + c.phone + '</b> / <b>' + c.email + '</b></p>' +
-      '<p><b>1. Müqavilənin predmeti</b></p>' +
-      '<p>1. Şəxs1 öz rəqəmsal tətbiqi (Misterio) vasitəsilə istifadəçilərə (bundan sonra — "Müştəri") Tərəfdaşın müəyyən etdiyi endirim faizini təqdim edən elektron kupon kodları təqdim edir.</p>' +
-      '<p>2. Tərəfdaş bu Müqaviləni imzalamaqla, aşağıdakı 2-ci bənddə göstərilən endirim şərtlərini Şəxs1 vasitəsilə gələn hər bir Müştəriyə tətbiq etməyi öhdəsinə götürür.</p>' +
-      '<p>3. Bu Müqavilə Tərəfdaşın Şəxs1-in platformasında qeydiyyatının rəsmi təsdiqi hesab olunur və Tərəfdaşın Misterio çarxında (spin) iştirak etməsi üçün əsasdır.</p>' +
-      '<p><b>2. Razılaşdırılmış endirim şərtləri</b></p>' +
-      '<p>Təklif edilən endirim faizi (%): <b>' + c.disc + '%</b></p>' +
-      '<p>1. Tərəfdaş yuxarıda göstərilən endirim faizini, Müştəri tərəfindən etibarlı Misterio kupon kodu təqdim edildiyi hər halda, heç bir istisna qoymadan tətbiq etməyi təəhhüd edir.</p>' +
-      '<p>2. Endirimin məbləği tamamilə Tərəfdaşın öz hesabına aiddir — Şəxs1 endirimin maliyyə yükünü Tərəfdaşa kompensasiya etmir.</p>' +
-      '<p><b>3. Tərəfdaşın öhdəlikləri</b></p>' +
-      '<p>1. Kupon kodu təqdim edən hər bir Müştəriyə, kodun etibarlılığını yoxladıqdan sonra, razılaşdırılmış faiz həcmində endirim tətbiq etmək.</p>' +
-      '<p>2. Kupon kodunun etibarlılığını əsassız şəkildə rədd etməmək və ya süni maneələr yaratmamaq. Belə bir hal yarandığı halda isə müştəriyə alternativlər təqdim etmək.</p>' +
-      '<p>3. Hər təsdiqlənmiş sifarişi Şəxs1 tərəfindən təqdim olunan admin panel vasitəsilə (sifariş məbləği, tətbiq olunan endirim, yekun məbləğ) qeydə almaq.</p>' +
-      '<p>4. Endirim şərtlərində hər hansı dəyişiklik etmək istədikdə, bunu qabaqcadan (ən azı 7 (yeddi) təqvim günü əvvəl) Şəxs1-ə yazılı şəkildə bildirmək.</p>' +
-      '<p><b>4. Öhdəliyin pozulması və məsuliyyət</b></p>' +
-      '<p>1. Əgər Tərəfdaş bu Müqavilədə razılaşdırılmış endirimi əsassız olaraq tətbiq etməzsə və ya imtina edərsə, bu, Müqavilənin bilavasitə pozulması sayılır.</p>' +
-      '<p>2. Bu cür pozuntu nəticəsində Müştəriyə dəyən hər hansı maddi və ya mənəvi zərər tamamilə Tərəfdaşın öz məsuliyyətinə aiddir.</p>' +
-      '<p>3. Şəxs1, Tərəfdaşın öhdəliyi pozması nəticəsində yaranan birbaşa maddi zərərə görə məsuliyyət daşımır, lakin belə halların araşdırılmasında Müştəriyə dəstək məqsədilə sübut materiallarını (kupon istifadəsi tarixçəsi, admin panel qeydləri) təqdim edə bilər.</p>' +
-      '<p>4. Tərəfdaş tərəfindən 3 (üç) və ya daha çox təsdiqlənmiş pozuntu halının qeydə alınması Şəxs1-ə yazılı bildiriş göndərməklə Tərəfdaşı birtərəfli qaydada platformadan çıxarmaq hüququ verir.</p>' +
-      '<p><b>5. Müqavilənin qüvvədə olma müddəti və ləğvi</b></p>' +
-      '<p>1. Bu Müqavilə imzalandığı tarixdən qüvvəyə minir və qarşılıqlı razılaşma olmadıqda müddətsiz olaraq bağlanır.</p>' +
-      '<p>2. Hər bir Tərəf, digər Tərəfə ən azı 14 (on dörd) təqvim günü əvvəl yazılı bildiriş göndərməklə, əsas göstərmədən Müqaviləni birtərəfli qaydada ləğv edə bilər.</p>' +
-      '<p>3. Müqavilənin ləğvi, ləğvdən əvvəl yaranmış öhdəliklərə (o cümlədən artıq təqdim edilmiş, lakin hələ istifadə olunmamış kuponlara) təsir etmir — bu cür kuponlar öz etibarlılıq müddəti bitənə qədər qüvvədə qalır.</p>' +
-      '<p><b>6. Digər şərtlər</b></p>' +
-      '<p>1. Bu Müqavilə Azərbaycan Respublikasının qüvvədə olan qanunvericiliyinə uyğun tənzimlənir.</p>' +
-      '<p>2. Tərəflər arasında yaranan mübahisələr ilk növbədə danışıqlar yolu ilə həll edilməyə çalışılır; nəticə əldə olunmadıqda, mübahisə Azərbaycan Respublikasının müvafiq məhkəməsinə göndərilir.</p>' +
-      '<p>3. Bu Müqavilə 2 (iki) əsl nüsxədə, hər bir Tərəf üçün bir nüsxə olmaqla tərtib edilmişdir və hər iki nüsxə bərabər hüquqi qüvvəyə malikdir.</p>' +
-      '<p>4. Bu Müqaviləyə hər hansı əlavə və dəyişiklik yalnız yazılı formada və hər iki Tərəfin imzası ilə edildikdə qüvvəyə minir.</p>' +
-      '<p><b>7. Tərəflərin imzaları</b></p>' +
-      '<p><b>ŞƏXS1:</b> Ad, Soyad: Kamal Ağayev | Vəzifə: Təsisçi | Tarix: ' + today + '</p>' +
-      '<p><b>TƏRƏFDAŞ:</b> Ad, Soyad: ' + (c.sign || "____________") + ' | Tarix: ' + today + '</p>';
+
+      h('Maddə 1. Tərəflər') +
+      li('<b>1.1.</b> Misterio platformasının təmsilçisi Kamal Ağayev (bundan sonra — "Şəxs1"):') +
+      li('&nbsp;&nbsp;&nbsp;• Fiziki şəxsin adı: Kamal Ağayev') +
+      li('&nbsp;&nbsp;&nbsp;• VÖEN / şəxsiyyət vəsiqəsi №: 1203626292') +
+      li('&nbsp;&nbsp;&nbsp;• Təmsil edən şəxs, vəzifəsi: Təsisçi') +
+      li('<b>1.2.</b> Tərəfdaş müəssisə (bundan sonra — "Tərəfdaş"):') +
+      li('&nbsp;&nbsp;&nbsp;• Müəssisənin adı: <b>' + c.name + '</b>') +
+      li('&nbsp;&nbsp;&nbsp;• Fəaliyyət kateqoriyası: <b>' + catName(c.cat) + '</b>') +
+      li('&nbsp;&nbsp;&nbsp;• Ünvan: <b>' + c.addr + '</b>') +
+      li('&nbsp;&nbsp;&nbsp;• Əlaqə telefonu / e-mail: <b>' + c.phone + '</b> / <b>' + c.email + '</b>') +
+
+      h('Maddə 2. Müqavilənin predmeti') +
+      li('<b>2.1.</b> Şəxs1 öz rəqəmsal tətbiqi (Misterio) vasitəsilə istifadəçilərə (bundan sonra — "Müştəri") Tərəfdaşın müəyyən etdiyi endirim faizini təqdim edən elektron kupon kodları təqdim edir.') +
+      li('<b>2.2.</b> Tərəfdaş bu Müqaviləni imzalamaqla, aşağıdakı 3-cü Maddədə göstərilən endirim şərtlərini Şəxs1 vasitəsilə gələn hər bir Müştəriyə tətbiq etməyi öhdəsinə götürür.') +
+      li('<b>2.3.</b> Bu Müqavilə Tərəfdaşın Şəxs1-in platformasında qeydiyyatının rəsmi təsdiqi hesab olunur və Tərəfdaşın Misterio çarxında (spin) iştirak etməsi üçün əsasdır.') +
+
+      h('Maddə 3. Razılaşdırılmış endirim şərtləri') +
+      p('Təklif edilən endirim faizi (%): <b>' + c.disc + '%</b>') +
+      li('<b>3.1.</b> Tərəfdaş yuxarıda göstərilən endirim faizini, Müştəri tərəfindən etibarlı Misterio kupon kodu təqdim edildiyi hər halda, heç bir istisna qoymadan tətbiq etməyi təəhhüd edir.') +
+      li('<b>3.2.</b> Endirimin məbləği tamamilə Tərəfdaşın öz hesabına aiddir — Şəxs1 endirimin maliyyə yükünü Tərəfdaşa kompensasiya etmir.') +
+
+      h('Maddə 4. Tərəfdaşın öhdəlikləri') +
+      li('<b>4.1.</b> Kupon kodu təqdim edən hər bir Müştəriyə, kodun etibarlılığını yoxladıqdan sonra, razılaşdırılmış faiz həcmində endirim tətbiq etmək.') +
+      li('<b>4.2.</b> Kupon kodunun etibarlılığını əsassız şəkildə rədd etməmək və ya süni maneələr yaratmamaq. Belə bir hal yarandığı halda isə müştəriyə alternativlər təqdim etmək.') +
+      li('<b>4.3.</b> Hər təsdiqlənmiş sifarişi Şəxs1 tərəfindən təqdim olunan admin panel vasitəsilə (sifariş məbləği, tətbiq olunan endirim, yekun məbləğ) qeydə almaq.') +
+      li('<b>4.4.</b> Endirim şərtlərində hər hansı dəyişiklik etmək istədikdə, bunu qabaqcadan (ən azı 7 (yeddi) təqvim günü əvvəl) Şəxs1-ə yazılı şəkildə bildirmək.') +
+
+      h('Maddə 5. Öhdəliyin pozulması və məsuliyyət') +
+      li('<b>5.1.</b> Əgər Tərəfdaş bu Müqavilədə razılaşdırılmış endirimi əsassız olaraq tətbiq etməzsə və ya imtina edərsə, bu, Müqavilənin bilavasitə pozulması sayılır.') +
+      li('<b>5.2.</b> Bu cür pozuntu nəticəsində Müştəriyə dəyən hər hansı maddi və ya mənəvi zərər tamamilə Tərəfdaşın öz məsuliyyətinə aiddir.') +
+      li('<b>5.3.</b> Şəxs1, Tərəfdaşın öhdəliyi pozması nəticəsində yaranan birbaşa maddi zərərə görə məsuliyyət daşımır, lakin belə halların araşdırılmasında Müştəriyə dəstək məqsədilə sübut materiallarını (kupon istifadəsi tarixçəsi, admin panel qeydləri) təqdim edə bilər.') +
+      li('<b>5.4.</b> Tərəfdaş tərəfindən 3 (üç) və ya daha çox təsdiqlənmiş pozuntu halının qeydə alınması Şəxs1-ə yazılı bildiriş göndərməklə Tərəfdaşı birtərəfli qaydada platformadan çıxarmaq hüququ verir.') +
+
+      h('Maddə 6. Müqavilənin qüvvədə olma müddəti və ləğvi') +
+      li('<b>6.1.</b> Bu Müqavilə imzalandığı tarixdən qüvvəyə minir və qarşılıqlı razılaşma olmadıqda müddətsiz olaraq bağlanır.') +
+      li('<b>6.2.</b> Hər bir Tərəf, digər Tərəfə ən azı 14 (on dörd) təqvim günü əvvəl yazılı bildiriş göndərməklə, əsas göstərmədən Müqaviləni birtərəfli qaydada ləğv edə bilər.') +
+      li('<b>6.3.</b> Müqavilənin ləğvi, ləğvdən əvvəl yaranmış öhdəliklərə (o cümlədən artıq təqdim edilmiş, lakin hələ istifadə olunmamış kuponlara) təsir etmir — bu cür kuponlar öz etibarlılıq müddəti bitənə qədər qüvvədə qalır.') +
+
+      h('Maddə 7. Digər şərtlər') +
+      li('<b>7.1.</b> Bu Müqavilə Azərbaycan Respublikasının qüvvədə olan qanunvericiliyinə uyğun tənzimlənir.') +
+      li('<b>7.2.</b> Tərəflər arasında yaranan mübahisələr ilk növbədə danışıqlar yolu ilə həll edilməyə çalışılır; nəticə əldə olunmadıqda, mübahisə Azərbaycan Respublikasının müvafiq məhkəməsinə göndərilir.') +
+      li('<b>7.3.</b> Bu Müqavilə 2 (iki) əsl nüsxədə, hər bir Tərəf üçün bir nüsxə olmaqla tərtib edilmişdir və hər iki nüsxə bərabər hüquqi qüvvəyə malikdir.') +
+      li('<b>7.4.</b> Bu Müqaviləyə hər hansı əlavə və dəyişiklik yalnız yazılı formada və hər iki Tərəfin imzası ilə edildikdə qüvvəyə minir.') +
+
+      h('Maddə 8. Tərəflərin imzaları') +
+      p('<b>ŞƏXS1:</b> Ad, Soyad: Kamal Ağayev | Vəzifə: Təsisçi | Tarix: ' + today + '</p>') +
+      p('<b>TƏRƏFDAŞ:</b> Ad, Soyad: ' + (c.sign || "____________") + ' | Tarix: ' + today + '</p>');
   }
 
   var pending = null;
