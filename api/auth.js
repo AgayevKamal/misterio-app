@@ -27,6 +27,13 @@ async function register(req, res, b) {
   if (!await L.rateLimit(req, "register", 5, 3600))
     return L.fail(res, 429, "Çox cəhd. 1 saat sonra yenidən yoxlayın.");
 
+  const addMonth = (d) => {
+    const n = new Date(d); const day = n.getDate();
+    n.setMonth(n.getMonth() + 1);
+    if (n.getDate() < day) n.setDate(0);
+    return n;
+  };
+
   const name  = L.clean(b.name, 80);
   const email = L.clean(b.email, 120).toLowerCase();
   const phone = L.clean(b.phone, 30);
