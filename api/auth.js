@@ -43,6 +43,9 @@ async function register(req, res, b) {
   if (exists.length) return L.fail(res, 409, "Bu email artıq qeydiyyatdadır");
 
   const code = String(L.randInt(900000) + 100000);
+  // Yeni istifadəçiyə 1 pulsuz (free) spin verilir (abunəlik tələb etmədən)
+  const now = new Date();
+  const monthLater = addMonth(now);
   const rows = await L.sb("users", {
     method: "POST",
     body: JSON.stringify({
@@ -50,14 +53,25 @@ async function register(req, res, b) {
       pass_hash: L.hashPassword(pass),
       verified: false,
       verify_code: code,
-      verify_expires: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
-      sub: {}, payments: [],
+      verify_expires: new Date(now.getTime() + 15 * 60 * 1000).toISOString(),
+      sub: {
+        active: true,
+        isFree: true,
+        free: true,
+        spinsLeft: 1,
+        totalSpins: 0,
+        expires: monthLater.toISOString(),
+        plan: "free"
+      },
+      payments: [],
     }),
   });
   const u = rows[0];
-  // Email doğrulama AKTİV: kod frontend-ə qayıtmır, email-ə gedir
+  // Email doğrulama: kod email-ə gedir. Email göndərilməsə (demo/SMTP yoxdur)
+  // kodu devCode ilə qaytarırıq ki, istifadəçi doğrulamadan keçə bilsin.
   const sent = await L.sendEmail(email, "Misterio — Email təsdiqi", L.verifyEmailHtml(code, name));
-  return L.ok(res, { userId: u.id, email, emailSent: sent });
+  const devCode = sent ? undefined : code;
+  return L.ok(res, { userId: u.id, email, emailSent: sent, devCode });
 }
 
 /* ───────── email doğrulama ───────── */
@@ -100,7 +114,8 @@ async function resend(req, res, b) {
     body: JSON.stringify({ verify_code: code, verify_expires: new Date(Date.now() + 15 * 60 * 1000).toISOString() }),
   });
   const sent = await L.sendEmail(email, "Misterio — Təsdiq kodu", L.verifyEmailHtml(code, u.name));
-  return L.ok(res, { emailSent: sent });
+  const devCode = sent ? undefined : code;
+  return L.ok(res, { emailSent: sent, devCode });
 }
 
 /* ───────── giriş ───────── */

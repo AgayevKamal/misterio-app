@@ -17,6 +17,21 @@ function shade(hex, amt) {
   const esc = s => (s||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   q("welcome").innerHTML = `Xoş gəldin, <b>${esc(user.name) || esc(user.email)}</b> · <a class="link" href="profile.html">Profilim</a>`;
 
+  const freeNotice = q("freeNotice");
+  function showFreeNotice(title, text) {
+    q("tnTitle").textContent = title;
+    q("tnText").textContent = text;
+    freeNotice.classList.remove("hidden");
+  }
+
+  /* ---- doğrulamadan sonra 1 dəfə ödənişsiz endirim şansı bildirişi ---- */
+  if (subInfo().isFreePending) {
+    showFreeNotice(
+      "🎁 1 dəfə ödənişsiz endirim qazanmaq şansın var!",
+      "Təbriklər — hesabına 1 pulsuz fırlatma haqqı əlavə olundu. Aşağıdan kateqoriya seç və çarxı fırlat."
+    );
+  }
+
   const catsEl = q("cats"), sec = q("wheelSec"), title = q("wheelTitle"),
     btn = q("spinBtn"), hint = q("hint"),
     cv = q("wheel"), ctx = cv.getContext("2d");
@@ -62,6 +77,15 @@ function shade(hex, amt) {
       q("bbText").textContent = "Çarxın arxasında nə gizləndiyini görmək üçün abunəliyi aktivləşdirin — 9.90 AZN, ayda 3 fırlatma.";
       q("bbBtn").textContent = "Abunə ol — 9.90 AZN/ay";
       MA.kilidGordu("abunelik_yoxdur");
+      return false;
+    }
+    /* ödənişsiz (free) şans var, amma hələ aktiv olmayıb — fırlatma yox, bildiriş */
+    if (s.isFreePending) {
+      bb.classList.remove("hidden"); area.classList.add("hidden"); sec.classList.remove("show");
+      q("bbIc").textContent = "⏳";
+      q("bbTitle").textContent = "Çarx hazırlanır";
+      q("bbText").textContent = "Ən sevdiyiniz məkanlar əlavə edilir. Təzəliklə aktiv olacaq — bir az səbr edin.";
+      q("bbBtn").textContent = "Abunə ol — 9.90 AZN/ay";
       return false;
     }
     if (!s.canSpin) {

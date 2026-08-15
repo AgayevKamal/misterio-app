@@ -767,3 +767,18 @@ html[data-theme="light"] .sw-btn.active{color:#fff}
   .coupons,.cats{grid-template-columns:1fr}
   .hero h1{font-size:23px}
 }
+
+/* ---------- ÖDƏNİŞSİZ BİLDİRİŞ (toast) ---------- */
+.toast-notice{
+  display:flex;gap:12px;align-items:flex-start;
+  background:linear-gradient(135deg,rgba(255,166,77,.16),rgba(179,102,255,.16));
+  border:1px solid var(--line);
+  border-left:4px solid var(--gold-2);
+  border-radius:14px;padding:14px 16px;margin:0 0 18px;
+  box-shadow:var(--shadow);
+  animation:tnIn .4s ease both;
+}
+.toast-notice .tn-ic{font-size:24px;line-height:1.2;flex:0 0 auto}
+.toast-notice .tn-body{font-size:14px;color:var(--ink-2);line-height:1.5}
+.toast-notice .tn-body b{display:block;color:var(--ink);font-size:15px;margin-bottom:3px}
+@keyframes tnIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}

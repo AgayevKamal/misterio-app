@@ -88,10 +88,13 @@ function subInfo() {
   const active = isActiveSub(u);
   return {
     active,
+    isFree: !!s.isFree || !!s.free,
     spinsLeft: active ? (s.spinsLeft || 0) : 0,
     expires: s.expires || null,
     renewText: s.expires ? fmtDate(s.expires) : "—",
-    canSpin: active && (s.spinsLeft || 0) > 0
+    canSpin: active && (s.spinsLeft || 0) > 0,
+    /* ödənişsiz (free) haqq var, amma hələ fırladıla bilməz — aktiv olacaq */
+    isFreePending: !!s.isFree && (s.spinsLeft || 0) > 0
   };
 }
 

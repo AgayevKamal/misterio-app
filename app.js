@@ -14,7 +14,6 @@
   });
 
   if (window.MA && window.MA.sirketFormu) window.MA.sirketFormu();
-  if (window.loadCompanies) window.loadCompanies().then(renderList);
 
   function catName(k) {
     var f = window.CATEGORY_LIST.find(function (x) { return x.key === k; });
@@ -207,18 +206,4 @@
     q("okModal").classList.add("hidden");
   });
 
-  function renderList() {
-    var list = (window.customCompanies ? window.customCompanies() : []) || [];
-    var box = q("compList");
-    if (!list.length) { box.innerHTML = '<p class="sub">Hələ əlavə edilmiş şirkət yoxdur.</p>'; return; }
-    box.innerHTML = "";
-    list.slice().reverse().forEach(function (c) {
-      var cat = window.CATEGORY_LIST.find(function (x) { return x.key === c.cat; });
-      var d = document.createElement("div");
-      d.className = "comp-row";
-      d.innerHTML = '<div><b>' + c.name + '</b><div class="sub">' + (cat ? cat.icon + " " + cat.name : c.cat) + ' · ' + (c.phone || "—") + '</div></div><span class="disc-pill">-' + c.disc + '%</span>';
-      box.appendChild(d);
-    });
-  }
-  renderList();
 })();
