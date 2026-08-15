@@ -47,15 +47,13 @@ async function loadSession() {
   return CURRENT_USER;
 }
 
-/* abunəliyi serverdə aktiv et (real ödəniş Epoint qoşulanda buraxılacaq) */
+/* abunəliyi serverdə kart ödənişi ilə aktiv et (pricing.html DB.payment çağırır) */
 async function activateSubscription() {
   if (MA && MA.abuneOldu) MA.abuneOldu();
   try {
     const r = await DB.payment("sub");
     if (r && r.user) { CURRENT_USER = r.user; Session.login(r.user); return CURRENT_USER; }
   } catch (e) { console.error("activate:", e.message); }
-  // fallback: local yenilə (server cavabı gəlməsə də UI yenilənsin)
-  if (CURRENT_USER) { CURRENT_USER.sub = CURRENT_USER.sub || {}; CURRENT_USER.sub.active = true; }
   return CURRENT_USER;
 }
 async function cancelSubscription() {

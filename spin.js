@@ -27,7 +27,7 @@ function shade(hex, amt) {
   /* ---- doğrulamadan sonra 1 dəfə ödənişsiz endirim şansı bildirişi ---- */
   if (subInfo().isFreePending) {
     showFreeNotice(
-      "🎁 1 dəfə ödənişsiz endirim qazanmaq şansın var!",
+      "🎁 1 dəfə ödənişsiz çarx fırlatma şansı qazandınız!",
       "Təbriklər — hesabına 1 pulsuz fırlatma haqqı əlavə olundu. Aşağıdan kateqoriya seç və çarxı fırlat."
     );
   }

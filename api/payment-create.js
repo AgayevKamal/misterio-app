@@ -35,13 +35,21 @@ module.exports = async (req, res) => {
     if (!u.verified) return L.fail(res, 403, "Email təsdiqlənməyib");
 
     if (mode === "sub") {
+      // Yalnız ödəniş məlumatları (kart) daxil edildikdə abunəni aktiv et.
+      // Kart məlumatı yoxdursa — aktiv etmə (pending qaytar), UI ödəniş formasını göstərir.
+      const card = (b.card || "").replace(/\s+/g, "");
+      const cardValid = /^(\d{16}|\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4})$/.test(card);
+      if (!cardValid) {
+        return L.ok(res, { ok: true, mode, demo: false, pending: true, needCard: true,
+          message: "Ödəniş üçün kart məlumatı tələb olunur" });
+      }
       // Abunəliyi serverdə aktiv et (demo — Epoint gələnə qədər)
       const expires = new Date(Date.now() + 30 * 86400 * 1000).toISOString();
       const newSub = {
         active: true, plan: "Misterio Aylıq", amount: amount,
         spinsLeft: 3, totalSpins: 0,
         expires, startedAt: new Date().toISOString(),
-        method: "demo", currency: cur,
+        method: "card", currency: cur,
       };
       await L.sb(`users?${L.q({ id: `eq.${u.id}` })}`, {
         method: "PATCH", prefer: "return=minimal",
@@ -57,7 +65,7 @@ module.exports = async (req, res) => {
           }),
         });
       } catch {}
-      return L.ok(res, { ok: true, mode, demo: true });
+      return L.ok(res, { ok: true, mode, demo: false, activated: true });
     } else {
       // Əlavə fırlatma: +1 spinsLeft
       const sub = u.sub || {};

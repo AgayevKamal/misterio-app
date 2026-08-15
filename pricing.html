@@ -106,7 +106,7 @@
     <p class="win" id="payAmount">9.90 AZN</p>
     <p class="sub" id="paySub">Aylıq təkrarlanan ödəniş. Nümunə axın — real ödəniş alınmır.</p>
     <div class="pay-fake">
-      <div class="pay-row"><span>Kart</span><b>**** **** **** 4242</b></div>
+      <div class="pay-row"><span>Kart nömrəsi</span><input id="payCard" inputmode="numeric" maxlength="19" placeholder="**** **** **** 4242" style="background:rgba(0,0,0,.25);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 10px;width:160px;text-align:right;font-family:monospace"></div>
       <div class="pay-row"><span>Məbləğ</span><b id="payAmountRow">9.90 AZN</b></div>
       <div class="pay-row"><span>Dövr</span><b id="payPeriod">Aylıq</b></div>
       <div class="pay-row"><span>Hesab</span><b id="payAcc">—</b></div>
@@ -145,7 +145,7 @@ let mode="sub";
 function render(){
   const u=Session.user();
   if(!u||!u.verified){
-    q("subNote").textContent="Abunə olmaq üçün aşağıdakı düyməni basın — demo rejimdə birbaşa aktiv olur.";
+    q("subNote").textContent="Abunə olmaq üçün aşağıdakı düyməni basın və kart məlumatınızı daxil edin.";
     return;
   }
   const s=subInfo();
@@ -174,7 +174,7 @@ function openPay(m){
   q("payAmount").textContent = amt;
   q("payAmountRow").textContent = amt;
   q("paySub").textContent = m==="sub"
-    ? "Aylıq təkrarlanan ödəniş. Nümunə axın — real ödəniş alınmır."
+    ? "Aylıq təkrarlanan ödəniş. Kart nömrənizi daxil edin — ödəniş təsdiqləndikdə abunə aktiv olur."
     : "Birdəfəlik ödəniş, hesabınıza +1 fırlatma əlavə olunur.";
   q("payModal").classList.remove("hidden");
 }
@@ -182,12 +182,22 @@ q("subBtn").onclick=()=>openPay("sub");
 q("extraBtn").onclick=()=>openPay("extra");
 q("payCancel").onclick=()=>q("payModal").classList.add("hidden");
 q("payGo").onclick=async()=>{
+  const card = (q("payCard").value || "").trim();
+  if(mode==="sub" && card.replace(/\s+/g,"").length < 12){
+    alert("Abunə üçün kart nömrəsini daxil edin.");
+    return;
+  }
   q("payModal").classList.add("hidden");
-  // DEMO rejim: real ödəniş yoxdur, birbaşa uğurlu sayılır
   try {
-    if(mode==="sub"){ await activateSubscription(); }
+    if(mode==="sub"){
+      // kart məlumatı ilə ödəniş yaradıb abunəni aktiv et
+      const r = await DB.payment("sub", card);
+      if(r && r.activated){ CURRENT_USER = r.user || CURRENT_USER; }
+      else { console.warn("payment not activated"); }
+      await loadSession();
+    }
     else { await buyExtraSpin(); }
-  } catch(e){ console.warn("demo payment:", e.message); }
+  } catch(e){ console.warn("payment:", e.message); }
   const s=subInfo() || { spinsLeft: 3, renewText: "—" };
   q("okSpins").textContent = (s.spinsLeft || 3) + " fırlatma səni gözləyir";
   q("okRenew").textContent = "Növbəti yenilənmə: " + (s.renewText || "—");

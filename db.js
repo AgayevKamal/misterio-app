@@ -52,9 +52,9 @@ const DB = {
   async companyMe()       { const r = await apiCall("/company", { method: "POST", body: { action: "me" } }); return r.company; },
   async companyLogout()   { return apiCall("/company", { method: "POST", body: { action: "logout" } }); },
   /* ödəniş (abunə / əlavə fırlatma) — serverdə aktiv edir */
-  async payment(mode)  {
-    // ödəniş yaradıb abunəni aktiv edirik (demo rejimdə birbaşa)
-    const r = await apiCall("/payment-create", { method: "POST", body: { mode } });
+  async payment(mode, card)  {
+    // ödəniş yaradıb abunəni kart məlumatı ilə aktiv edir (demo rejimdə birbaşa)
+    const r = await apiCall("/payment-create", { method: "POST", body: { mode, card } });
     // sonra təzə sessiya məlumatını çək
     try { const u = await DB.me(); if (u) return { ...r, user: u }; } catch { }
     return r;

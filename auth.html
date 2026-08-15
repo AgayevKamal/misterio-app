@@ -176,7 +176,7 @@ q("verifyForm").onsubmit=async e=>{
     const r = await DB.verify(email, q("vInput").value.trim());
     MA.dogrulandi();
     Session.login(r.user);
-    location.href = "index.html";
+    location.href = "spin.html";
   }catch(ex){ err(q("vErr"), ex.message); }
 };
 
