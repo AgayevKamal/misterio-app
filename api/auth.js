@@ -62,7 +62,7 @@ async function register(req, res, b) {
       verify_code: code,
       verify_expires: new Date(now.getTime() + 15 * 60 * 1000).toISOString(),
       sub: {
-        active: true,
+        active: false,
         isFree: true,
         free: true,
         spinsLeft: 1,

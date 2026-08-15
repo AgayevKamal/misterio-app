@@ -86,15 +86,18 @@ function subInfo() {
   const u = CURRENT_USER; if (!u) return null;
   const s = u.sub || {};
   const active = isActiveSub(u);
+  const isFree = !!s.isFree || !!s.free;
+  /* free istifadəçi öz 1 pulsuz haqqını saxlayır (abunə olmayanda da) */
+  const spinsLeft = isFree ? (s.spinsLeft || 0) : (active ? (s.spinsLeft || 0) : 0);
   return {
     active,
-    isFree: !!s.isFree || !!s.free,
-    spinsLeft: active ? (s.spinsLeft || 0) : 0,
+    isFree,
+    spinsLeft,
     expires: s.expires || null,
     renewText: s.expires ? fmtDate(s.expires) : "—",
     canSpin: active && (s.spinsLeft || 0) > 0,
     /* ödənişsiz (free) haqq var, amma hələ fırladıla bilməz — aktiv olacaq */
-    isFreePending: !!s.isFree && (s.spinsLeft || 0) > 0
+    isFreePending: isFree && (s.spinsLeft || 0) > 0
   };
 }
 

@@ -70,15 +70,6 @@ function shade(hex, amt) {
   function gate() {
     const s = subInfo();
     const bb = q("blockBox"), area = q("spinArea");
-    if (!s.active) {
-      bb.classList.remove("hidden"); area.classList.add("hidden"); sec.classList.remove("show");
-      q("bbIc").textContent = "🔒";
-      q("bbTitle").textContent = "Çarx kilidlidir";
-      q("bbText").textContent = "Çarxın arxasında nə gizləndiyini görmək üçün abunəliyi aktivləşdirin — 9.90 AZN, ayda 3 fırlatma.";
-      q("bbBtn").textContent = "Abunə ol — 9.90 AZN/ay";
-      MA.kilidGordu("abunelik_yoxdur");
-      return false;
-    }
     /* ödənişsiz (free) şans var, amma hələ aktiv olmayıb — fırlatma yox, bildiriş */
     if (s.isFreePending) {
       bb.classList.remove("hidden"); area.classList.add("hidden"); sec.classList.remove("show");
@@ -86,6 +77,15 @@ function shade(hex, amt) {
       q("bbTitle").textContent = "Çarx hazırlanır";
       q("bbText").textContent = "Ən sevdiyiniz məkanlar əlavə edilir. Təzəliklə aktiv olacaq — bir az səbr edin.";
       q("bbBtn").textContent = "Abunə ol — 9.90 AZN/ay";
+      return false;
+    }
+    if (!s.active) {
+      bb.classList.remove("hidden"); area.classList.add("hidden"); sec.classList.remove("show");
+      q("bbIc").textContent = "🔒";
+      q("bbTitle").textContent = "Çarx kilidlidir";
+      q("bbText").textContent = "Çarxın arxasında nə gizləndiyini görmək üçün abunəliyi aktivləşdirin — 9.90 AZN, ayda 3 fırlatma.";
+      q("bbBtn").textContent = "Abunə ol — 9.90 AZN/ay";
+      MA.kilidGordu("abunelik_yoxdur");
       return false;
     }
     if (!s.canSpin) {

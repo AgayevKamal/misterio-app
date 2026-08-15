@@ -38,6 +38,14 @@
 </header>
 
 <main>
+  <!-- daxilolma bildirişi (toast) -->
+  <div class="toast-notice hidden" id="loginNotice">
+    <div class="tn-ic">🎁</div>
+    <div class="tn-body">
+      <b>1 dəfə ödənişsiz çarx fırlatma şansı qazandınız!</b>
+      <div>Çarxa keç və pulsuz fırlatmanı sınamaqla endirim qazan.</div>
+    </div>
+  </div>
   <!-- QONAQ üçün hero -->
   <section class="hero" id="heroGuest">
     <div class="badge" data-i18n="hero.badge">🔮 Sürpriz endirim platforması</div>
@@ -143,10 +151,15 @@ if(u && u.verified){
     q("uHint").innerHTML=`⚠️ Bu ayki fırlatma haqqın bitib. Yeniləmə tarixi: <b>${s.renewText}</b>`;
   } else {
     acts.innerHTML=`<a class="btn big" href="pricing.html">Abunə ol — 9.90 AZN/ay</a>`;
-    q("uHint").textContent="Fırlatmaq üçün abunəlik aktiv olmalıdır.";
+    q("uHint").textContent="Fırlatmaq üçün abunə olmalıdır.";
   }
   q("ctaBtn").textContent = s.canSpin ? "Çarxı fırlat 🔮" : "Abunəliyə bax";
   q("ctaBtn").href = s.canSpin ? "spin.html" : "pricing.html";
+
+  /* ödənişsiz (free) şansı olanlar üçün daxilolma bildirişi */
+  if(s.isFreePending){
+    q("loginNotice").classList.remove("hidden");
+  }
 }
 })();
 </script>
