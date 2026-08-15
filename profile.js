@@ -24,11 +24,41 @@
     q("pfName").textContent=user.name||"—";
     q("pfMail").textContent=user.email;
     q("pfSpin").textContent = s.active ? `🎡 ${s.spinsLeft} fırlatma qalıb` : "🔒 Abunəlik deaktiv";
+
+    /* ---- ödənişsiz (free) şansı varsa profildə göstər + fırlat düyməsi ---- */
+    const fn = q("freeNotice");
+    if (s.isFreePending) {
+      fn.querySelector("#tnTitle").textContent = "🎁 1 dəfə ödənişsiz çarx fırlatma şansın var!";
+      fn.querySelector("#tnText").innerHTML = 'Hesabında <b>1 pulsuz fırlatma haqqı</b> var. Aşağıdakı düymə ilə çarxı fırlat və endirim qazan.';
+      fn.classList.remove("hidden");
+    } else {
+      fn.classList.add("hidden");
+    }
   }
 
   function renderSub(){
     const s=subInfo();
     const box=q("subCard");
+
+    /* ödənişsiz (free) şansı olanlar: profildə fırlat düyməsi + hazırlanır bildirişi */
+    if (s.isFreePending) {
+      box.innerHTML=`
+        <div class="sub-row">
+          <div>
+            <div class="sub-state off">Free şans</div>
+            <p class="sub">Hesabında <b>1 pulsuz fırlatma haqqı</b> var. Çarxı fırlat düyməsinə bas — çarx hazırlanır bildirişi çıxacaq.</p>
+          </div>
+          <button class="btn" id="freeSpinBtn">🔮 Çarxı fırlat</button>
+        </div>`;
+      const fb=q("freeSpinBtn");
+      if(fb) fb.onclick=()=>{
+        MA.firlatma("free");
+        // spin.html-ə yönləndir — orda "Çarx hazırlanır" bildirişi çıxır
+        location.href="spin.html";
+      };
+      return;
+    }
+
     if(!s.active){
       box.innerHTML=`
         <div class="sub-row">
